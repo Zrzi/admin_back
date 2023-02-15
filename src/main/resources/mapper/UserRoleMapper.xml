@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.UserRoleMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.UserRoleDto">
+        <id column="id" property="id" />
+        <result column="user_no" property="userNo" />
+        <result column="role_id" property="roleId" />
+        <result column="level" property="level" />
+        <result column="user_type" property="userType" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findUserRoleByNo" resultMap="baseMap">
+        SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_user_role`
+        WHERE `user_no` = #{userNo}
+          AND `status` = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.ResourceMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.ResourceDto">
+        <id column="id" property="id" />
+        <result column="resource_id" property="resourceId" />
+        <result column="resource_name" property="resourceName" />
+        <result column="system_id" property="systemId" />
+        <result column="system_name" property="systemName" />
+        <result column="resource_url" property="resourceUrl" />
+        <result column="resource_type" property="resourceType" />
+        <result column="parent_resource" property="parentResource" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findResourceBySystemId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resources`
+        WHERE `system_id` = #{systemId}
+          AND `status` = 0
+    </select>
+
+    <select id="findResourceByParentResource" resultMap="java.lang.String" parameterType="java.lang.String">
+        SELECT `resource_id`
+        FROM `admin_resources`
+        WHERE `parent_resource` = #{parentResource}
+          AND `status` = 0
+    </select>
+
+    <select id="findResourceByResourceId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `resource_id` = #{resourceId}
+          AND `status` = 0
+    </select>
+
+    <select id="findResourceByResourceName" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `resource_name` = #{resourceName}
+          AND `status` = 0
+    </select>
+
+    <select id="findResourceByResourceNameAndSystemId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `resource_name` = #{resourceName}
+          AND `system_id` = #{systemId}
+          AND `status` = 0
+    </select>
+
+    <insert id="addResource" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
+        INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{resource.resourceId}, #{resource.resourceName}, #{resource.systemId}, #{resource.systemName}, #{resource.resourceUrl}, #{resource.resourceType}, #{resource.parentResource}, #{resource.createdBy}, NOW(), #{resource.updatedBy}, NOW(), 0)
+    </insert>
+
+    <update id="updateResourceByResourceId" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
+        UPDATE `admin_resource`
+        SET `resource_name` = #{resource.resourceName},
+            `resource_url` = #{resource.resourceUrl},
+            `resource_type` = #{resource.resourceType},
+            `parent_resource` = #{resource.parentResource},
+            `updated_by` = #{resource.updatedBy},
+            `updated_date` = NOW()
+        WHERE `resource_id` = #{resource.resourceId}
+    </update>
+
+    <delete id="deleteResourceByResourceId" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
+        UPDATE `admin_resource`
+        SET `updated_by` = #{role.updatedBy},
+            `updated_date` = NOW(),
+            `status` = 1
+        WHERE `resource_id` = #{resource.resourceId}
+    </delete>
+
+</mapper>

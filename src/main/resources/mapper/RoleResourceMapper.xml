@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.RoleResourceMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.RoleResourceDto">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="resource_id" property="resourceId" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findRoleResourceByRoleId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role_resource`
+        WHERE `role_id` = #{roleId}
+          AND `status` = 0
+    </select>
+
+    <select id="findRoleResourceByResourceId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role_resource`
+        WHERE `resource_id` = #{resourceId}
+          AND `status` = 0
+    </select>
+
+    <insert id="addRoleResource" parameterType="com.admin.admin_back.pojo.dto.RoleResourceDto">
+        INSERT INTO `admin_role_resource`(`role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{roleResource.roleId}, #{roleResource.resourceId}, #{roleResource.createdBy}, NOW(), #{roleResource.updatedBy}, NOW(), 0)
+    </insert>
+
+    <delete id="deleteRoleResource" parameterType="com.admin.admin_back.pojo.dto.RoleResourceDto">
+        UPDATE `admin_role_resource`
+        SET `updated_by` = #{roleResource.updatedBy},
+            `updated_date` = NOW(),
+            `status` = 1
+        WHERE `role_id` = #{roleResource.roleId}
+          AND `resource_id` = #{roleResource.resourceId}
+    </delete>
+
+</mapper>

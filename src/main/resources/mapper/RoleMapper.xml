@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.RoleMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.RoleDto">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="system_id" property="systemId" />
+        <result column="system_name" property="systemName" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findRoleBySystemId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `role_name`, `system_id`, `system_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role`
+        WHERE `system_id` = #{systemId}
+          AND `status` = 0
+    </select>
+
+    <select id="findRoleByRoleId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `role_name`, `system_id`, `system_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role`
+        WHERE `role_id` = #{roleId}
+          AND `status` = 0
+    </select>
+
+    <select id="findRoleByRoleNameAndSystemId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `role_name`, `system_id`, `system_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role`
+        WHERE `role_name` = #{roleName}
+          AND `system_id` = #{systemName}
+          AND `status` = 0
+    </select>
+
+    <insert id="addRole" parameterType="com.admin.admin_back.pojo.dto.RoleDto">
+        INSERT INTO `admin_role`(`role_id`, `role_name`, `system_id`, `system_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{role.roleId}, #{role.roleName}, #{role.systemId}, #{role.systemName}, #{role.createdBy}, NOW(), #{role.updatedBy}, NOW(), 0)
+    </insert>
+
+    <update id="updateRoleByRoleId" parameterType="com.admin.admin_back.pojo.dto.RoleDto">
+        UPDATE `admin_role`
+        SET `role_name` = #{role.roleName},
+            `updated_by` = #{role.updatedBy},
+            `updated_date` = NOW()
+        WHERE `role_id` = #{role.roleId}
+    </update>
+
+    <delete id="deleteRoleByRoleId" parameterType="com.admin.admin_back.pojo.dto.RoleDto">
+        UPDATE `admin_role`
+        SET `updated_by` = #{role.updatedBy},
+            `updated_date` = NOW(),
+            `status` = 1
+        WHERE `role_id` = #{role.roleId}
+    </delete>
+
+</mapper>
