@@ -15,4 +15,12 @@ public interface UserRoleMapper {
 
     List<UserRoleDto> findUserRoleByNo(String userNo);
 
+    UserRoleDto findUserRoleByUserNoAndRoleId(String userNo, String roleId);
+
+    Integer addUserRole(UserRoleDto userRole);
+
+    Integer updateUserRole(UserRoleDto userRole);
+
+    Integer deleteUserRole(UserRoleDto userRole);
+
 }

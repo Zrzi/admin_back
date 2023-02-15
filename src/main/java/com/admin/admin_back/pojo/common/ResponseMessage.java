@@ -112,6 +112,21 @@ public enum ResponseMessage {
     PASSWORD_ERROR(400003, "密码错误"),
 
     /**
+     * 表单错误
+     */
+    MEMBER_FORM_ERROR(400004, "表单错误"),
+
+    /**
+     * 用户角色对应关系已经存在
+     */
+    USER_ROLE_EXIST(400005, "用户角色对应关系已经存在"),
+
+    /**
+     * 用户角色对应关系不存在
+     */
+    USER_ROLE_NOT_FOUND(400006, "用户角色对应关系不存在"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),

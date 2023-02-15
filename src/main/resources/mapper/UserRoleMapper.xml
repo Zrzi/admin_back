@@ -24,4 +24,35 @@
           AND `status` = 0
     </select>
 
+    <select id="findUserRoleByUserNoAndRoleId" resultMap="baseMap">
+        SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_user_role`
+        WHERE `user_no` = #{userNo}
+          AND `role_id` = #{roleId}
+          AND `status` = 0
+    </select>
+
+    <insert id="addUserRole" parameterType="com.admin.admin_back.pojo.dto.UserRoleDto">
+        INSERT INTO `admin_user_role` (`user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{userRole.userNo}, #{userRole.roleId}, #{userRole.level}, #{userRole.userType}, #{userRole.createdBy}, NOW(), #{userRole.updatedBy}, NOW(), 0)
+    </insert>
+
+    <update id="updateUserRole" parameterType="com.admin.admin_back.pojo.dto.UserRoleDto">
+        UPDATE `admin_user_role`
+        SET `level` = #{userRole.level},
+            `updated_by` = #{userRole.updatedBy},
+            `updated_date` = NOW()
+        WHERE `user_no` = #{userRole.userNo}
+          AND `role_id` = #{userRole.roleId}
+          AND `status` = 0
+    </update>
+
+    <update id="deleteUserRole" parameterType="com.admin.admin_back.pojo.dto.UserRoleDto">
+        UPDATE `admin_user_role`
+        SET `status` = 1
+        WHERE `user_no` = #{userRole.userNo}
+          AND `role_id` = #{userRole.roleId}
+          AND `status` = 0
+    </update>
+
 </mapper>
