@@ -29,6 +29,14 @@
           AND `status` = 0
     </select>
 
+    <select id="findRoleResourceByRoleIdAndResourceId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_role_resource`
+        WHERE `role_id` = #{roleId}
+          AND `resource_id` = #{resourceId}
+          AND `status` = 0
+    </select>
+
     <insert id="addRoleResource" parameterType="com.admin.admin_back.pojo.dto.RoleResourceDto">
         INSERT INTO `admin_role_resource`(`role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
         VALUES (#{roleResource.roleId}, #{roleResource.resourceId}, #{roleResource.createdBy}, NOW(), #{roleResource.updatedBy}, NOW(), 0)
@@ -41,6 +49,7 @@
             `status` = 1
         WHERE `role_id` = #{roleResource.roleId}
           AND `resource_id` = #{roleResource.resourceId}
+          AND `status` = 0
     </delete>
 
 </mapper>

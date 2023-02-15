@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Order(2)
+@Order(3)
 @Aspect
 @Component
 public class LogAspect {

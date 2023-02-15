@@ -82,6 +82,16 @@ public enum ResponseMessage {
     ROLE_NAME_EXIST(300002, "角色名称已经存在"),
 
     /**
+     * 角色编码不存在
+     */
+    ROLE_ID_IS_NULL(300003, "角色编码不存在"),
+
+    /**
+     * 编辑角色资源表单错误
+     */
+    EDIT_ROLE_RESOURCE_FORM_ERROR(300004, "编辑角色资源表单错误"),
+
+    /**
      * 用户名缺失
      */
     USER_NO_NOT_FOUND(400000, "用户名缺失"),

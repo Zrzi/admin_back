@@ -18,6 +18,8 @@ public interface RoleResourceMapper {
 
     List<RoleResourceDto> findRoleResourceByResourceId(String resourceId);
 
+    RoleResourceDto findRoleResourceByRoleIdAndResourceId(String roleId, String resourceId);
+
     Integer addRoleResource(RoleResourceDto roleResource);
 
     Integer deleteRoleResource(RoleResourceDto roleResource);

@@ -48,7 +48,7 @@ public enum ResourceTypeEnum {
                 return resourceTypeEnum;
             }
         }
-        // 默认是功能操作
+        // 默认是功能操作，实际上不会走到这
         return ResourceTypeEnum.operation;
     }
 

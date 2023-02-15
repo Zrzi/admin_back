@@ -2,6 +2,9 @@ package com.admin.admin_back.pojo.threadlocals;
 
 import com.admin.admin_back.pojo.dto.UserDto;
 
+/**
+ * @author 陈群矜
+ */
 public class UserThreadLocal {
 
     private final static ThreadLocal<UserDto> USER_THREAD_LOCAL = new ThreadLocal<>();
