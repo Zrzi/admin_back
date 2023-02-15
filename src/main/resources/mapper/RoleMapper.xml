@@ -50,6 +50,7 @@
             `updated_by` = #{role.updatedBy},
             `updated_date` = NOW()
         WHERE `role_id` = #{role.roleId}
+          AND `status` = 0
     </update>
 
     <delete id="deleteRoleByRoleId" parameterType="com.admin.admin_back.pojo.dto.RoleDto">
@@ -58,6 +59,7 @@
             `updated_date` = NOW(),
             `status` = 1
         WHERE `role_id` = #{role.roleId}
+          AND `status` = 0
     </delete>
 
 </mapper>

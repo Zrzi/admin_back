@@ -46,6 +46,7 @@
             `updatedBy` = #{system.updatedBy},
             `updated_date` = NOW()
         WHERE `system_id` = #{system.systemId}
+          AND `status` = 0
     </update>
 
     <update id="deleteSystemBySystemId" parameterType="com.admin.admin_back.pojo.dto.SystemDto">
@@ -54,6 +55,7 @@
             `updated_date` = NOW(),
             `status` = 1
         WHERE `system_id` = #{system.systemId}
+          AND `status` = 0
     </update>
 
 </mapper>

@@ -20,6 +20,7 @@
         SELECT `id`, `user_no`, `user_name`, `password`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user`
         WHERE `user_no` = #{userNo}
+          AND `status` = 0
     </select>
 
     <update id="updateUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
@@ -28,6 +29,7 @@
             `updated_by` = #{userDto.updatedBy},
             `updated_date` = NOW()
         WHERE `user_no` = #{userDto.userNo}
+          AND `status` = 0
     </update>
 
     <update id="deleteUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
@@ -36,6 +38,7 @@
             `updated_by` = #{userDto.updatedBy},
             `updated_date` = NOW()
         WHERE `user_no` = #{userDto.userNo}
+          AND `status` = 0
     </update>
 
 </mapper>

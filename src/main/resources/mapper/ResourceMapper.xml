@@ -70,6 +70,7 @@
             `updated_by` = #{resource.updatedBy},
             `updated_date` = NOW()
         WHERE `resource_id` = #{resource.resourceId}
+          AND `status` = 0
     </update>
 
     <delete id="deleteResourceByResourceId" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
@@ -78,6 +79,7 @@
             `updated_date` = NOW(),
             `status` = 1
         WHERE `resource_id` = #{resource.resourceId}
+          AND `status` = 0
     </delete>
 
 </mapper>
