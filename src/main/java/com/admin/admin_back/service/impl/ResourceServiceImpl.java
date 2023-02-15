@@ -8,6 +8,7 @@ import com.admin.admin_back.pojo.enums.CodeTypeEnum;
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.ResourceForm;
+import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
@@ -86,9 +87,9 @@ public class ResourceServiceImpl implements ResourceService {
         }
         resourceDto.setResourceType(code);
         resourceDto.setParentResource(resourceDto.getParentResource());
-        // todo 获取用户名
-        resourceDto.setCreatedBy("");
-        resourceDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        resourceDto.setCreatedBy(userNo);
+        resourceDto.setUpdatedBy(userNo);
         resourceMapper.addResource(resourceDto);
     }
 
@@ -122,8 +123,8 @@ public class ResourceServiceImpl implements ResourceService {
         }
         resourceDto.setResourceType(code);
         resourceDto.setParentResource(resourceDto.getParentResource());
-        // todo 获取用户名
-        resourceDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        resourceDto.setUpdatedBy(userNo);
         resourceMapper.updateResourceByResourceId(resourceDto);
     }
 
@@ -138,8 +139,9 @@ public class ResourceServiceImpl implements ResourceService {
         if (!CollectionUtils.isEmpty(ids)) {
             throw new ResourceChildExistException();
         }
-        // todo 获取用户名
-        resourceDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        resourceDto.setUpdatedBy(userNo);
         resourceMapper.deleteResourceByResourceId(resourceDto);
     }
+
 }

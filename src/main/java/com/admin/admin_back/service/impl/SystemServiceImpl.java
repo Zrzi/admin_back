@@ -6,6 +6,7 @@ import com.admin.admin_back.pojo.enums.CodeTypeEnum;
 import com.admin.admin_back.pojo.exception.BaseException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.exception.SystemNameExistException;
+import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.SystemVo;
 import com.admin.admin_back.service.SystemService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
@@ -52,9 +53,9 @@ public class SystemServiceImpl implements SystemService {
         SystemDto systemDto = new SystemDto();
         systemDto.setSystemId(systemId);
         systemDto.setSystemName(systemName);
-        // todo 获取用户名
-        systemDto.setCreatedBy("");
-        systemDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        systemDto.setCreatedBy(userNo);
+        systemDto.setUpdatedBy(userNo);
         systemMapper.addSystem(systemDto);
     }
 
@@ -70,8 +71,8 @@ public class SystemServiceImpl implements SystemService {
         }
         systemDto.setSystemId(systemId);
         systemDto.setSystemName(systemName);
-        // todo 获取用户名
-        systemDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        systemDto.setUpdatedBy(userNo);
         systemMapper.updateSystemBySystemId(systemDto);
     }
 
@@ -82,8 +83,8 @@ public class SystemServiceImpl implements SystemService {
         if (Objects.isNull(system)) {
             throw new SystemExistException();
         }
-        // todo 获取用户名
-        system.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        system.setUpdatedBy(userNo);
         systemMapper.deleteSystemBySystemId(system);
     }
 

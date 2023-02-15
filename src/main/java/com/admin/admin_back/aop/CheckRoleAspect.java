@@ -7,6 +7,7 @@ import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.ResourceDto;
 import com.admin.admin_back.pojo.dto.RoleResourceDto;
+import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.UserRoleVo;
 import com.admin.admin_back.utils.JwtTokenUtil;
@@ -53,7 +54,7 @@ public class CheckRoleAspect {
             if (StringUtils.isBlank(token) || !jwtTokenUtil.validateToken(token)) {
                 return new Result<>(ResponseMessage.NOT_LOGIN);
             }
-            UserThreadLocal.setUserToken(token);
+            setUserThreadLocal(token);
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
             CheckRole annotation = methodSignature.getMethod().getAnnotation(CheckRole.class);
             String resourceName = annotation.value();
@@ -65,7 +66,7 @@ public class CheckRoleAspect {
         } catch (Throwable throwable) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         } finally {
-            UserThreadLocal.removeUserToken();
+            UserThreadLocal.removeUser();
         }
     }
 
@@ -86,6 +87,15 @@ public class CheckRoleAspect {
             }
         }
         return false;
+    }
+
+    private void setUserThreadLocal(String token) {
+        String userNo = jwtTokenUtil.getUserNoFromToken(token);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        UserDto user = new UserDto();
+        user.setUserNo(userNo);
+        user.setUsername(username);
+        UserThreadLocal.setUser(user);
     }
 
 }

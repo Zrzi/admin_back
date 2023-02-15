@@ -9,6 +9,7 @@ import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.RoleNameExistException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.form.RoleForm;
+import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.RoleVo;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
@@ -90,9 +91,9 @@ public class RoleServiceImpl implements RoleService {
         roleDto.setRoleName(roleName);
         roleDto.setSystemId(systemId);
         roleDto.setSystemName(systemDto.getSystemName());
-        // todo 获取用户名
-        roleDto.setCreatedBy("");
-        roleDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        roleDto.setCreatedBy(userNo);
+        roleDto.setUpdatedBy(userNo);
         roleMapper.addRole(roleDto);
     }
 
@@ -110,8 +111,8 @@ public class RoleServiceImpl implements RoleService {
             throw new RoleNameExistException();
         }
         roleDto.setRoleName(roleName);
-        // todo 获取用户名
-        roleDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        roleDto.setUpdatedBy(userNo);
         roleMapper.updateRoleByRoleId(roleDto);
     }
 
@@ -122,8 +123,8 @@ public class RoleServiceImpl implements RoleService {
         if (Objects.isNull(roleDto)) {
             throw new RoleExistException();
         }
-        // todo 获取用户名
-        roleDto.setUpdatedBy("");
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        roleDto.setUpdatedBy(userNo);
         roleMapper.deleteRoleByRoleId(roleDto);
     }
 

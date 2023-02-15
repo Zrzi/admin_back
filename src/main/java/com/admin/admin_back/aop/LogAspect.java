@@ -2,6 +2,7 @@ package com.admin.admin_back.aop;
 
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.utils.JwtTokenUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,8 +28,8 @@ public class LogAspect {
     @Around("logPoint()")
     public Object around(ProceedingJoinPoint pjp) {
         try {
-            String token = UserThreadLocal.getUserToken();
-            String username = jwtTokenUtil.getUsernameFromToken(token);
+            UserDto user = UserThreadLocal.getUser();
+            String username = user.getUsername();
             MethodSignature signature = (MethodSignature) pjp.getSignature();
             String methodName = signature.getMethod().getName();
             Object[] args = pjp.getArgs();
