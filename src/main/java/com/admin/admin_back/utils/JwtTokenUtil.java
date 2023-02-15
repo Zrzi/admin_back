@@ -99,7 +99,7 @@ public class JwtTokenUtil {
     }
 
     public String generateToken(UserDto user, List<UserRoleVo> roles) {
-        Map<String, Object> claims = new HashMap<>(16) {{
+        Map<String, Object> claims = new HashMap<String, Object>(16) {{
             put(CLAIM_KEY_USER_NO, user.getUserNo());
             put(CLAIM_KEY_USERNAME, user.getUsername());
             put(CLAIM_KEY_ROLES, roles);

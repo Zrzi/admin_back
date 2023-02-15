@@ -13,4 +13,4 @@ CREATE TABLE `admin_user`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `admin_user` (`user_no`, `user_name`, `password`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-VALUE ('00000000000000000000', 'admin', '123456', '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
+VALUE ('00000000000000000000', 'admin', '96e79218965eb72c92a549dd5a330112', '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);

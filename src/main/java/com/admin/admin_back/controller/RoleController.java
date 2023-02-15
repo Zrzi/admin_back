@@ -48,7 +48,7 @@ public class RoleController {
         }
     }
 
-    @PostMapping("/role/post")
+    @PostMapping("/role/update")
     public Result<?> updateRole(RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
         if (!StringUtils.isEmpty(flag)) {
@@ -64,7 +64,7 @@ public class RoleController {
         }
     }
 
-    @PostMapping("/role/post")
+    @PostMapping("/role/delete")
     public Result<?> removeRole(String roleId) {
         roleId = roleId.trim();
         if (StringUtils.isEmpty(roleId)) {
