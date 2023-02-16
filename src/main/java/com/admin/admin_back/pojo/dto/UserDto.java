@@ -17,6 +17,8 @@ public class UserDto {
 
     private String password;
 
+    private Integer userType;
+
     private String createdBy;
 
     private Date createdDate;
@@ -59,6 +61,14 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 
     public String getCreatedBy() {

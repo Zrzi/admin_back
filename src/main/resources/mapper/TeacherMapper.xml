@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.TeacherMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.TeacherDto">
+        <id column="empNo" property="empNo" />
+        <result column="empName" property="empName" />
+        <result column="sex" property="sex" />
+        <result column="birthday" property="birthday" />
+        <result column="phone" property="phone" />
+        <result column="IDNo" property="IDNo" />
+        <result column="marriage" property="marriage" />
+        <result column="orgType" property="orgType" />
+        <result column="staffType" property="staffType" />
+        <result column="title" property="title" />
+        <result column="degree" property="degree" />
+        <result column="title_level" property="titleLevel" />
+        <result column="teachtype" property="teachType" />
+        <result column="school" property="school" />
+        <result column="enterdate" property="enterDate" />
+        <result column="teachdate" property="teachDate" />
+        <result column="status" property="status" />
+        <result column="rank" property="rank" />
+        <result column="tecposition" property="tecposition" />
+        <result column="memo" property="memo" />
+        <result column="schoolid" property="schoolId" />
+    </resultMap>
+
+    <select id="findTeachers" resultMap="baseMap">
+        SELECT `empNo`, `empName`, `sex`, `birthday`, `phone`, `IDNo`, `marriage`,
+               `orgType`, `staffType`, `title`, `degree`, `title_level`, `teachtype`,
+               `school`, `enterdate`, `teachdate`, `status`, `rank`, `tecposition`, `memo`, `schoolid`
+        FROM `teacheres`
+    </select>
+
+    <select id="findTeacherByEmpNo" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `empNo`, `empName`, `sex`, `birthday`, `phone`, `IDNo`, `marriage`,
+               `orgType`, `staffType`, `title`, `degree`, `title_level`, `teachtype`,
+               `school`, `enterdate`, `teachdate`, `status`, `rank`, `tecposition`, `memo`, `schoolid`
+        FROM `teacheres`
+        WHERE `empNo` = #{empNo}
+    </select>
+
+    <insert id="addTeacher" parameterType="com.admin.admin_back.pojo.dto.TeacherDto">
+        INSERT INTO `teacheres` (`empNo`, `empName`, `sex`, `birthday`, `phone`, `IDNo`, `marriage`, `orgType`, `staffType`, `title`, `degree`, `title_level`, `teachtype`, `school`, `enterdate`, `teachdate`, `status`, `rank`, `tecposition`, `memo`, `schoolid`)
+        VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.IDNo}, #{teacher.marriage}, #{teacher.}, #{teacher.orgType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
+    </insert>
+
+</mapper>

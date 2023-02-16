@@ -9,6 +9,7 @@
         <result column="user_no" property="userNo"/>
         <result column="user_name" property="username" />
         <result column="password" property="password" />
+        <result column="user_type" property="userType" />
         <result column="created_by" property="createdBy" />
         <result column="created_date" property="createdDate" />
         <result column="updated_by" property="updatedBy" />
@@ -16,8 +17,15 @@
         <result column="status" property="status" />
     </resultMap>
 
-    <select id="findUserByUserNo" resultMap="baseMap">
-        SELECT `id`, `user_no`, `user_name`, `password`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+    <select id="findUserByUserType" resultMap="baseMap" parameterType="java.lang.Integer">
+        SELECT `id`, `user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_user`
+        WHERE `user_type` = #{userType}
+          AND `status` = 0
+    </select>
+
+    <select id="findUserByUserNo" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user`
         WHERE `user_no` = #{userNo}
           AND `status` = 0

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.StudentMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.StudentDto">
+        <id column="stuNo" property="stuNo" />
+        <result column="stuName" property="stuName" />
+        <result column="sex" property="sex" />
+        <result column="majorNo" property="majorNo" />
+        <result column="classNo" property="classNo" />
+        <result column="cur_grade" property="curGrade" />
+        <result column="enteryear" property="enterYear" />
+        <result column="birthday" property="birthday" />
+        <result column="ID" property="ID" />
+        <result column="status" property="status" />
+        <result column="nation" property="nation" />
+        <result column="PoliticalStatus" property="politicalStatus" />
+        <result column="SourcePlace" property="sourcePlace" />
+    </resultMap>
+
+    <select id="findStudents" resultMap="baseMap">
+        SELECT `stuNo`, `stuName`, `sex`, `majorNo`, `classNo`, `cur_grade`, `enteryear`, `birthday`, `ID`, `status`, `nation`, `PoliticalStatus`, `SourcePlace`
+        FROM `students`
+    </select>
+
+    <select id="findStudentByStuNo" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `stuNo`, `stuName`, `sex`, `majorNo`, `classNo`, `cur_grade`, `enteryear`, `birthday`, `ID`, `status`, `nation`, `PoliticalStatus`, `SourcePlace`
+        FROM `students`
+        WHERE `stuNo` = #{stuNo}
+    </select>
+
+    <insert id="addStudent" parameterType="com.admin.admin_back.pojo.dto.StudentDto">
+        INSERT INTO `students` (`stuNo`, `stuName`, `sex`, `majorNo`, `classNo`, `cur_grade`, `enteryear`, `birthday`, `ID`, `status`, `nation`, `PoliticalStatus`, `SourcePlace`)
+        VALUES (#{student.stuNo}, #{student.stuName}, #{student.sex}, #{student.majorNo}, #{student.classNo}, #{student.curGrade}, #{student.enterYear}, #{student.birthday}, #{student.ID}, #{student.status}, #{student.nation}, #{student.politicalStatus}, #{student.sourcePlace})
+    </insert>
+
+</mapper>

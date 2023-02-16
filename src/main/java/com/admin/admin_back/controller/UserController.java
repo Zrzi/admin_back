@@ -9,6 +9,7 @@ import com.admin.admin_back.pojo.form.ResetPasswordForm;
 import com.admin.admin_back.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,6 +71,11 @@ public class UserController {
         } catch (PasswordException exception) {
             return new Result<>(ResponseMessage.PASSWORD_ERROR);
         }
+    }
+
+    @GetMapping("/user/get")
+    public Result<?> getUser() {
+        return null;
     }
 
 }

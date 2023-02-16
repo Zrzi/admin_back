@@ -1,4 +1,4 @@
-package com.admin.admin_back.pojo.dto;
+package com.admin.admin_back.pojo.vo;
 
 import com.alibaba.fastjson.JSON;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @author 陈群矜
  */
-public class TeacherDto {
+public class TeacherVo {
 
     private String empNo;
 
@@ -51,7 +51,7 @@ public class TeacherDto {
 
     private Integer schoolId;
 
-    public TeacherDto() {}
+    public TeacherVo() {}
 
     public String getEmpNo() {
         return empNo;

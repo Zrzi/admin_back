@@ -1,11 +1,11 @@
-package com.admin.admin_back.pojo.dto;
+package com.admin.admin_back.pojo.vo;
 
 import com.alibaba.fastjson.JSON;
 
 /**
  * @author 陈群矜
  */
-public class StudentDto {
+public class StudentVo {
 
     private String stuNo;
 
@@ -33,7 +33,7 @@ public class StudentDto {
 
     private String sourcePlace;
 
-    public StudentDto() {}
+    public StudentVo() {}
 
     public String getStuNo() {
         return stuNo;
@@ -143,5 +143,6 @@ public class StudentDto {
     public String toString() {
         return JSON.toJSONString(this);
     }
+
 
 }
