@@ -4,17 +4,23 @@ import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.PasswordException;
 import com.admin.admin_back.pojo.exception.UserExistException;
+import com.admin.admin_back.pojo.exception.UserNoException;
+import com.admin.admin_back.pojo.form.AddUserForm;
 import com.admin.admin_back.pojo.form.LoginForm;
 import com.admin.admin_back.pojo.form.ResetPasswordForm;
+import com.admin.admin_back.pojo.vo.StudentVo;
+import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author 陈群矜
@@ -75,7 +81,44 @@ public class UserController {
 
     @GetMapping("/user/get")
     public Result<?> getUser() {
-        return null;
+        return new Result<>(ResponseMessage.SUCCESS, userService.getUsers());
+    }
+
+    @PostMapping("/user/post")
+    public Result<?> addUser(AddUserForm addUserForm) {
+        String flag = checkAddUserForm(addUserForm);
+        if (StringUtils.isBlank(flag)) {
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+        }
+        try {
+            userService.addUser(addUserForm);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (UserNoException exception) {
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, exception.getMessage());
+        }
+    }
+
+    private String checkAddUserForm(AddUserForm addUserForm) {
+        boolean isStudent = addUserForm.getIsStudent();
+        if (isStudent) {
+            return checkAddStudent(addUserForm.getStudent());
+        } else {
+            return checkAddTeacher(addUserForm.getTeacher());
+        }
+    }
+
+    private String checkAddStudent(@Nullable StudentVo studentVo) {
+        if (Objects.isNull(studentVo)) {
+            return "上传数据为空";
+        }
+        return "";
+    }
+
+    private String checkAddTeacher(@Nullable TeacherVo teacherVo) {
+        if (Objects.isNull(teacherVo)) {
+            return "上传数据为空";
+        }
+        return "";
     }
 
 }

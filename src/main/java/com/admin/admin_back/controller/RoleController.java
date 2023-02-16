@@ -32,6 +32,15 @@ public class RoleController {
         return new Result<>(ResponseMessage.SUCCESS, roleService.getRole());
     }
 
+    @GetMapping("/role/getByRoleId")
+    public Result<?> getRoleByRoleId(String roleId) {
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, getRoleByRoleId(roleId));
+        } catch (RoleExistException exception) {
+            return new Result<>(ResponseMessage.ROLE_NOT_FOUND);
+        }
+    }
+
     @PostMapping("/role/post")
     public Result<?> addRole(RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);

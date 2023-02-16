@@ -13,7 +13,11 @@ import java.util.List;
 @Repository
 public interface UserRoleMapper {
 
+    List<String> findUnaddedUser(String roleId);
+
     List<UserRoleDto> findUserRoleByNo(String userNo);
+
+    List<UserRoleDto> findUserRoleByRoleId(String roleId);
 
     UserRoleDto findUserRoleByUserNoAndRoleId(String userNo, String roleId);
 

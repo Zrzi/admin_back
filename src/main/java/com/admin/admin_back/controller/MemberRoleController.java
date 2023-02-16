@@ -28,12 +28,12 @@ public class MemberRoleController {
 
     @GetMapping("/memberRole/get")
     public Result<?> getMemberRole(String roleId) {
-        return null;
+        return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getMemberRoleByRoleId(roleId));
     }
 
-    @GetMapping("/memberRole/getUnadded")
-    public Result<?> getMemberRole(String roleId, String systemId) {
-        return null;
+    @GetMapping("/memberRole/getUnaddedUser")
+    public Result<?> getUnaddedUser(String roleId) {
+        return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
     }
 
     @PostMapping("/memberRole/addMemberRole")

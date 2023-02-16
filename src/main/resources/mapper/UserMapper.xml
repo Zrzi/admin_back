@@ -24,12 +24,24 @@
           AND `status` = 0
     </select>
 
+    <select id="findUserNoByUserType" resultMap="java.lang.String" parameterType="java.lang.Integer">
+        SELECT `user_no`
+        FROM `admin_user`
+        WHERE `user_type` = #{userType}
+          AND `status` = 0
+    </select>
+
     <select id="findUserByUserNo" resultMap="baseMap" parameterType="java.lang.String">
         SELECT `id`, `user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user`
         WHERE `user_no` = #{userNo}
           AND `status` = 0
     </select>
+
+    <insert id="addUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
+        INSERT INTO `admin_uesr` (`user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{userDto.userNo}, #{userDto.username}, #{userDto.password}, #{userDto.userType}, #{userDto.createdBy}, NOW(), #{userDto.updatedBy}, NOW(), 0)
+    </insert>
 
     <update id="updateUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
         UPDATE `admin_user`

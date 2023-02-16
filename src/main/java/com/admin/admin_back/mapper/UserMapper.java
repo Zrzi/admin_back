@@ -15,7 +15,11 @@ public interface UserMapper {
 
     List<UserDto> findUserByUserType(Integer userType);
 
+    List<String> findUserNoByUserType(Integer userType);
+
     UserDto findUserByUserNo(String userNo);
+
+    Integer addUser(UserDto userDto);
 
     Integer updateUser(UserDto userDto);
 

@@ -41,6 +41,25 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public RoleVo getRoleByRoleId(String roleId) {
+        RoleDto roleDto = roleMapper.findRoleByRoleId(roleId);
+        if (Objects.isNull(roleDto)) {
+            throw new RoleExistException();
+        }
+        RoleVo roleVo = new RoleVo();
+        roleVo.setRoleId(roleDto.getRoleId());
+        roleVo.setRoleName(roleDto.getRoleName());
+        roleVo.setSystemId(roleDto.getSystemId());
+        roleVo.setSystemName(roleDto.getSystemName());
+        roleVo.setCreatedBy(roleDto.getCreatedBy());
+        roleVo.setCreatedDate(roleDto.getCreatedDate());
+        roleVo.setUpdatedBy(roleDto.getUpdatedBy());
+        roleVo.setUpdatedDate(roleDto.getUpdatedDate());
+        return roleVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<SystemRoleVo> getRole() {
         List<SystemDto> systemDtos = systemMapper.findSystemList();
         if (CollectionUtils.isEmpty(systemDtos)) {

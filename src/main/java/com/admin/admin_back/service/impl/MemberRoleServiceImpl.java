@@ -1,8 +1,10 @@
 package com.admin.admin_back.service.impl;
 
 import com.admin.admin_back.mapper.RoleMapper;
+import com.admin.admin_back.mapper.UserMapper;
 import com.admin.admin_back.mapper.UserRoleMapper;
 import com.admin.admin_back.pojo.dto.RoleDto;
+import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.dto.UserRoleDto;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleExistException;
@@ -10,11 +12,15 @@ import com.admin.admin_back.pojo.exception.UserRoleNotFoundException;
 import com.admin.admin_back.pojo.form.AddMemberRoleForm;
 import com.admin.admin_back.pojo.form.EditMemberRoleForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
+import com.admin.admin_back.pojo.vo.UserVo;
 import com.admin.admin_back.service.MemberRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +35,50 @@ public class MemberRoleServiceImpl implements MemberRoleService {
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public List<UserVo> getUnaddedUserByRoleId(String roleId) {
+        List<UserVo> result = new ArrayList<>();
+        List<String> unaddedUser = userRoleMapper.findUnaddedUser(roleId);
+        if (CollectionUtils.isEmpty(unaddedUser)) {
+            return result;
+        }
+        for (String userNo : unaddedUser) {
+            UserDto userDto = userMapper.findUserByUserNo(userNo);
+            if (Objects.nonNull(userDto)) {
+                UserVo userVo = new UserVo();
+                userVo.setUserNo(userNo);
+                userVo.setUsername(userDto.getUsername());
+                result.add(userVo);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public List<UserVo> getMemberRoleByRoleId(String roleId) {
+        List<UserVo> result = new ArrayList<>();
+        List<UserRoleDto> userRoleDtos = userRoleMapper.findUserRoleByRoleId(roleId);
+        if (CollectionUtils.isEmpty(userRoleDtos)) {
+            return result;
+        }
+        for (UserRoleDto userRoleDto : userRoleDtos) {
+            String userNo = userRoleDto.getUserNo();
+            UserDto userDto = userMapper.findUserByUserNo(userNo);
+            if (Objects.nonNull(userDto)) {
+                UserVo userVo = new UserVo();
+                userVo.setUserNo(userNo);
+                userVo.setUserNo(userDto.getUsername());
+                result.add(userVo);
+            }
+        }
+        return result;
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)

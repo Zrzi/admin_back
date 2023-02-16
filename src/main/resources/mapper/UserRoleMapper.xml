@@ -17,14 +17,33 @@
         <result column="status" property="status" />
     </resultMap>
 
-    <select id="findUserRoleByNo" resultMap="baseMap">
+    <select id="findUnaddedUser" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT `user_no`
+        FROM `admin_user`
+        WHERE `status` = 0
+          AND`user_no` NOT IN (
+            SELECT `user_no`
+            FROM `admin_user_role`
+            WHERE `role_id` = #{roleId}
+              AND `status` = 0
+        )
+    </select>
+
+    <select id="findUserRoleByNo" resultMap="baseMap" parameterType="java.lang.String">
         SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user_role`
         WHERE `user_no` = #{userNo}
           AND `status` = 0
     </select>
 
-    <select id="findUserRoleByUserNoAndRoleId" resultMap="baseMap">
+    <select id="findUserRoleByRoleId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_user_role`
+        WHERE `role_id` = #{roleId}
+          AND `status` = 0
+    </select>
+
+    <select id="findUserRoleByUserNoAndRoleId" resultMap="baseMap" parameterType="java.lang.String">
         SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user_role`
         WHERE `user_no` = #{userNo}
