@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.RoleResourceDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public interface RoleResourceMapper {
 
     RoleResourceDto findRoleResourceByRoleIdAndResourceId(String roleId, String resourceId);
 
-    Integer addRoleResource(RoleResourceDto roleResource);
+    Integer addRoleResource(@Param("roleResource") RoleResourceDto roleResource);
 
-    Integer deleteRoleResource(RoleResourceDto roleResource);
+    Integer deleteRoleResource(@Param("roleResource") RoleResourceDto roleResource);
 
 }

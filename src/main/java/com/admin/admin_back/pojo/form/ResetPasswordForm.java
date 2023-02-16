@@ -7,21 +7,11 @@ import com.alibaba.fastjson.JSON;
  */
 public class ResetPasswordForm {
 
-    private String userNo;
-
     private String oldPassword;
 
     private String newPassword;
 
     public ResetPasswordForm() {}
-
-    public String getUserNo() {
-        return userNo;
-    }
-
-    public void setUserNo(String userNo) {
-        this.userNo = userNo;
-    }
 
     public String getOldPassword() {
         return oldPassword;

@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
@@ -25,6 +26,7 @@ public class RoleResourceController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
     public Result<?> getRoleResources(String systemId, String roleId) {
         systemId = systemId.trim();
@@ -45,6 +47,7 @@ public class RoleResourceController {
         }
     }
 
+    @CheckRole("editRoleResource")
     @PostMapping("/roleResource/post")
     public Result<?> editRoleResource(EditRoleResourceForm editRoleResourceForm) {
         String flag = checkEditRoleResourceForm(editRoleResourceForm);

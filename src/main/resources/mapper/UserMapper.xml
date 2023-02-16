@@ -24,7 +24,7 @@
           AND `status` = 0
     </select>
 
-    <select id="findUserNoByUserType" resultMap="java.lang.String" parameterType="java.lang.Integer">
+    <select id="findUserNoByUserType" resultType="java.lang.String" parameterType="java.lang.Integer">
         SELECT `user_no`
         FROM `admin_user`
         WHERE `user_type` = #{userType}

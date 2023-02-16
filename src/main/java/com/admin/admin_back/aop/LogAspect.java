@@ -22,7 +22,7 @@ public class LogAspect {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Pointcut("execution(public * com.admin.admin_back.controller.*.*(..))")
+    @Pointcut("@annotation(com.admin.admin_back.annotations.CheckRole)")
     public void logPoint() {}
 
     @Around("logPoint()")

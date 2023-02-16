@@ -27,7 +27,7 @@
           AND `status` = 0
     </select>
 
-    <select id="findResourceByParentResource" resultMap="java.lang.String" parameterType="java.lang.String">
+    <select id="findResourceByParentResource" resultType="java.lang.String" parameterType="java.lang.String">
         SELECT `resource_id`
         FROM `admin_resources`
         WHERE `parent_resource` = #{parentResource}

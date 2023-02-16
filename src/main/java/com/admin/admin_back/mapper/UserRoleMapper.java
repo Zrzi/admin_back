@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.UserRoleDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public interface UserRoleMapper {
 
     UserRoleDto findUserRoleByUserNoAndRoleId(String userNo, String roleId);
 
-    Integer addUserRole(UserRoleDto userRole);
+    Integer addUserRole(@Param("userRole") UserRoleDto userRole);
 
-    Integer updateUserRole(UserRoleDto userRole);
+    Integer updateUserRole(@Param("userRole") UserRoleDto userRole);
 
-    Integer deleteUserRole(UserRoleDto userRole);
+    Integer deleteUserRole(@Param("userRole") UserRoleDto userRole);
 
 }

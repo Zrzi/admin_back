@@ -10,3 +10,6 @@ CREATE TABLE `admin_system`(
     `status` INTEGER NOT NULL DEFAULT 0 COMMENT '记录状态 0：正常；1：删除',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `admin_system`(`system_id`, `system_name`,`created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);

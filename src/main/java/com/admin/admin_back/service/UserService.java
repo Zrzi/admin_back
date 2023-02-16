@@ -16,4 +16,6 @@ public interface UserService {
 
     void addUser(AddUserForm addUserForm);
 
+    void deleteUser(String userNo);
+
 }

@@ -63,7 +63,7 @@ public class ResourceServiceImpl implements ResourceService {
             throw new SystemExistException();
         }
         String resourceName = resourceForm.getResourceName();
-        if (Objects.nonNull(resourceMapper.findResourceByResourceNameAndSystemId(resourceName, systemId))) {
+        if (Objects.nonNull(resourceMapper.findResourceByResourceName(resourceName))) {
             throw new ResourceNameExistException();
         }
         String parentResource = resourceForm.getParentResource().trim();

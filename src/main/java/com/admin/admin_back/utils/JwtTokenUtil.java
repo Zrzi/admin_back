@@ -18,7 +18,7 @@ public class JwtTokenUtil {
     private static final String CLAIM_KEY_USERNAME = "username";
     private static final String CLAIM_KEY_ROLES = "roles";
     private static final String SECRET = "secret";
-    private static final String ISSUER = "sdu-meeting";
+    private static final String ISSUER = "sdu-admin";
     private static final int EXPIRATION = 604800;
 
     public String getUserNoFromToken(String token) {

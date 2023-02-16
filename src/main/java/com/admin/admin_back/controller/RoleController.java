@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
@@ -27,11 +28,13 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    @CheckRole("getRole")
     @GetMapping("/role/get")
     public Result<List<SystemRoleVo>> getRole() {
         return new Result<>(ResponseMessage.SUCCESS, roleService.getRole());
     }
 
+    @CheckRole("getRoleByRoleId")
     @GetMapping("/role/getByRoleId")
     public Result<?> getRoleByRoleId(String roleId) {
         try {
@@ -41,6 +44,7 @@ public class RoleController {
         }
     }
 
+    @CheckRole("addRole")
     @PostMapping("/role/post")
     public Result<?> addRole(RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);
@@ -57,6 +61,7 @@ public class RoleController {
         }
     }
 
+    @CheckRole("updateRole")
     @PostMapping("/role/update")
     public Result<?> updateRole(RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
@@ -73,6 +78,7 @@ public class RoleController {
         }
     }
 
+    @CheckRole("removeRole")
     @PostMapping("/role/delete")
     public Result<?> removeRole(String roleId) {
         roleId = roleId.trim();

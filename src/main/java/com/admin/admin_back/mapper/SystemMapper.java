@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.SystemDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,10 +21,10 @@ public interface SystemMapper {
 
     SystemDto findSystemBySystemName(String systemName);
 
-    Integer addSystem(SystemDto system);
+    Integer addSystem(@Param("system") SystemDto system);
 
-    Integer updateSystemBySystemId(SystemDto system);
+    Integer updateSystemBySystemId(@Param("system") SystemDto system);
 
-    Integer deleteSystemBySystemId(SystemDto system);
+    Integer deleteSystemBySystemId(@Param("system") SystemDto system);
 
 }

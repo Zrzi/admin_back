@@ -137,6 +137,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteUser(String userNo) {
+        UserDto userDto = userMapper.findUserByUserNo(userNo);
+        if (Objects.isNull(userDto)) {
+            throw new UserExistException();
+        }
+        String updatedBy = UserThreadLocal.getUser().getUserNo();
+        userDto.setUpdatedBy(updatedBy);
+        userMapper.deleteUser(userDto);
+    }
+
     private void addStudent(StudentVo student) {
         String userNo = student.getStuNo();
         StudentDto studentDto = studentMapper.findStudentByStuNo(userNo);

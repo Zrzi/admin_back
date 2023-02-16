@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.StudentDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public interface StudentMapper {
 
     StudentDto findStudentByStuNo(String stuNo);
 
-    Integer addStudent(StudentDto student);
+    Integer addStudent(@Param("student") StudentDto student);
 
 }

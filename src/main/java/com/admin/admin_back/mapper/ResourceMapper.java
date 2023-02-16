@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.ResourceDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,10 +25,10 @@ public interface ResourceMapper {
 
     ResourceDto findResourceByResourceNameAndSystemId(String resourceName, String systemId);
 
-    Integer addResource(ResourceDto resource);
+    Integer addResource(@Param("resource") ResourceDto resource);
 
-    Integer updateResourceByResourceId(ResourceDto resource);
+    Integer updateResourceByResourceId(@Param("resource") ResourceDto resource);
 
-    Integer deleteResourceByResourceId(ResourceDto resource);
+    Integer deleteResourceByResourceId(@Param("resource") ResourceDto resource);
 
 }

@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public interface UserMapper {
 
     UserDto findUserByUserNo(String userNo);
 
-    Integer addUser(UserDto userDto);
+    Integer addUser(@Param("userDto") UserDto userDto);
 
-    Integer updateUser(UserDto userDto);
+    Integer updateUser(@Param("userDto") UserDto userDto);
 
-    Integer deleteUser(UserDto userDto);
+    Integer deleteUser(@Param("userDto") UserDto userDto);
 
 }

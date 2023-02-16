@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.PasswordException;
@@ -8,6 +9,7 @@ import com.admin.admin_back.pojo.exception.UserNoException;
 import com.admin.admin_back.pojo.form.AddUserForm;
 import com.admin.admin_back.pojo.form.LoginForm;
 import com.admin.admin_back.pojo.form.ResetPasswordForm;
+import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
@@ -58,9 +60,10 @@ public class UserController {
         return new Result<>(ResponseMessage.SUCCESS);
     }
 
+    @CheckRole("resetPassword")
     @PostMapping("/resetPassword")
     public Result<?> resetPassword(ResetPasswordForm resetPasswordForm) {
-        String userNo = resetPasswordForm.getUserNo().trim();
+        String userNo = UserThreadLocal.getUser().getUserNo();
         String oldPassword = resetPasswordForm.getOldPassword().trim();
         String newPassword = resetPasswordForm.getNewPassword().trim();
         if (StringUtils.isBlank(userNo)) {
@@ -79,11 +82,13 @@ public class UserController {
         }
     }
 
+    @CheckRole("getUser")
     @GetMapping("/user/get")
     public Result<?> getUser() {
         return new Result<>(ResponseMessage.SUCCESS, userService.getUsers());
     }
 
+    @CheckRole("addUser")
     @PostMapping("/user/post")
     public Result<?> addUser(AddUserForm addUserForm) {
         String flag = checkAddUserForm(addUserForm);
@@ -95,6 +100,16 @@ public class UserController {
             return new Result<>(ResponseMessage.SUCCESS);
         } catch (UserNoException exception) {
             return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, exception.getMessage());
+        }
+    }
+
+    @PostMapping("/user/delete")
+    public Result<?> removeUser(String userNo) {
+        try {
+            userService.deleteUser(userNo);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (UserExistException exception) {
+            return new Result<>(ResponseMessage.USER_NOT_FOUND);
         }
     }
 

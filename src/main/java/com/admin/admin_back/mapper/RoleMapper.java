@@ -2,6 +2,7 @@ package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.RoleDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,10 +21,10 @@ public interface RoleMapper {
 
     RoleDto findRoleByRoleNameAndSystemId(String roleName, String systemId);
 
-    Integer addRole(RoleDto role);
+    Integer addRole(@Param("role") RoleDto role);
 
-    Integer updateRoleByRoleId(RoleDto role);
+    Integer updateRoleByRoleId(@Param("role") RoleDto role);
 
-    Integer deleteRoleByRoleId(RoleDto role);
+    Integer deleteRoleByRoleId(@Param("role") RoleDto role);
 
 }

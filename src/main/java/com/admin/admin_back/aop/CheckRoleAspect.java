@@ -23,6 +23,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Order(2)
@@ -63,12 +64,12 @@ public class CheckRoleAspect {
     }
 
     private boolean checkAuthority(String token, String resourceName) {
-        List<UserRoleVo> userRoleVos = (List<UserRoleVo>) jwtTokenUtil.getUserRoleFromToken(token);
+        List<LinkedHashMap<String, Object>> userRoleVos = (List<LinkedHashMap<String, Object>>) jwtTokenUtil.getUserRoleFromToken(token);
         if (CollectionUtils.isEmpty(userRoleVos)) {
             return false;
         }
-        for (UserRoleVo userRoleVo : userRoleVos) {
-            String roleId = userRoleVo.getRoleId();
+        for (LinkedHashMap<String, Object> map : userRoleVos) {
+            String roleId = map.getOrDefault("roleId", "").toString();
             List<RoleResourceDto> roleResources = roleResourceMapper.findRoleResourceByRoleId(roleId);
             for (RoleResourceDto roleResourceDto : roleResources) {
                 String resourceId = roleResourceDto.getResourceId();

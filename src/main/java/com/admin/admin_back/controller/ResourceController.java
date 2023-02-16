@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
@@ -26,6 +27,7 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
+    @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
     public Result<List<ResourceVo>> getResourcesBySystemId(String systemId) {
         try {
@@ -36,6 +38,7 @@ public class ResourceController {
         }
     }
 
+    @CheckRole("addResource")
     @PostMapping("/resource/post")
     public Result<?> addResource(ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, false);
@@ -56,6 +59,7 @@ public class ResourceController {
         }
     }
 
+    @CheckRole("updateResource")
     @PostMapping("/resource/update")
     public Result<?> updateResource(ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, true);
@@ -78,6 +82,7 @@ public class ResourceController {
         }
     }
 
+    @CheckRole("deleteResource")
     @PostMapping("/resource/delete")
     public Result<?> deleteResource(String resourceId) {
         try {
@@ -110,8 +115,8 @@ public class ResourceController {
         if (StringUtils.isEmpty(resourceName)) {
             return "资源名称为空";
         }
-        if (resourceName.length() > 16) {
-            return "资源名称长度大于16个字符";
+        if (resourceName.length() > 50) {
+            return "资源名称长度大于50个字符";
         }
         resourceForm.setResourceName(resourceName);
         String resourceUrl = resourceForm.getResourceUrl().trim();

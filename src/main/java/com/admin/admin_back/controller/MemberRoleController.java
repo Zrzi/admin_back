@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
@@ -26,16 +27,19 @@ public class MemberRoleController {
     @Autowired
     private MemberRoleService memberRoleService;
 
+    @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
     public Result<?> getMemberRole(String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getMemberRoleByRoleId(roleId));
     }
 
+    @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
     public Result<?> getUnaddedUser(String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
     }
 
+    @CheckRole("addMemberRole")
     @PostMapping("/memberRole/addMemberRole")
     public Result<?> addMemberRole(AddMemberRoleForm addMemberRoleForm) {
         String flag = checkAddMemberRoleForm(addMemberRoleForm);
@@ -53,6 +57,7 @@ public class MemberRoleController {
 
     }
 
+    @CheckRole("updateMemberRole")
     @PostMapping("/memberRole/updateMemberRole")
     public Result<?> updateMemberRole(EditMemberRoleForm editMemberRoleForm) {
         String flag = checkEditMemberRoleForm(editMemberRoleForm);
@@ -67,6 +72,7 @@ public class MemberRoleController {
         }
     }
 
+    @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")
     public Result<?> deleteMemberRole(String roleId, String userNo) {
         if (StringUtils.isBlank(roleId)) {

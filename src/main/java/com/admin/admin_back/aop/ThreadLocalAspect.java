@@ -31,7 +31,7 @@ public class ThreadLocalAspect {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Pointcut("execution(public * com.admin.admin_back.controller.*.*(..))")
+    @Pointcut("@annotation(com.admin.admin_back.annotations.CheckRole)")
     public void aspectPoint() {}
 
     @Around("aspectPoint()")

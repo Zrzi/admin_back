@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `admin_user`;
 CREATE TABLE `admin_user`(
-    `id` BIGINT NOT NULL AUTOINCREMENT,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
     `user_no` VARCHAR(20) NOT NULL UNIQUE COMMENT '用户名',
     `user_name` VARCHAR(50) NOT NULL COMMENT '姓名',
     `password` TEXT NOT NULL COMMENT '密码',

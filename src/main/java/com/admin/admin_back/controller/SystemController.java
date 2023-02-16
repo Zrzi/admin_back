@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.BaseException;
@@ -27,6 +28,7 @@ public class SystemController {
     @Autowired
     private SystemService systemService;
 
+    @CheckRole("getSystems")
     @GetMapping(value = "/system/get")
     public Result<List<SystemVo>> getSystems() {
         try {
@@ -37,6 +39,7 @@ public class SystemController {
         }
     }
 
+    @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
     public Result<?> addSystem(SystemForm form, @RequestHeader("Authorization") String jwt) {
         String systemName = form.getSystemName().trim();
@@ -54,6 +57,7 @@ public class SystemController {
         }
     }
 
+    @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")
     public Result<?> updateSystem(SystemForm form) {
         String systemId = form.getSystemId().trim();
@@ -77,6 +81,7 @@ public class SystemController {
         }
     }
 
+    @CheckRole("deleteSystem")
     @PostMapping("/system/delete")
     public Result<?> deleteSystem(String systemId) {
         if (StringUtils.isEmpty(systemId)) {
