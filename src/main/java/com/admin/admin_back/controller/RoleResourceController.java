@@ -54,8 +54,14 @@ public class RoleResourceController {
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.EDIT_ROLE_RESOURCE_FORM_ERROR, flag);
         }
-        // todo
-        return null;
+        try {
+            roleResourceService.editRoleResources(editRoleResourceForm);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (SystemExistException exception) {
+            return new Result<>(ResponseMessage.SYSTEM_NOT_FOUNT);
+        } catch (RoleExistException exception) {
+            return new Result<>(ResponseMessage.ROLE_NOT_FOUND);
+        }
     }
 
     private String checkEditRoleResourceForm(EditRoleResourceForm editRoleResourceForm) {

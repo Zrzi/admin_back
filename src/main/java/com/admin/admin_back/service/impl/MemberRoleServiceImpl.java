@@ -7,6 +7,7 @@ import com.admin.admin_back.pojo.dto.RoleDto;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.dto.UserRoleDto;
 import com.admin.admin_back.pojo.exception.RoleExistException;
+import com.admin.admin_back.pojo.exception.UserExistException;
 import com.admin.admin_back.pojo.exception.UserRoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleNotFoundException;
 import com.admin.admin_back.pojo.form.AddMemberRoleForm;
@@ -97,10 +98,13 @@ public class MemberRoleServiceImpl implements MemberRoleService {
             if (Objects.nonNull(temp)) {
                 throw new UserRoleExistException();
             }
+            UserDto userDto = userMapper.findUserByUserNo(userNo);
+            if (Objects.isNull(userDto)) {
+                throw new UserExistException();
+            }
             userRoleDto.setUserNo(userNo);
             userRoleDto.setRoleId(roleId);
-            // todo 待确定
-            userRoleDto.setUserType(0);
+            userRoleDto.setUserType(userDto.getUserType());
             userRoleDto.setLevel(0);
             userRoleDto.setCreatedBy(createdBy);
             userRoleDto.setUpdatedBy(createdBy);
