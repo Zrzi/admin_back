@@ -16,9 +16,7 @@ import com.admin.admin_back.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,9 +33,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Result<Map<String, String>> login(LoginForm loginForm) {
-        String userNo = loginForm.getUserNo().trim();
-        String password = loginForm.getPassword().trim();
+    public Result<Map<String, String>> login(@RequestBody LoginForm loginForm) {
+        String userNo = loginForm.getUserNo();
+        String password = loginForm.getPassword();
         if (StringUtils.isBlank(userNo)) {
             return new Result<>(ResponseMessage.USER_NO_NOT_FOUND);
         }
@@ -50,7 +48,7 @@ public class UserController {
             map.put("token", token);
             return new Result<>(ResponseMessage.SUCCESS, map);
         } catch (UserExistException exception) {
-            return new Result<>(ResponseMessage.USER_NO_NOT_FOUND);
+            return new Result<>(ResponseMessage.USER_NOT_FOUND);
         } catch (PasswordException exception) {
             return new Result<>(ResponseMessage.PASSWORD_ERROR);
         }
@@ -63,7 +61,7 @@ public class UserController {
 
     @CheckRole("resetPassword")
     @PostMapping("/resetPassword")
-    public Result<?> resetPassword(ResetPasswordForm resetPasswordForm) {
+    public Result<?> resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) {
         String userNo = UserThreadLocal.getUser().getUserNo();
         String oldPassword = resetPasswordForm.getOldPassword().trim();
         String newPassword = resetPasswordForm.getNewPassword().trim();
@@ -91,7 +89,7 @@ public class UserController {
 
     @CheckRole("addUser")
     @PostMapping("/user/post")
-    public Result<?> addUser(AddUserForm addUserForm) {
+    public Result<?> addUser(@RequestBody AddUserForm addUserForm) {
         String flag = checkAddUserForm(addUserForm);
         if (StringUtils.isBlank(flag)) {
             return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
@@ -106,7 +104,7 @@ public class UserController {
 
     @CheckRole("removeUser")
     @PostMapping("/user/delete")
-    public Result<?> removeUser(String userNo) {
+    public Result<?> removeUser(@RequestParam("userNo") String userNo) {
         try {
             userService.deleteUser(userNo);
             return new Result<>(ResponseMessage.SUCCESS);

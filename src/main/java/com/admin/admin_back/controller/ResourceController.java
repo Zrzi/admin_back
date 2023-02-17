@@ -10,9 +10,7 @@ import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +27,7 @@ public class ResourceController {
 
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
-    public Result<List<ResourceVo>> getResourcesBySystemId(String systemId) {
+    public Result<List<ResourceVo>> getResourcesBySystemId(@RequestParam("systemId") String systemId) {
         try {
             List<ResourceVo> resourceVos = resourceService.getResourcesBySystemId(systemId);
             return new Result<>(ResponseMessage.SUCCESS, resourceVos);
@@ -40,7 +38,7 @@ public class ResourceController {
 
     @CheckRole("addResource")
     @PostMapping("/resource/post")
-    public Result<?> addResource(ResourceForm resourceForm) {
+    public Result<?> addResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, false);
         if (StringUtils.hasLength(flag)) {
             return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
@@ -61,7 +59,7 @@ public class ResourceController {
 
     @CheckRole("updateResource")
     @PostMapping("/resource/update")
-    public Result<?> updateResource(ResourceForm resourceForm) {
+    public Result<?> updateResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, true);
         if (StringUtils.hasLength(flag)) {
             return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
@@ -84,7 +82,7 @@ public class ResourceController {
 
     @CheckRole("deleteResource")
     @PostMapping("/resource/delete")
-    public Result<?> deleteResource(String resourceId) {
+    public Result<?> deleteResource(@RequestParam("resourceId") String resourceId) {
         try {
             resourceService.deleteResourceByResourceId(resourceId);
             return new Result<>(ResponseMessage.SUCCESS);

@@ -11,9 +11,7 @@ import com.admin.admin_back.service.RoleResourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +26,8 @@ public class RoleResourceController {
 
     @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
-    public Result<?> getRoleResources(String systemId, String roleId) {
+    public Result<?> getRoleResources(@RequestParam("systemId") String systemId,
+                                      @RequestParam("roleId") String roleId) {
         systemId = systemId.trim();
         roleId = roleId.trim();
         if (StringUtils.isBlank(systemId)) {
@@ -49,7 +48,7 @@ public class RoleResourceController {
 
     @CheckRole("editRoleResource")
     @PostMapping("/roleResource/post")
-    public Result<?> editRoleResource(EditRoleResourceForm editRoleResourceForm) {
+    public Result<?> editRoleResource(@RequestBody EditRoleResourceForm editRoleResourceForm) {
         String flag = checkEditRoleResourceForm(editRoleResourceForm);
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.EDIT_ROLE_RESOURCE_FORM_ERROR, flag);

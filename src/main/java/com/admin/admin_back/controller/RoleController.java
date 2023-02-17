@@ -7,14 +7,11 @@ import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.RoleNameExistException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.form.RoleForm;
-import com.admin.admin_back.pojo.vo.RoleVo;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class RoleController {
 
     @CheckRole("getRoleByRoleId")
     @GetMapping("/role/getByRoleId")
-    public Result<?> getRoleByRoleId(String roleId) {
+    public Result<?> getRoleByRoleId(@RequestParam("roleId") String roleId) {
         try {
             return new Result<>(ResponseMessage.SUCCESS, roleService.getRoleByRoleId(roleId));
         } catch (RoleExistException exception) {
@@ -46,7 +43,7 @@ public class RoleController {
 
     @CheckRole("addRole")
     @PostMapping("/role/post")
-    public Result<?> addRole(RoleForm roleForm) {
+    public Result<?> addRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);
         if (!StringUtils.isEmpty(flag)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
@@ -63,7 +60,7 @@ public class RoleController {
 
     @CheckRole("updateRole")
     @PostMapping("/role/update")
-    public Result<?> updateRole(RoleForm roleForm) {
+    public Result<?> updateRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
         if (!StringUtils.isEmpty(flag)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
@@ -80,7 +77,7 @@ public class RoleController {
 
     @CheckRole("removeRole")
     @PostMapping("/role/delete")
-    public Result<?> removeRole(String roleId) {
+    public Result<?> removeRole(@RequestParam("roleId") String roleId) {
         if (StringUtils.isEmpty(roleId)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, "请输入角色编码");
         }

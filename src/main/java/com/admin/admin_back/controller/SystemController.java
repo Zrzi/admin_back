@@ -11,9 +11,7 @@ import com.admin.admin_back.pojo.vo.SystemVo;
 import com.admin.admin_back.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,7 +38,7 @@ public class SystemController {
 
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
-    public Result<?> addSystem(SystemForm form) {
+    public Result<?> addSystem(@RequestBody SystemForm form) {
         String systemName = form.getSystemName();
         if (StringUtils.isEmpty(systemName)) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
@@ -59,7 +57,7 @@ public class SystemController {
 
     @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")
-    public Result<?> updateSystem(SystemForm form) {
+    public Result<?> updateSystem(@RequestBody SystemForm form) {
         String systemId = form.getSystemId();
         String systemName = form.getSystemName();
         if (StringUtils.isEmpty(systemId)) {
@@ -85,7 +83,7 @@ public class SystemController {
 
     @CheckRole("deleteSystem")
     @PostMapping("/system/delete")
-    public Result<?> deleteSystem(String systemId) {
+    public Result<?> deleteSystem(@RequestParam("systemId") String systemId) {
         if (StringUtils.isEmpty(systemId)) {
             return new Result<>(ResponseMessage.SYSTEM_ID_IS_NULL);
         }

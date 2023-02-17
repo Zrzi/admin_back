@@ -12,9 +12,7 @@ import com.admin.admin_back.service.MemberRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,19 +27,19 @@ public class MemberRoleController {
 
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
-    public Result<?> getMemberRole(String roleId) {
+    public Result<?> getMemberRole(@RequestParam("roleId") String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getMemberRoleByRoleId(roleId));
     }
 
     @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
-    public Result<?> getUnaddedUser(String roleId) {
+    public Result<?> getUnaddedUser(@RequestParam("roleId") String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
     }
 
     @CheckRole("addMemberRole")
     @PostMapping("/memberRole/addMemberRole")
-    public Result<?> addMemberRole(AddMemberRoleForm addMemberRoleForm) {
+    public Result<?> addMemberRole(@RequestBody AddMemberRoleForm addMemberRoleForm) {
         String flag = checkAddMemberRoleForm(addMemberRoleForm);
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
@@ -74,7 +72,8 @@ public class MemberRoleController {
 
     @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")
-    public Result<?> deleteMemberRole(String roleId, String userNo) {
+    public Result<?> deleteMemberRole(@RequestParam("roleId") String roleId,
+                                      @RequestParam("userNo") String userNo) {
         if (StringUtils.isBlank(roleId)) {
             return new Result<>(ResponseMessage.ROLE_ID_IS_NULL);
         }
