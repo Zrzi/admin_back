@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -41,11 +40,12 @@ public class SystemController {
 
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
-    public Result<?> addSystem(SystemForm form, @RequestHeader("Authorization") String jwt) {
-        String systemName = form.getSystemName().trim();
+    public Result<?> addSystem(SystemForm form) {
+        String systemName = form.getSystemName();
         if (StringUtils.isEmpty(systemName)) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
         }
+        systemName = systemName.trim();
         if (systemName.length() > 16) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_LENGTH_EXCESS);
         }
@@ -60,14 +60,16 @@ public class SystemController {
     @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")
     public Result<?> updateSystem(SystemForm form) {
-        String systemId = form.getSystemId().trim();
-        String systemName = form.getSystemName().trim();
+        String systemId = form.getSystemId();
+        String systemName = form.getSystemName();
         if (StringUtils.isEmpty(systemId)) {
             return new Result<>(ResponseMessage.SYSTEM_ID_IS_NULL);
         }
         if (StringUtils.isEmpty(systemName)) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
         }
+        systemId = systemId.trim();
+        systemName = systemName.trim();
         if (systemName.length() > 16) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_LENGTH_EXCESS);
         }

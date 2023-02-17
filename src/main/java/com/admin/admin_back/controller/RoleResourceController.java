@@ -54,20 +54,21 @@ public class RoleResourceController {
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.EDIT_ROLE_RESOURCE_FORM_ERROR, flag);
         }
+        // todo
         return null;
     }
 
     private String checkEditRoleResourceForm(EditRoleResourceForm editRoleResourceForm) {
-        String systemId = editRoleResourceForm.getSystemId().trim();
+        String systemId = editRoleResourceForm.getSystemId();
         if (StringUtils.isBlank(systemId)) {
             return "系统编码为空";
         }
-        editRoleResourceForm.setSystemId(systemId);
-        String roleId = editRoleResourceForm.getRoleId().trim();
+        editRoleResourceForm.setSystemId(systemId.trim());
+        String roleId = editRoleResourceForm.getRoleId();
         if (StringUtils.isBlank(roleId)) {
             return "角色编码为空";
         }
-        editRoleResourceForm.setRoleId(roleId);
+        editRoleResourceForm.setRoleId(roleId.trim());
         List<String> resourceIds = editRoleResourceForm.getResourceIds();
         if (CollectionUtils.isEmpty(resourceIds)) {
             return "";

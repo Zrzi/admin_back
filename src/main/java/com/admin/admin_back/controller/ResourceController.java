@@ -98,33 +98,34 @@ public class ResourceController {
     private String checkValidResourceForm(ResourceForm resourceForm, boolean isUpdate) {
         if (isUpdate) {
             // 检查传入的resourceId
-            String resourceId = resourceForm.getResourceId().trim();
+            String resourceId = resourceForm.getResourceId();
             if (StringUtils.isEmpty(resourceId)) {
                 return "资源编码为空";
             }
-            resourceForm.setResourceId(resourceId);
+            resourceForm.setResourceId(resourceId.trim());
         } else {
             // 检查传入的systemId
-            String systemId = resourceForm.getSystemId().trim();
+            String systemId = resourceForm.getSystemId();
             if (StringUtils.isEmpty(systemId)) {
                 return "系统编码为空";
             }
-            resourceForm.setSystemId(systemId);
+            resourceForm.setSystemId(systemId.trim());
         }
-        String resourceName = resourceForm.getResourceName().trim();
+        String resourceName = resourceForm.getResourceName();
         if (StringUtils.isEmpty(resourceName)) {
             return "资源名称为空";
         }
+        resourceName = resourceName.trim();
         if (resourceName.length() > 50) {
             return "资源名称长度大于50个字符";
         }
         resourceForm.setResourceName(resourceName);
-        String resourceUrl = resourceForm.getResourceUrl().trim();
+        String resourceUrl = resourceForm.getResourceUrl();
         if (StringUtils.isEmpty(resourceUrl)) {
             return "资源路径为空";
         }
-        resourceForm.setResourceUrl(resourceUrl);
-        String resourceType = resourceForm.getResourceType().trim();
+        resourceForm.setResourceUrl(resourceUrl.trim());
+        String resourceType = resourceForm.getResourceType();
         ResourceTypeEnum typeEnum = ResourceTypeEnum.findResourceTypeEnumByMessage(resourceType);
         if (Objects.isNull(typeEnum)) {
             return "资源类型错误";

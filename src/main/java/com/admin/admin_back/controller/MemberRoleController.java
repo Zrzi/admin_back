@@ -57,20 +57,20 @@ public class MemberRoleController {
 
     }
 
-    @CheckRole("updateMemberRole")
-    @PostMapping("/memberRole/updateMemberRole")
-    public Result<?> updateMemberRole(EditMemberRoleForm editMemberRoleForm) {
-        String flag = checkEditMemberRoleForm(editMemberRoleForm);
-        if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
-        }
-        try {
-            memberRoleService.updateMemberRole(editMemberRoleForm);
-            return new Result<>(ResponseMessage.SUCCESS);
-        } catch (UserRoleNotFoundException exception) {
-            return new Result<>(ResponseMessage.USER_ROLE_NOT_FOUND);
-        }
-    }
+//    @CheckRole("updateMemberRole")
+//    @PostMapping("/memberRole/updateMemberRole")
+//    public Result<?> updateMemberRole(EditMemberRoleForm editMemberRoleForm) {
+//        String flag = checkEditMemberRoleForm(editMemberRoleForm);
+//        if (StringUtils.isNotBlank(flag)) {
+//            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+//        }
+//        try {
+//            memberRoleService.updateMemberRole(editMemberRoleForm);
+//            return new Result<>(ResponseMessage.SUCCESS);
+//        } catch (UserRoleNotFoundException exception) {
+//            return new Result<>(ResponseMessage.USER_ROLE_NOT_FOUND);
+//        }
+//    }
 
     @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")
@@ -82,7 +82,7 @@ public class MemberRoleController {
             return new Result<>(ResponseMessage.USER_NO_NOT_FOUND);
         }
         try {
-            memberRoleService.deleteMemberRole(userNo.trim(), roleId.trim());
+            memberRoleService.deleteMemberRole(userNo, roleId);
             return new Result<>(ResponseMessage.SUCCESS);
         } catch (UserRoleNotFoundException exception) {
             return new Result<>(ResponseMessage.USER_ROLE_NOT_FOUND);
@@ -90,11 +90,11 @@ public class MemberRoleController {
     }
 
     private String checkAddMemberRoleForm(AddMemberRoleForm addMemberRoleForm) {
-        String roleId = addMemberRoleForm.getRoleId().trim();
+        String roleId = addMemberRoleForm.getRoleId();
         if (StringUtils.isBlank(roleId)) {
             return "角色编码为空";
         }
-        addMemberRoleForm.setRoleId(roleId);
+        addMemberRoleForm.setRoleId(roleId.trim());
         List<String> userNos = addMemberRoleForm.getUserNos();
         if (CollectionUtils.isEmpty(userNos)) {
             return "待添加的用户编码列表为空";
@@ -113,11 +113,11 @@ public class MemberRoleController {
             return "用户名为空";
         }
         editMemberRoleForm.setUesrNo(userNo);
-        String roleId = editMemberRoleForm.getRoleId().trim();
+        String roleId = editMemberRoleForm.getRoleId();
         if (StringUtils.isBlank(roleId)) {
             return "角色编码为空";
         }
-        editMemberRoleForm.setRoleId(roleId);
+        editMemberRoleForm.setRoleId(roleId.trim());
         Integer level = editMemberRoleForm.getLevel();
         if (level < 0 || level > 10) {
             return "角色等级应该在0到10之间";

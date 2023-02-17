@@ -38,7 +38,7 @@ public class RoleController {
     @GetMapping("/role/getByRoleId")
     public Result<?> getRoleByRoleId(String roleId) {
         try {
-            return new Result<>(ResponseMessage.SUCCESS, getRoleByRoleId(roleId));
+            return new Result<>(ResponseMessage.SUCCESS, roleService.getRoleByRoleId(roleId));
         } catch (RoleExistException exception) {
             return new Result<>(ResponseMessage.ROLE_NOT_FOUND);
         }
@@ -81,9 +81,8 @@ public class RoleController {
     @CheckRole("removeRole")
     @PostMapping("/role/delete")
     public Result<?> removeRole(String roleId) {
-        roleId = roleId.trim();
         if (StringUtils.isEmpty(roleId)) {
-            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, "角色编码不存在");
+            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, "请输入角色编码");
         }
         try {
             roleService.deleteRoleByRoleId(roleId);
@@ -95,22 +94,23 @@ public class RoleController {
 
     private String checkValidRoleForm(RoleForm roleForm, boolean isUpdate) {
         if (isUpdate) {
-            String roleId = roleForm.getRoleId().trim();
+            String roleId = roleForm.getRoleId();
             if (StringUtils.isEmpty(roleId)) {
                 return "角色编码为空";
             }
-            roleForm.setRoleId(roleId);
+            roleForm.setRoleId(roleId.trim());
         } else {
-            String systemId = roleForm.getSystemId().trim();
+            String systemId = roleForm.getSystemId();
             if (StringUtils.isEmpty(systemId)) {
                 return "系统编码为空";
             }
-            roleForm.setSystemId(systemId);
+            roleForm.setSystemId(systemId.trim());
         }
-        String roleName = roleForm.getRoleName().trim();
+        String roleName = roleForm.getRoleName();
         if (StringUtils.isEmpty(roleName)) {
             return "角色名称为空";
         }
+        roleName = roleName.trim();
         if (roleName.length() > 16) {
             return "角色名称超过16个字符";
         }

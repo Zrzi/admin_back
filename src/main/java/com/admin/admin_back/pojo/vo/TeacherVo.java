@@ -15,7 +15,7 @@ public class TeacherVo {
 
     private String sex;
 
-    private String birthday;
+    private Date birthday;
 
     private String phone;
 
@@ -43,7 +43,7 @@ public class TeacherVo {
 
     private String status;
 
-    private String rank;
+    private Integer rank;
 
     private String tecposition;
 
@@ -77,11 +77,11 @@ public class TeacherVo {
         this.sex = sex;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
@@ -189,11 +189,11 @@ public class TeacherVo {
         this.status = status;
     }
 
-    public String getRank() {
+    public Integer getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(Integer rank) {
         this.rank = rank;
     }
 
