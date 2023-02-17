@@ -22,4 +22,6 @@ VALUES ('R81a9defb13ac44489557e10b6558b32e', 'addRole', 'Saeda408ef5de4fdb9a583f
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R09933f7d15fd4dcabd95dec5bc62bb6d', 'addResource', 'Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '/resource/post', 0, NULL, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
 
+-- 需要初始化的资源还有 /resource/get  /system/get  /resource/count
+
 ALTER TABLE `admin_resource` MODIFY COLUMN `resource_name` VARCHAR(50) NOT NULL COMMENT '资源名称';

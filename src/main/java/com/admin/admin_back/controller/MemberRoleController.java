@@ -8,13 +8,16 @@ import com.admin.admin_back.pojo.exception.UserRoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleNotFoundException;
 import com.admin.admin_back.pojo.form.AddMemberRoleForm;
 import com.admin.admin_back.pojo.form.EditMemberRoleForm;
+import com.admin.admin_back.pojo.vo.UserVo;
 import com.admin.admin_back.service.MemberRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 陈群矜
@@ -27,8 +30,22 @@ public class MemberRoleController {
 
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
-    public Result<?> getMemberRole(@RequestParam("roleId") String roleId) {
-        return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getMemberRoleByRoleId(roleId));
+    public Result<?> getMemberRole(@RequestParam("roleId") String roleId,
+                                   @RequestParam(value = "start", required = false) Integer start,
+                                   @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (start == null || start < 0) {
+            start = 0;
+        }
+        if (pageSize == null || pageSize < 0) {
+            pageSize = 10;
+        }
+        List<UserVo> memberRoles = memberRoleService.getMemberRolePageByRoleId(roleId, start, pageSize);
+        Integer count = memberRoleService.getMemberRolesCount(roleId);
+        Map<String, Object> map = new HashMap<String, Object>() {{
+            put("users", memberRoles);
+            put("count", count);
+        }};
+        return new Result<>(ResponseMessage.SUCCESS, map);
     }
 
     @CheckRole("getUnaddedUser")

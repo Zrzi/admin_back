@@ -33,6 +33,34 @@ public class ResourceServiceImpl implements ResourceService {
     private SystemMapper systemMapper;
 
     @Override
+    public Integer getResourcesCount(String systemId) {
+        return resourceMapper.findResourceCount(systemId);
+    }
+
+    @Override
+    public List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer pageSize) {
+        List<ResourceDto> resourceBySystemId = resourceMapper.findResourcePageBySystemId(systemId, start, pageSize);
+        if (CollectionUtils.isEmpty(resourceBySystemId)) {
+            throw new BaseException("资源不存在");
+        }
+        return resourceBySystemId.stream().map(resourceDto -> {
+            ResourceVo vo = new ResourceVo();
+            vo.setResourceId(resourceDto.getResourceId());
+            vo.setResourceName(resourceDto.getResourceName());
+            vo.setSystemId(resourceDto.getSystemId());
+            vo.setSystemName(resourceDto.getSystemName());
+            vo.setResourceUrl(resourceDto.getResourceUrl());
+            vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
+            vo.setParentResource(resourceDto.getParentResource());
+            vo.setCreatedBy(resourceDto.getCreatedBy());
+            vo.setCreatedDate(resourceDto.getCreatedDate());
+            vo.setUpdatedBy(resourceDto.getUpdatedBy());
+            vo.setUpdatedDate(resourceDto.getUpdatedDate());
+            return vo;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     public List<ResourceVo> getResourcesBySystemId(String systemId) {
         List<ResourceDto> resourceBySystemId = resourceMapper.findResourceBySystemId(systemId);
         if (CollectionUtils.isEmpty(resourceBySystemId)) {

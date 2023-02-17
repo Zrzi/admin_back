@@ -57,7 +57,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
         }
         List<ResourceDto> resourceDtos = resourceMapper.findResourceBySystemId(systemId);
         List<RoleResourceVo> result = new ArrayList<>();
-        if (CollectionUtils.isEmpty(result)) {
+        if (CollectionUtils.isEmpty(resourceDtos)) {
             return result;
         }
         for (ResourceDto resourceDto : resourceDtos) {
@@ -108,22 +108,22 @@ public class RoleResourceServiceImpl implements RoleResourceService {
                 // 原本已经有的，不做修改
                 resourceIds.remove(resourceId);
             } else {
-                // 原本没有的，待添加
+                // 原本有的，但现在不需要了
                 RoleResourceDto temp = new RoleResourceDto();
                 temp.setRoleId(roleId);
                 temp.setResourceId(resourceId);
-                temp.setCreatedBy(userNo);
                 temp.setUpdatedBy(userNo);
-                toBeInserted.add(temp);
+                toBeDeleted.add(temp);
             }
         }
-        // 剩余的id是待删除的
+        // 剩余的id是待添加的
         for (String id : resourceIds) {
             RoleResourceDto temp = new RoleResourceDto();
             temp.setRoleId(roleId);
             temp.setResourceId(id);
+            temp.setCreatedBy(userNo);
             temp.setUpdatedBy(userNo);
-            toBeDeleted.add(temp);
+            toBeInserted.add(temp);
         }
         insertRoleResource(toBeInserted);
         deleteRoleResource(toBeDeleted);

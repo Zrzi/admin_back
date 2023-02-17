@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface ResourceService {
 
+    Integer getResourcesCount(String systemId);
+
+    List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer end);
+
     List<ResourceVo> getResourcesBySystemId(String systemId);
 
     void addResource(ResourceForm resourceForm);

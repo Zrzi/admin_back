@@ -62,6 +62,33 @@ public class MemberRoleServiceImpl implements MemberRoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public Integer getMemberRolesCount(String roleId) {
+        return userRoleMapper.findUserRoleCountByRoleId(roleId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize) {
+        List<UserVo> result = new ArrayList<>();
+        List<UserRoleDto> userRoleDtos = userRoleMapper.findUserRolePageByRoleId(roleId, start, pageSize);
+        if (CollectionUtils.isEmpty(userRoleDtos)) {
+            return result;
+        }
+        for (UserRoleDto userRoleDto : userRoleDtos) {
+            String userNo = userRoleDto.getUserNo();
+            UserDto userDto = userMapper.findUserByUserNo(userNo);
+            if (Objects.nonNull(userDto)) {
+                UserVo userVo = new UserVo();
+                userVo.setUserNo(userNo);
+                userVo.setUserNo(userDto.getUsername());
+                result.add(userVo);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public List<UserVo> getMemberRoleByRoleId(String roleId) {
         List<UserVo> result = new ArrayList<>();
         List<UserRoleDto> userRoleDtos = userRoleMapper.findUserRoleByRoleId(roleId);

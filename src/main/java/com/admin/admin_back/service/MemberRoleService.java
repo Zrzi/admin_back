@@ -13,6 +13,10 @@ public interface MemberRoleService {
 
     List<UserVo> getUnaddedUserByRoleId(String roleId);
 
+    Integer getMemberRolesCount(String roleId);
+
+    List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize);
+
     List<UserVo> getMemberRoleByRoleId(String roleId);
 
     void addMemberRole(AddMemberRoleForm addMemberRoleForm);

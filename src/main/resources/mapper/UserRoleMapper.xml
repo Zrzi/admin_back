@@ -36,6 +36,21 @@
           AND `status` = 0
     </select>
 
+    <select id="findUserRoleCountByRoleId" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(`id`)
+        FROM `admin_user_role`
+        WHERE `role_id` = #{roleId}
+          AND `status` = 0
+    </select>
+
+    <select id="findUserRolePageByRoleId" resultMap="baseMap">
+        SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_user_role`
+        WHERE `role_id` = #{roleId}
+          AND `status` = 0
+        LIMIT #{start}, #{pageSize}
+    </select>
+
     <select id="findUserRoleByRoleId" resultMap="baseMap" parameterType="java.lang.String">
         SELECT `id`, `user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_user_role`

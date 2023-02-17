@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *
@@ -25,12 +24,31 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
+    @CheckRole("getResourcesCount")
+    @GetMapping("/resource/count")
+    public Result<Integer> getResourcesCount(@RequestParam("systemId") String systemId) {
+        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
+    }
+
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
-    public Result<List<ResourceVo>> getResourcesBySystemId(@RequestParam("systemId") String systemId) {
+    public Result<?> getResourcesBySystemId(@RequestParam("systemId") String systemId,
+                                                           @RequestParam(value = "start", required = false) Integer start,
+                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         try {
-            List<ResourceVo> resourceVos = resourceService.getResourcesBySystemId(systemId);
-            return new Result<>(ResponseMessage.SUCCESS, resourceVos);
+            if (start == null || start < 0) {
+                start = 0;
+            }
+            if (pageSize == null || pageSize < 0) {
+                pageSize = 10;
+            }
+            List<ResourceVo> resourceVos = resourceService.getResourcesPageBySystemId(systemId, start, pageSize);
+            Integer total = resourceService.getResourcesCount(systemId);
+            Map<String, Object> map = new HashMap<String, Object>(){{
+                put("resources", resourceVos);
+                put("total", total);
+            }};
+            return new Result<>(ResponseMessage.SUCCESS, map);
         } catch (BaseException exception) {
             return new Result<>(ResponseMessage.RESOURCE_NOT_FOUND);
         }

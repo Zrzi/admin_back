@@ -18,6 +18,10 @@ public interface UserRoleMapper {
 
     List<UserRoleDto> findUserRoleByNo(String userNo);
 
+    Integer findUserRoleCountByRoleId(String roleId);
+
+    List<UserRoleDto> findUserRolePageByRoleId(@Param("roleId") String roleId, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
     List<UserRoleDto> findUserRoleByRoleId(String roleId);
 
     UserRoleDto findUserRoleByUserNoAndRoleId(String userNo, String roleId);
