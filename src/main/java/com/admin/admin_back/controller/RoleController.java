@@ -6,6 +6,7 @@ import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.RoleNameExistException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
+import com.admin.admin_back.pojo.form.DeleteRoleForm;
 import com.admin.admin_back.pojo.form.RoleForm;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
@@ -77,7 +78,8 @@ public class RoleController {
 
     @CheckRole("removeRole")
     @PostMapping("/role/delete")
-    public Result<?> removeRole(@RequestParam("roleId") String roleId) {
+    public Result<?> removeRole(@RequestBody DeleteRoleForm deleteRoleForm) {
+        String roleId = deleteRoleForm.getRoleId();
         if (StringUtils.isEmpty(roleId)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, "请输入角色编码");
         }

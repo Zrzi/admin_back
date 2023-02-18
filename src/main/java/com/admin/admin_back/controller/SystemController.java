@@ -81,18 +81,18 @@ public class SystemController {
         }
     }
 
-    @CheckRole("deleteSystem")
-    @PostMapping("/system/delete")
-    public Result<?> deleteSystem(@RequestParam("systemId") String systemId) {
-        if (StringUtils.isEmpty(systemId)) {
-            return new Result<>(ResponseMessage.SYSTEM_ID_IS_NULL);
-        }
-        try {
-            systemService.deleteSystem(systemId);
-            return new Result<>(ResponseMessage.SUCCESS);
-        } catch (SystemExistException exception) {
-            return new Result<>(ResponseMessage.SYSTEM_NOT_FOUNT);
-        }
-    }
+//    @CheckRole("deleteSystem")
+//    @PostMapping("/system/delete")
+//    public Result<?> deleteSystem(@RequestParam("systemId") String systemId) {
+//        if (StringUtils.isEmpty(systemId)) {
+//            return new Result<>(ResponseMessage.SYSTEM_ID_IS_NULL);
+//        }
+//        try {
+//            systemService.deleteSystem(systemId);
+//            return new Result<>(ResponseMessage.SUCCESS);
+//        } catch (SystemExistException exception) {
+//            return new Result<>(ResponseMessage.SYSTEM_NOT_FOUNT);
+//        }
+//    }
 
 }

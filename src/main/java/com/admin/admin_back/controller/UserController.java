@@ -3,10 +3,12 @@ package com.admin.admin_back.controller;
 import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.exception.PasswordException;
 import com.admin.admin_back.pojo.exception.UserExistException;
 import com.admin.admin_back.pojo.exception.UserNoException;
 import com.admin.admin_back.pojo.form.AddUserForm;
+import com.admin.admin_back.pojo.form.DeleteUserForm;
 import com.admin.admin_back.pojo.form.LoginForm;
 import com.admin.admin_back.pojo.form.ResetPasswordForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
@@ -83,8 +85,20 @@ public class UserController {
 
     @CheckRole("getUser")
     @GetMapping("/user/get")
-    public Result<?> getUser() {
-        return new Result<>(ResponseMessage.SUCCESS, userService.getUsers());
+    public Result<?> getUser(@RequestParam("userType") String userType,
+                             @RequestParam("start") Integer start,
+                             @RequestParam("pageSize") Integer pageSize) {
+        UserTypeEnum userTypeEnum = UserTypeEnum.findUserTypeByMessage(userType);
+        if (Objects.isNull(userTypeEnum)) {
+            return new Result<>(ResponseMessage.USER_TYOE_ERROR);
+        }
+        if (start == null || start < 0) {
+            start = 0;
+        }
+        if (pageSize == null || pageSize < 0) {
+            pageSize = 10;
+        }
+        return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize));
     }
 
     @CheckRole("addUser")
@@ -104,7 +118,11 @@ public class UserController {
 
     @CheckRole("removeUser")
     @PostMapping("/user/delete")
-    public Result<?> removeUser(@RequestParam("userNo") String userNo) {
+    public Result<?> removeUser(@RequestBody DeleteUserForm deleteUserForm) {
+        String userNo = deleteUserForm.getUserNo();
+        if (StringUtils.isBlank(userNo)) {
+            return new Result<>(ResponseMessage.USER_NO_NOT_FOUND);
+        }
         try {
             userService.deleteUser(userNo);
             return new Result<>(ResponseMessage.SUCCESS);

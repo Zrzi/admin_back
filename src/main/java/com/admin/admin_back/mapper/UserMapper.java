@@ -16,6 +16,10 @@ public interface UserMapper {
 
     List<UserDto> findUserByUserType(Integer userType);
 
+    Integer findUserCountByUserType(@Param("userType") Integer userType);
+
+    List<String> findUserNoPageByUserType(@Param("userType") Integer userType, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
     List<String> findUserNoByUserType(Integer userType);
 
     UserDto findUserByUserNo(String userNo);

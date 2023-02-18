@@ -5,11 +5,12 @@ import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.exception.*;
+import com.admin.admin_back.pojo.form.DeleteResourceForm;
 import com.admin.admin_back.pojo.form.ResourceForm;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -58,7 +59,7 @@ public class ResourceController {
     @PostMapping("/resource/post")
     public Result<?> addResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, false);
-        if (StringUtils.hasLength(flag)) {
+        if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
         }
         try {
@@ -79,7 +80,7 @@ public class ResourceController {
     @PostMapping("/resource/update")
     public Result<?> updateResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, true);
-        if (StringUtils.hasLength(flag)) {
+        if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
         }
         try {
@@ -100,7 +101,11 @@ public class ResourceController {
 
     @CheckRole("deleteResource")
     @PostMapping("/resource/delete")
-    public Result<?> deleteResource(@RequestParam("resourceId") String resourceId) {
+    public Result<?> deleteResource(@RequestBody DeleteResourceForm deleteResourceForm) {
+        String resourceId = deleteResourceForm.getResourceId();
+        if (StringUtils.isBlank(resourceId)) {
+            return new Result<>(ResponseMessage.RESOURCE_ID_NOT_FOUND);
+        }
         try {
             resourceService.deleteResourceByResourceId(resourceId);
             return new Result<>(ResponseMessage.SUCCESS);
@@ -115,20 +120,20 @@ public class ResourceController {
         if (isUpdate) {
             // 检查传入的resourceId
             String resourceId = resourceForm.getResourceId();
-            if (StringUtils.isEmpty(resourceId)) {
+            if (StringUtils.isBlank(resourceId)) {
                 return "资源编码为空";
             }
             resourceForm.setResourceId(resourceId.trim());
         } else {
             // 检查传入的systemId
             String systemId = resourceForm.getSystemId();
-            if (StringUtils.isEmpty(systemId)) {
+            if (StringUtils.isBlank(systemId)) {
                 return "系统编码为空";
             }
             resourceForm.setSystemId(systemId.trim());
         }
         String resourceName = resourceForm.getResourceName();
-        if (StringUtils.isEmpty(resourceName)) {
+        if (StringUtils.isBlank(resourceName)) {
             return "资源名称为空";
         }
         resourceName = resourceName.trim();
@@ -137,7 +142,7 @@ public class ResourceController {
         }
         resourceForm.setResourceName(resourceName);
         String resourceUrl = resourceForm.getResourceUrl();
-        if (StringUtils.isEmpty(resourceUrl)) {
+        if (StringUtils.isBlank(resourceUrl)) {
             return "资源路径为空";
         }
         resourceForm.setResourceUrl(resourceUrl.trim());

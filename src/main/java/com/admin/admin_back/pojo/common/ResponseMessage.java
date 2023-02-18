@@ -67,6 +67,11 @@ public enum ResponseMessage {
     RESOURCE_CHILD_EXIST(200005, "存在子资源，不能删除"),
 
     /**
+     * 资源编码缺失
+     */
+    RESOURCE_ID_NOT_FOUND(200005, "资源编码缺失"),
+
+    /**
      * 角色不存在
      */
     ROLE_NOT_FOUND(300000, "角色不存在"),
@@ -125,6 +130,11 @@ public enum ResponseMessage {
      * 用户角色对应关系不存在
      */
     USER_ROLE_NOT_FOUND(400006, "用户角色对应关系不存在"),
+
+    /**
+     * 用户类型错误
+     */
+    USER_TYOE_ERROR(400007, "用户类型错误"),
 
     /**
      * 参数异常

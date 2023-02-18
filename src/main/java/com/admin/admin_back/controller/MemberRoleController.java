@@ -7,6 +7,7 @@ import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleNotFoundException;
 import com.admin.admin_back.pojo.form.AddMemberRoleForm;
+import com.admin.admin_back.pojo.form.DeleteMemberRoleForm;
 import com.admin.admin_back.pojo.form.EditMemberRoleForm;
 import com.admin.admin_back.pojo.vo.UserVo;
 import com.admin.admin_back.service.MemberRoleService;
@@ -89,8 +90,9 @@ public class MemberRoleController {
 
     @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")
-    public Result<?> deleteMemberRole(@RequestParam("roleId") String roleId,
-                                      @RequestParam("userNo") String userNo) {
+    public Result<?> deleteMemberRole(@RequestBody DeleteMemberRoleForm deleteMemberRoleForm) {
+        String roleId = deleteMemberRoleForm.getRoleId();
+        String userNo = deleteMemberRoleForm.getUserNo();
         if (StringUtils.isBlank(roleId)) {
             return new Result<>(ResponseMessage.ROLE_ID_IS_NULL);
         }

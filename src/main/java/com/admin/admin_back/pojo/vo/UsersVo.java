@@ -15,6 +15,8 @@ public class UsersVo {
 
     private List<TeacherVo> teachers;
 
+    private Integer total = 0;
+
     public UsersVo() {}
 
     public List<UserVo> getAdminUsers() {
@@ -39,6 +41,14 @@ public class UsersVo {
 
     public void setTeachers(List<TeacherVo> teachers) {
         this.teachers = teachers;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 
     @Override

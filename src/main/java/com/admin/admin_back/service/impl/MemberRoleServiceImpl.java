@@ -80,7 +80,11 @@ public class MemberRoleServiceImpl implements MemberRoleService {
             if (Objects.nonNull(userDto)) {
                 UserVo userVo = new UserVo();
                 userVo.setUserNo(userNo);
-                userVo.setUserNo(userDto.getUsername());
+                userVo.setUsername(userDto.getUsername());
+                userVo.setCreatedBy(userDto.getCreatedBy());
+                userVo.setCreatedDate(userDto.getCreatedDate());
+                userVo.setUpdatedBy(userDto.getUpdatedBy());
+                userVo.setUpdatedDate(userDto.getUpdatedDate());
                 result.add(userVo);
             }
         }

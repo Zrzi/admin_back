@@ -102,6 +102,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize) {
+        UsersVo usersVo = new UsersVo();
+        switch (userTypeEnum) {
+            case STUDENT:
+                List<String> studentNos =
+                        userMapper.findUserNoPageByUserType(UserTypeEnum.STUDENT.code, start, pageSize);
+                List<StudentVo> studentVos = new ArrayList<>();
+                if (!CollectionUtils.isEmpty(studentNos)) {
+                    for (String studentNo : studentNos) {
+                        StudentDto studentDto = studentMapper.findStudentByStuNo(studentNo);
+                        StudentVo studentVo = JSON.parseObject(JSON.toJSONString(studentDto), StudentVo.class);
+                        studentVos.add(studentVo);
+                    }
+                }
+                usersVo.setStudents(studentVos);
+                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
+                break;
+            case TEACHER:
+                List<String> teacherNos =
+                        userMapper.findUserNoPageByUserType(UserTypeEnum.TEACHER.code, start, pageSize);
+                List<TeacherVo> teacherVos = new ArrayList<>();
+                if (!CollectionUtils.isEmpty(teacherNos)) {
+                    for (String teacherNo : teacherNos) {
+                        TeacherDto teacherDto = teacherMapper.findTeacherByEmpNo(teacherNo);
+                        TeacherVo teacherVo = JSON.parseObject(JSON.toJSONString(teacherDto), TeacherVo.class);
+                        teacherVos.add(teacherVo);
+                    }
+                }
+                usersVo.setTeachers(teacherVos);
+                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
+                break;
+            default:
+                // 不返沪系统用户
+                break;
+        }
+        return usersVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public UsersVo getUsers() {
         List<String> studentNos = userMapper.findUserNoByUserType(UserTypeEnum.STUDENT.code);
         List<StudentVo> studentVos = new ArrayList<>();
