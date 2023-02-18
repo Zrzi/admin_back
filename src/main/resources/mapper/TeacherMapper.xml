@@ -45,7 +45,7 @@
 
     <insert id="addTeacher" parameterType="com.admin.admin_back.pojo.dto.TeacherDto">
         INSERT INTO `teacheres` (`empNo`, `empName`, `sex`, `birthday`, `phone`, `IDNo`, `marriage`, `orgType`, `staffType`, `title`, `degree`, `title_level`, `teachtype`, `school`, `enterdate`, `teachdate`, `status`, `rank`, `tecposition`, `memo`, `schoolid`)
-        VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.IDNo}, #{teacher.marriage}, #{teacher.}, #{teacher.orgType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
+        VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.IDNo}, #{teacher.marriage}, #{teacher.orgType}, #{teacher.staffType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
     </insert>
 
 </mapper>

@@ -65,14 +65,16 @@ public class UserController {
     @PostMapping("/resetPassword")
     public Result<?> resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) {
         String userNo = UserThreadLocal.getUser().getUserNo();
-        String oldPassword = resetPasswordForm.getOldPassword().trim();
-        String newPassword = resetPasswordForm.getNewPassword().trim();
+        String oldPassword = resetPasswordForm.getOldPassword();
+        String newPassword = resetPasswordForm.getNewPassword();
         if (StringUtils.isBlank(userNo)) {
             return new Result<>(ResponseMessage.USER_NO_NOT_FOUND);
         }
         if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
             return new Result<>(ResponseMessage.PASSWORD_NOT_FOUND);
         }
+        oldPassword = oldPassword.trim();
+        newPassword = newPassword.trim();
         try {
             userService.resetPassword(userNo, oldPassword, newPassword);
             return new Result<>(ResponseMessage.SUCCESS);
@@ -105,7 +107,7 @@ public class UserController {
     @PostMapping("/user/post")
     public Result<?> addUser(@RequestBody AddUserForm addUserForm) {
         String flag = checkAddUserForm(addUserForm);
-        if (StringUtils.isBlank(flag)) {
+        if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
         }
         try {

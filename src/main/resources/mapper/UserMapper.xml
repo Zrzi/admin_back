@@ -54,7 +54,7 @@
     </select>
 
     <insert id="addUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
-        INSERT INTO `admin_uesr` (`user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        INSERT INTO `admin_user` (`user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
         VALUES (#{userDto.userNo}, #{userDto.username}, #{userDto.password}, #{userDto.userType}, #{userDto.createdBy}, NOW(), #{userDto.updatedBy}, NOW(), 0)
     </insert>
 
