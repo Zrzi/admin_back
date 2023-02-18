@@ -14,6 +14,7 @@ import com.admin.admin_back.pojo.vo.RoleVo;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,8 +127,10 @@ public class RoleServiceImpl implements RoleService {
         }
         String systemId = roleDto.getSystemId();
         String roleName = roleForm.getRoleName();
-        if (Objects.nonNull(roleMapper.findRoleByRoleNameAndSystemId(roleName, systemId))) {
-            throw new RoleNameExistException();
+        if (!StringUtils.equals(roleName, roleDto.getRoleName())) {
+            if (Objects.nonNull(roleMapper.findRoleByRoleNameAndSystemId(roleName, systemId))) {
+                throw new RoleNameExistException();
+            }
         }
         roleDto.setRoleName(roleName);
         String userNo = UserThreadLocal.getUser().getUserNo();

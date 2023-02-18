@@ -12,12 +12,11 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Objects;
@@ -97,7 +96,7 @@ public class ResourceServiceImpl implements ResourceService {
         }
         String parentResource = resourceForm.getParentResource().trim();
         ResourceDto parent = null;
-        if (!StringUtils.isEmpty(parentResource)) {
+        if (StringUtils.isNotBlank(parentResource)) {
             parent = resourceMapper.findResourceByResourceId(parentResource);
             if (Objects.isNull(parent)) {
                 throw new ResourceParentExistException();
@@ -132,12 +131,14 @@ public class ResourceServiceImpl implements ResourceService {
         }
         String systemId = resourceDto.getSystemId();
         String resourceName = resourceForm.getResourceName();
-        if (Objects.nonNull(resourceMapper.findResourceByResourceNameAndSystemId(resourceName, systemId))) {
-            throw new ResourceNameExistException();
+        if (!StringUtils.equals(resourceName, resourceDto.getResourceName())) {
+            if (Objects.nonNull(resourceMapper.findResourceByResourceNameAndSystemId(resourceName, systemId))) {
+                throw new ResourceNameExistException();
+            }
         }
         String parentResource = resourceForm.getParentResource();
         ResourceDto parent = null;
-        if (!StringUtils.isEmpty(parentResource)) {
+        if (StringUtils.isNotEmpty(parentResource)) {
             parent = resourceMapper.findResourceByResourceId(parentResource);
             if (Objects.isNull(parent)) {
                 throw new ResourceParentExistException();

@@ -27,6 +27,23 @@
           AND `status` = 0
     </select>
 
+    <select id="findResourceByUserNo" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `resource_id` IN (
+            SELECT `resource_id`
+            FROM `admin_role_resource`
+            WHERE `role_id` IN (
+                SELECT `role_id`
+                FROM `admin_user_role`
+                WHERE `user_no` = #{userNo}
+                  AND `status` = 0
+            )
+              AND `status` = 0
+        )
+          AND `status` = 0
+    </select>
+
     <select id="findResourcePageBySystemId" resultMap="baseMap">
         SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
@@ -90,7 +107,7 @@
 
     <delete id="deleteResourceByResourceId" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
         UPDATE `admin_resource`
-        SET `updated_by` = #{role.updatedBy},
+        SET `updated_by` = #{resource.updatedBy},
             `updated_date` = NOW(),
             `status` = 1
         WHERE `resource_id` = #{resource.resourceId}

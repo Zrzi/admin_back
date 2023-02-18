@@ -43,7 +43,7 @@
     <update id="updateSystemBySystemId" parameterType="com.admin.admin_back.pojo.dto.SystemDto">
         UPDATE `admin_system`
         SET `system_name` = #{system.systemName},
-            `updatedBy` = #{system.updatedBy},
+            `updated_by` = #{system.updatedBy},
             `updated_date` = NOW()
         WHERE `system_id` = #{system.systemId}
           AND `status` = 0

@@ -10,8 +10,8 @@ import com.admin.admin_back.pojo.form.DeleteRoleForm;
 import com.admin.admin_back.pojo.form.RoleForm;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class RoleController {
     @PostMapping("/role/post")
     public Result<?> addRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);
-        if (!StringUtils.isEmpty(flag)) {
+        if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
         }
         try {
@@ -63,7 +63,7 @@ public class RoleController {
     @PostMapping("/role/update")
     public Result<?> updateRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
-        if (!StringUtils.isEmpty(flag)) {
+        if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
         }
         try {
@@ -80,7 +80,7 @@ public class RoleController {
     @PostMapping("/role/delete")
     public Result<?> removeRole(@RequestBody DeleteRoleForm deleteRoleForm) {
         String roleId = deleteRoleForm.getRoleId();
-        if (StringUtils.isEmpty(roleId)) {
+        if (StringUtils.isBlank(roleId)) {
             return new Result<>(ResponseMessage.ROLE_FORM_ERROR, "请输入角色编码");
         }
         try {
@@ -94,19 +94,19 @@ public class RoleController {
     private String checkValidRoleForm(RoleForm roleForm, boolean isUpdate) {
         if (isUpdate) {
             String roleId = roleForm.getRoleId();
-            if (StringUtils.isEmpty(roleId)) {
+            if (StringUtils.isBlank(roleId)) {
                 return "角色编码为空";
             }
             roleForm.setRoleId(roleId.trim());
         } else {
             String systemId = roleForm.getSystemId();
-            if (StringUtils.isEmpty(systemId)) {
+            if (StringUtils.isBlank(systemId)) {
                 return "系统编码为空";
             }
             roleForm.setSystemId(systemId.trim());
         }
         String roleName = roleForm.getRoleName();
-        if (StringUtils.isEmpty(roleName)) {
+        if (StringUtils.isBlank(roleName)) {
             return "角色名称为空";
         }
         roleName = roleName.trim();

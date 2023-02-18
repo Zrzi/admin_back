@@ -10,6 +10,7 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.SystemVo;
 import com.admin.admin_back.service.SystemService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,12 +63,14 @@ public class SystemServiceImpl implements SystemService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateSystem(String systemId, String systemName) {
-        if (Objects.nonNull(systemMapper.findSystemBySystemName(systemName))) {
-            throw new SystemNameExistException();
-        }
         SystemDto systemDto = systemMapper.findSystemBySystemId(systemId);
         if (Objects.isNull(systemDto)) {
             throw new SystemExistException();
+        }
+        if (!StringUtils.equals(systemName, systemDto.getSystemName())) {
+            if (Objects.nonNull(systemMapper.findSystemBySystemName(systemName))) {
+                throw new SystemNameExistException();
+            }
         }
         systemDto.setSystemId(systemId);
         systemDto.setSystemName(systemName);

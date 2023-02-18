@@ -9,8 +9,8 @@ import com.admin.admin_back.pojo.exception.SystemNameExistException;
 import com.admin.admin_back.pojo.form.SystemForm;
 import com.admin.admin_back.pojo.vo.SystemVo;
 import com.admin.admin_back.service.SystemService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class SystemController {
     @PostMapping(value = "/system/post")
     public Result<?> addSystem(@RequestBody SystemForm form) {
         String systemName = form.getSystemName();
-        if (StringUtils.isEmpty(systemName)) {
+        if (StringUtils.isBlank(systemName)) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
         }
         systemName = systemName.trim();
@@ -60,10 +60,10 @@ public class SystemController {
     public Result<?> updateSystem(@RequestBody SystemForm form) {
         String systemId = form.getSystemId();
         String systemName = form.getSystemName();
-        if (StringUtils.isEmpty(systemId)) {
+        if (StringUtils.isBlank(systemId)) {
             return new Result<>(ResponseMessage.SYSTEM_ID_IS_NULL);
         }
-        if (StringUtils.isEmpty(systemName)) {
+        if (StringUtils.isBlank(systemName)) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
         }
         systemId = systemId.trim();

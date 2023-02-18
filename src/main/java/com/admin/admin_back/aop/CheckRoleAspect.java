@@ -37,9 +37,6 @@ public class CheckRoleAspect {
     @Autowired
     private ResourceMapper resourceMapper;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
     @Pointcut("@annotation(com.admin.admin_back.annotations.CheckRole)")
     public void checkRole() {}
 
@@ -47,36 +44,31 @@ public class CheckRoleAspect {
     public Object around(ProceedingJoinPoint pjp) {
         Object result = null;
         try {
-            String token = TokenThreadLocal.getToken();
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
             CheckRole annotation = methodSignature.getMethod().getAnnotation(CheckRole.class);
             String resourceName = annotation.value();
-            if (!checkAuthority(token, resourceName)) {
+            if (!checkAuthority(resourceName)) {
                 return new Result<>(ResponseMessage.NO_AUTHORITIES);
             }
             result = pjp.proceed();
             return result;
         } catch (Throwable throwable) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
-        } finally {
-            UserThreadLocal.removeUser();
         }
     }
 
-    private boolean checkAuthority(String token, String resourceName) {
-        List<LinkedHashMap<String, Object>> userRoleVos = (List<LinkedHashMap<String, Object>>) jwtTokenUtil.getUserRoleFromToken(token);
-        if (CollectionUtils.isEmpty(userRoleVos)) {
+    private boolean checkAuthority(String resourceName) {
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        if (StringUtils.isBlank(userNo)) {
             return false;
         }
-        for (LinkedHashMap<String, Object> map : userRoleVos) {
-            String roleId = map.getOrDefault("roleId", "").toString();
-            List<RoleResourceDto> roleResources = roleResourceMapper.findRoleResourceByRoleId(roleId);
-            for (RoleResourceDto roleResourceDto : roleResources) {
-                String resourceId = roleResourceDto.getResourceId();
-                ResourceDto resource = resourceMapper.findResourceByResourceId(resourceId);
-                if (StringUtils.equals(resourceName, resource.getResourceName())) {
-                    return true;
-                }
+        List<ResourceDto> resources = resourceMapper.findResourceByUserNo(userNo);
+        if (CollectionUtils.isEmpty(resources)) {
+            return false;
+        }
+        for (ResourceDto resource : resources) {
+            if (StringUtils.equals(resourceName, resource.getResourceName())) {
+                return true;
             }
         }
         return false;
