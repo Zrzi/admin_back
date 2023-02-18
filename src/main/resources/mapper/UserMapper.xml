@@ -67,6 +67,15 @@
           AND `status` = 0
     </update>
 
+    <update id="updateUsername" parameterType="com.admin.admin_back.pojo.dto.UserDto">
+        UPDATE `admin_user`
+        SET `user_name` = #{userDto.username},
+            `updated_by` = #{userDto.updatedBy},
+            `updated_date` = NOW()
+        WHERE `user_no` = #{userDto.userNo}
+          AND `status` = 0
+    </update>
+
     <update id="deleteUser" parameterType="com.admin.admin_back.pojo.dto.UserDto">
         UPDATE `admin_user`
         SET `status` = 1,

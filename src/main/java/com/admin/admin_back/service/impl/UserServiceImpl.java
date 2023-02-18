@@ -13,6 +13,7 @@ import com.admin.admin_back.pojo.exception.PasswordException;
 import com.admin.admin_back.pojo.exception.UserExistException;
 import com.admin.admin_back.pojo.exception.UserNoException;
 import com.admin.admin_back.pojo.form.AddUserForm;
+import com.admin.admin_back.pojo.form.EditUserForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
@@ -179,6 +180,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public void updateUser(EditUserForm editUserForm) {
+        if (editUserForm.getIsStudent()) {
+            updateStudent(editUserForm.getUserNo(), editUserForm.getStudent());
+        } else {
+            updateTeacher(editUserForm.getUserNo(), editUserForm.getTeacher());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void deleteUser(String userNo) {
         UserDto userDto = userMapper.findUserByUserNo(userNo);
         if (Objects.isNull(userDto)) {
@@ -187,6 +198,8 @@ public class UserServiceImpl implements UserService {
         String updatedBy = UserThreadLocal.getUser().getUserNo();
         userDto.setUpdatedBy(updatedBy);
         userMapper.deleteUser(userDto);
+        studentMapper.deleteStudent(userNo);
+        teacherMapper.deleteTeacher(userNo);
     }
 
     private void addStudent(StudentVo student) {
@@ -204,6 +217,22 @@ public class UserServiceImpl implements UserService {
         addUserDto(userNo, student.getStuName(), UserTypeEnum.STUDENT.code);
     }
 
+    private void updateStudent(String stuNo, StudentVo student) {
+        StudentDto studentDto = studentMapper.findStudentByStuNo(stuNo);
+        if (Objects.isNull(studentDto)) {
+            throw new UserNoException();
+        }
+        UserDto userDto = userMapper.findUserByUserNo(stuNo);
+        if (Objects.isNull(userDto)) {
+            throw new UserNoException();
+        }
+        studentDto = JSON.parseObject(JSON.toJSONString(student), StudentDto.class);
+        studentDto.setStuNo(stuNo);
+        userDto.setUsername(studentDto.getStuName());
+        studentMapper.updateStudent(studentDto);
+        userMapper.updateUsername(userDto);
+    }
+
     private void addTeacher(TeacherVo teacher) {
         String userNo = teacher.getEmpNo();
         TeacherDto teacherDto = teacherMapper.findTeacherByEmpNo(userNo);
@@ -217,6 +246,22 @@ public class UserServiceImpl implements UserService {
         teacherDto = JSON.parseObject(JSON.toJSONString(teacher), TeacherDto.class);
         teacherMapper.addTeacher(teacherDto);
         addUserDto(userNo, teacher.getEmpName(), UserTypeEnum.TEACHER.code);
+    }
+
+    private void updateTeacher(String empNo, TeacherVo teacher) {
+        TeacherDto teacherDto = teacherMapper.findTeacherByEmpNo(empNo);
+        if (Objects.isNull(teacherDto)) {
+            throw new UserNoException();
+        }
+        UserDto userDto = userMapper.findUserByUserNo(empNo);
+        if (Objects.isNull(userDto)) {
+            throw new UserNoException();
+        }
+        teacherDto = JSON.parseObject(JSON.toJSONString(teacher), TeacherDto.class);
+        teacherDto.setEmpNo(empNo);
+        userDto.setUsername(teacherDto.getEmpName());
+        teacherMapper.updateTeacher(teacherDto);
+        userMapper.updateUsername(userDto);
     }
 
     private void addUserDto(String userNo, String username, int userType) {

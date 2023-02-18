@@ -2,6 +2,7 @@ package com.admin.admin_back.service;
 
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.form.AddUserForm;
+import com.admin.admin_back.pojo.form.EditUserForm;
 import com.admin.admin_back.pojo.vo.UsersVo;
 
 /**
@@ -18,6 +19,8 @@ public interface UserService {
     UsersVo getUsers();
 
     void addUser(AddUserForm addUserForm);
+
+    void updateUser(EditUserForm editUserForm);
 
     void deleteUser(String userNo);
 

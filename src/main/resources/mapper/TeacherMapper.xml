@@ -48,4 +48,34 @@
         VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.IDNo}, #{teacher.marriage}, #{teacher.orgType}, #{teacher.staffType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
     </insert>
 
+    <update id="updateTeacher" parameterType="com.admin.admin_back.pojo.dto.TeacherDto">
+        UPDATE `teacheres`
+        SET `empName` = #{teacher.empName},
+            `sex` = #{teacher.sex},
+            `birthday` = #{teacher.birthday},
+            `phone` = #{teacher.phone},
+            `IDNo` = #{teacher.IDNo},
+            `marriage` = #{teacher.marriage},
+            `orgType` = #{teacher.orgType},
+            `staffType` = #{teacher.staffType},
+            `title` = #{teacher.title},
+            `degree` = #{teacher.degree},
+            `title_level` = #{teacher.titleLevel},
+            `teachtype` = #{teacher.teachType},
+            `school` = #{teacher.school},
+            `enterdate` = #{teacher.enterDate},
+            `teachdate` = #{teacher.teachDate},
+            `status` = #{teacher.status},
+            `rank` = #{teacher.rank},
+            `tecposition` = #{teacher.tecposition},
+            `memo` = #{teacher.memo},
+            `schoolid` = #{teacher.schoolId}
+        WHERE `empNo` = #{teacher.empNo}
+    </update>
+
+    <delete id="deleteTeacher" parameterType="java.lang.String">
+        DELETE FROM `teacheres`
+        WHERE `empNo` = #{empNo}
+    </delete>
+
 </mapper>

@@ -28,6 +28,8 @@ public interface UserMapper {
 
     Integer updateUser(@Param("userDto") UserDto userDto);
 
+    Integer updateUsername(@Param("userDto") UserDto userDto);
+
     Integer deleteUser(@Param("userDto") UserDto userDto);
 
 }

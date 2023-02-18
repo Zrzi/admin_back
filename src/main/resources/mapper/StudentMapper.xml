@@ -36,4 +36,26 @@
         VALUES (#{student.stuNo}, #{student.stuName}, #{student.sex}, #{student.majorNo}, #{student.classNo}, #{student.curGrade}, #{student.enterYear}, #{student.birthday}, #{student.ID}, #{student.status}, #{student.nation}, #{student.politicalStatus}, #{student.sourcePlace})
     </insert>
 
+    <update id="updateStudent" parameterType="com.admin.admin_back.pojo.dto.StudentDto">
+        UPDATE `students`
+        SET `stuName` = #{student.stuName},
+            `sex` = #{student.sex},
+            `majorNo` = #{student.majorNo},
+            `classNo` = #{student.classNo},
+            `cur_grade` = #{student.curGrade},
+            `enteryear` = #{student.enterYear},
+            `birthday` = #{student.birthday},
+            `ID` = #{student.ID},
+            `status` = #{student.status},
+            `nation` = #{student.nation},
+            `PoliticalStatus` = #{student.politicalStatus},
+            `SourcePlace` = #{student.sourcePlace}
+        WHERE `stuNo` = #{student.stuNo}
+    </update>
+
+    <delete id="deleteStudent" parameterType="java.lang.String">
+        DELETE FROM `students`
+        WHERE `stuNo` = #{stuNo}
+    </delete>
+
 </mapper>

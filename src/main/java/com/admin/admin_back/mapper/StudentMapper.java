@@ -20,4 +20,8 @@ public interface StudentMapper {
 
     Integer addStudent(@Param("student") StudentDto student);
 
+    Integer updateStudent(@Param("student") StudentDto student);
+
+    Integer deleteStudent(String stuNo);
+
 }

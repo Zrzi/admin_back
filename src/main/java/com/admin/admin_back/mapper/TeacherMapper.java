@@ -20,4 +20,8 @@ public interface TeacherMapper {
 
     Integer addTeacher(@Param("teacher") TeacherDto teacher);
 
+    Integer updateTeacher(@Param("teacher") TeacherDto teacher);
+
+    Integer deleteTeacher(String stuNo);
+
 }
