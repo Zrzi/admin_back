@@ -23,7 +23,7 @@ public class StudentVo {
 
     private String birthday;
 
-    private String ID;
+    private String id;
 
     private String status;
 
@@ -99,12 +99,12 @@ public class StudentVo {
         this.birthday = birthday;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getStatus() {

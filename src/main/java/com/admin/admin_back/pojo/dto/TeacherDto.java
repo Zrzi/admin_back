@@ -19,7 +19,7 @@ public class TeacherDto {
 
     private String phone;
 
-    private String IDNo;
+    private String idNo;
 
     private String marriage;
 
@@ -93,12 +93,12 @@ public class TeacherDto {
         this.phone = phone;
     }
 
-    public String getIDNo() {
-        return IDNo;
+    public String getIdNo() {
+        return idNo;
     }
 
-    public void setIDNo(String IDNo) {
-        this.IDNo = IDNo;
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
     }
 
     public String getMarriage() {

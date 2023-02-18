@@ -103,6 +103,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public StudentVo getStudentByStuNo(String userNo) {
+        StudentDto studentDto = studentMapper.findStudentByStuNo(userNo);
+        return JSON.parseObject(JSON.toJSONString(studentDto), StudentVo.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public TeacherVo getTeacherByEmpNo(String userNo) {
+        TeacherDto teacherDto = teacherMapper.findTeacherByEmpNo(userNo);
+        return JSON.parseObject(JSON.toJSONString(teacherDto), TeacherVo.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize) {
         UsersVo usersVo = new UsersVo();
         switch (userTypeEnum) {

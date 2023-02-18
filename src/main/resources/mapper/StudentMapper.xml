@@ -13,7 +13,7 @@
         <result column="cur_grade" property="curGrade" />
         <result column="enteryear" property="enterYear" />
         <result column="birthday" property="birthday" />
-        <result column="ID" property="ID" />
+        <result column="ID" property="id" />
         <result column="status" property="status" />
         <result column="nation" property="nation" />
         <result column="PoliticalStatus" property="politicalStatus" />
@@ -33,7 +33,7 @@
 
     <insert id="addStudent" parameterType="com.admin.admin_back.pojo.dto.StudentDto">
         INSERT INTO `students` (`stuNo`, `stuName`, `sex`, `majorNo`, `classNo`, `cur_grade`, `enteryear`, `birthday`, `ID`, `status`, `nation`, `PoliticalStatus`, `SourcePlace`)
-        VALUES (#{student.stuNo}, #{student.stuName}, #{student.sex}, #{student.majorNo}, #{student.classNo}, #{student.curGrade}, #{student.enterYear}, #{student.birthday}, #{student.ID}, #{student.status}, #{student.nation}, #{student.politicalStatus}, #{student.sourcePlace})
+        VALUES (#{student.stuNo}, #{student.stuName}, #{student.sex}, #{student.majorNo}, #{student.classNo}, #{student.curGrade}, #{student.enterYear}, #{student.birthday}, #{student.id}, #{student.status}, #{student.nation}, #{student.politicalStatus}, #{student.sourcePlace})
     </insert>
 
     <update id="updateStudent" parameterType="com.admin.admin_back.pojo.dto.StudentDto">
@@ -45,7 +45,7 @@
             `cur_grade` = #{student.curGrade},
             `enteryear` = #{student.enterYear},
             `birthday` = #{student.birthday},
-            `ID` = #{student.ID},
+            `ID` = #{student.id},
             `status` = #{student.status},
             `nation` = #{student.nation},
             `PoliticalStatus` = #{student.politicalStatus},

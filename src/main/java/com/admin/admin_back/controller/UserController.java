@@ -82,6 +82,24 @@ public class UserController {
         }
     }
 
+    @CheckRole("getUserByUserNo")
+    @GetMapping("/user/getByUserNo")
+    public Result<?> getUserByUserNo(@RequestParam("userNo") String userNo,
+                                     @RequestParam("userType") String userType) {
+        UserTypeEnum userTypeEnum = UserTypeEnum.findUserTypeByMessage(userType);
+        if (Objects.isNull(userTypeEnum)) {
+            return new Result<>(ResponseMessage.USER_TYOE_ERROR);
+        }
+        switch (userTypeEnum) {
+            case STUDENT:
+                return new Result<>(ResponseMessage.SUCCESS, userService.getStudentByStuNo(userNo));
+            case TEACHER:
+                return new Result<>(ResponseMessage.SUCCESS, userService.getTeacherByEmpNo(userNo));
+            default:
+                return new Result<>(ResponseMessage.SUCCESS);
+        }
+    }
+
     @CheckRole("getUser")
     @GetMapping("/user/get")
     public Result<?> getUser(@RequestParam("userType") String userType,
@@ -164,9 +182,9 @@ public class UserController {
         }
         editUserForm.setUserNo(userNo.trim());
         if (isStudent) {
-            return checkAddStudent(editUserForm.getStudent());
+            return checkEditStudent(editUserForm.getStudent());
         } else {
-            return checkAddTeacher(editUserForm.getTeacher());
+            return checkEditTeacher(editUserForm.getTeacher());
         }
     }
 
@@ -242,13 +260,13 @@ public class UserController {
             return "出生日期长度不超过20个字符";
         }
         studentVo.setBirthday(birthday);
-        String ID = studentVo.getID();
-        if (StringUtils.isNotBlank(ID)) {
-            ID = ID.trim();
-            if (ID.length() > 20) {
+        String id = studentVo.getId();
+        if (StringUtils.isNotBlank(id)) {
+            id = id.trim();
+            if (id.length() > 20) {
                 return "学生身份证最长20位";
             }
-            studentVo.setID(ID);
+            studentVo.setId(id);
         }
         String status = studentVo.getStatus();
         if (StringUtils.isBlank(status)) {
@@ -351,13 +369,13 @@ public class UserController {
             return "出生日期长度不超过20个字符";
         }
         studentVo.setBirthday(birthday);
-        String ID = studentVo.getID();
-        if (StringUtils.isNotBlank(ID)) {
-            ID = ID.trim();
-            if (ID.length() > 20) {
+        String id = studentVo.getId();
+        if (StringUtils.isNotBlank(id)) {
+            id = id.trim();
+            if (id.length() > 20) {
                 return "学生身份证最长20位";
             }
-            studentVo.setID(ID);
+            studentVo.setId(id);
         }
         String status = studentVo.getStatus();
         if (StringUtils.isBlank(status)) {
@@ -440,13 +458,13 @@ public class UserController {
             }
             teacherVo.setPhone(phone);
         }
-        String IDNo = teacherVo.getIDNo();
-        if (StringUtils.isNotEmpty(IDNo)) {
-            IDNo = IDNo.trim();
-            if (IDNo.length() > 20) {
+        String idNo = teacherVo.getIdNo();
+        if (StringUtils.isNotEmpty(idNo)) {
+            idNo = idNo.trim();
+            if (idNo.length() > 20) {
                 return "身份证长度不超过20个字符";
             }
-            teacherVo.setIDNo(IDNo);
+            teacherVo.setIdNo(idNo);
         }
         String marriage = teacherVo.getMarriage();
         if (StringUtils.isNotEmpty(marriage)) {
@@ -584,13 +602,13 @@ public class UserController {
             }
             teacherVo.setPhone(phone);
         }
-        String IDNo = teacherVo.getIDNo();
-        if (StringUtils.isNotEmpty(IDNo)) {
-            IDNo = IDNo.trim();
-            if (IDNo.length() > 20) {
+        String idNo = teacherVo.getIdNo();
+        if (StringUtils.isNotEmpty(idNo)) {
+            idNo = idNo.trim();
+            if (idNo.length() > 20) {
                 return "身份证长度不超过20个字符";
             }
-            teacherVo.setIDNo(IDNo);
+            teacherVo.setIdNo(idNo);
         }
         String marriage = teacherVo.getMarriage();
         if (StringUtils.isNotEmpty(marriage)) {

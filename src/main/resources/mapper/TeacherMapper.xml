@@ -10,7 +10,7 @@
         <result column="sex" property="sex" />
         <result column="birthday" property="birthday" />
         <result column="phone" property="phone" />
-        <result column="IDNo" property="IDNo" />
+        <result column="IDNo" property="idNo" />
         <result column="marriage" property="marriage" />
         <result column="orgType" property="orgType" />
         <result column="staffType" property="staffType" />
@@ -45,7 +45,7 @@
 
     <insert id="addTeacher" parameterType="com.admin.admin_back.pojo.dto.TeacherDto">
         INSERT INTO `teacheres` (`empNo`, `empName`, `sex`, `birthday`, `phone`, `IDNo`, `marriage`, `orgType`, `staffType`, `title`, `degree`, `title_level`, `teachtype`, `school`, `enterdate`, `teachdate`, `status`, `rank`, `tecposition`, `memo`, `schoolid`)
-        VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.IDNo}, #{teacher.marriage}, #{teacher.orgType}, #{teacher.staffType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
+        VALUES (#{teacher.empNo}, #{teacher.empName}, #{teacher.sex}, #{teacher.birthday}, #{teacher.phone}, #{teacher.idNo}, #{teacher.marriage}, #{teacher.orgType}, #{teacher.staffType}, #{teacher.title}, #{teacher.degree}, #{teacher.titleLevel}, #{teacher.teachType}, #{teacher.school}, #{teacher.enterDate}, #{teacher.teachDate}, #{teacher.status}, #{teacher.rank}, #{teacher.tecposition}, #{teacher.memo}, #{teacher.schoolId})
     </insert>
 
     <update id="updateTeacher" parameterType="com.admin.admin_back.pojo.dto.TeacherDto">
@@ -54,7 +54,7 @@
             `sex` = #{teacher.sex},
             `birthday` = #{teacher.birthday},
             `phone` = #{teacher.phone},
-            `IDNo` = #{teacher.IDNo},
+            `IDNo` = #{teacher.idNo},
             `marriage` = #{teacher.marriage},
             `orgType` = #{teacher.orgType},
             `staffType` = #{teacher.staffType},
