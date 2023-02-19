@@ -38,6 +38,54 @@ public class ResourceController {
         }
     }
 
+    /**
+     * 不受Aop控制，提供给其它系统使用，因此需要提供userNo
+     * @param userNo 用户名
+     * @param resourceId 资源编码
+     * @return 判断用户是否有权访问这项资源
+     */
+    @GetMapping("/checkAuthorityWithUserNoAndResourceId")
+    public Result<Boolean> checkAuthorityWithUserNoAndResourceId(@RequestParam(value = "userNo", required = false) String userNo,
+                                                                 @RequestParam(value = "resourceId", required = false) String resourceId) {
+        if (StringUtils.isBlank(userNo)) {
+            return new Result<>(ResponseMessage.SUCCESS, false);
+        }
+        if (StringUtils.isBlank(resourceId)) {
+            return new Result<>(ResponseMessage.SUCCESS, false);
+        }
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, resourceService.checkAuthorityWithUserNoAndResourceId(userNo, resourceId));
+        } catch (RuntimeException exception) {
+            return new Result<>(ResponseMessage.SUCCESS, false);
+        }
+    }
+
+    /**
+     * 提供给其它系统使用
+     * @param userNo 用户名
+     * @param resourceType 资源类型
+     * @return ResourveVo列表
+     */
+    @GetMapping("/getResourceWithUserNoAndResourceType")
+    public Result<List<?>> getResourceWithUserNoAndResourceType(@RequestParam(value = "userNo", required = false) String userNo,
+                                                                @RequestParam(value = "resourceType", required = false) String resourceType) {
+        if (StringUtils.isBlank(userNo)) {
+            return new Result<>(ResponseMessage.SUCCESS, new ArrayList<>());
+        }
+        if (StringUtils.isBlank(resourceType)) {
+            return new Result<>(ResponseMessage.SUCCESS, new ArrayList<>());
+        }
+        ResourceTypeEnum resourceTypeEnum = ResourceTypeEnum.findResourceTypeEnumByMessage(resourceType);
+        if (Objects.isNull(resourceTypeEnum)) {
+            return new Result<>(ResponseMessage.SUCCESS, new ArrayList<>());
+        }
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourceByUserNoAndResourceType(userNo, resourceTypeEnum));
+        } catch (RuntimeException exception) {
+            return new Result<>(ResponseMessage.SYSTEM_ERROR, new ArrayList<>());
+        }
+    }
+
 //    @CheckRole("getResourcesCount")
 //    @GetMapping("/resource/count")
 //    public Result<Integer> getResourcesCount(@RequestParam("systemId") String systemId) {

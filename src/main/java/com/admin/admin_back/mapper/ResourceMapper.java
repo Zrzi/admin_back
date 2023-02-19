@@ -19,6 +19,8 @@ public interface ResourceMapper {
 
     List<ResourceDto> findResourceByUserNo(String userNo);
 
+    List<ResourceDto> findResourceByUserNoAndResourceType(@Param("userNo") String userNo, @Param("resourceType") Integer resourceType);
+
     List<ResourceDto> findResourcePageBySystemId(@Param("systemId") String systemId, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
     List<ResourceDto> findResourceBySystemId(String systemId);
