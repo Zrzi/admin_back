@@ -23,7 +23,7 @@ public interface ResourceMapper {
 
     List<ResourceDto> findResourceBySystemId(String systemId);
 
-    List<String> findResourceByParentResource(String parentResource);
+    // List<String> findResourceByParentResource(String parentResource);
 
     ResourceDto findResourceByResourceId(String resourceId);
 

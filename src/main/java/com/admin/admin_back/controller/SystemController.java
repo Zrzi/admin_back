@@ -36,6 +36,16 @@ public class SystemController {
         }
     }
 
+//    @CheckRole("getSystemById")
+//    @GetMapping(value = "/system/getById")
+//    public Result<?> getSystemById(@RequestParam("systemId") String systemId) {
+//        try {
+//            return new Result<>(ResponseMessage.SUCCESS, systemService.getSystemBySystemId(systemId));
+//        } catch (SystemExistException exception) {
+//            return new Result<>(ResponseMessage.SYSTEM_NOT_FOUNT);
+//        }
+//    }
+
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
     public Result<?> addSystem(@RequestBody SystemForm form) {

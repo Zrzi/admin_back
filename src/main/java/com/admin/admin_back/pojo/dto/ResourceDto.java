@@ -23,7 +23,7 @@ public class ResourceDto {
 
     private Integer resourceType;
 
-    private String parentResource;
+//    private String parentResource;
 
     private String createdBy;
 
@@ -91,13 +91,13 @@ public class ResourceDto {
         this.resourceType = resourceType;
     }
 
-    public String getParentResource() {
-        return parentResource;
-    }
-
-    public void setParentResource(String parentResource) {
-        this.parentResource = parentResource;
-    }
+//    public String getParentResource() {
+//        return parentResource;
+//    }
+//
+//    public void setParentResource(String parentResource) {
+//        this.parentResource = parentResource;
+//    }
 
     public String getCreatedBy() {
         return createdBy;

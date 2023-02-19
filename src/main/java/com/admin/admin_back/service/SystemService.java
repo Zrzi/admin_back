@@ -8,6 +8,8 @@ public interface SystemService {
 
     List<SystemVo> getSystems();
 
+    SystemVo getSystemBySystemId(String systemId);
+
     void addSystem(String systemName);
 
     void updateSystem(String systemId, String systemName);

@@ -13,6 +13,8 @@ public interface ResourceService {
 
     List<ResourceVo> getResourcesBySystemId(String systemId);
 
+    ResourceVo getResourceById(String resourceId);
+
     void addResource(ResourceForm resourceForm);
 
     void updateResource(ResourceForm resourceForm);

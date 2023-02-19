@@ -55,6 +55,16 @@ public class ResourceController {
         }
     }
 
+    @CheckRole("getResourceById")
+    @GetMapping("/resource/getById")
+    public Result<?> getResourceById(@RequestParam("resourceId") String resourceId) {
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourceById(resourceId));
+        } catch (ResourceExistException exception) {
+            return new Result<>(ResponseMessage.RESOURCE_NOT_FOUND);
+        }
+    }
+
     @CheckRole("addResource")
     @PostMapping("/resource/post")
     public Result<?> addResource(@RequestBody ResourceForm resourceForm) {

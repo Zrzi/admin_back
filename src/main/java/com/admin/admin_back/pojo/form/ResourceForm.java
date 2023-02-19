@@ -18,8 +18,6 @@ public class ResourceForm {
 
     private String resourceType;
 
-    private String parentResource;
-
     public ResourceForm() {}
 
     public String getResourceId() {
@@ -60,14 +58,6 @@ public class ResourceForm {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
-    }
-
-    public String getParentResource() {
-        return parentResource;
-    }
-
-    public void setParentResource(String parentResource) {
-        this.parentResource = parentResource;
     }
 
     @Override

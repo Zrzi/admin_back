@@ -50,7 +50,7 @@ public class ResourceServiceImpl implements ResourceService {
             vo.setSystemName(resourceDto.getSystemName());
             vo.setResourceUrl(resourceDto.getResourceUrl());
             vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
-            vo.setParentResource(resourceDto.getParentResource());
+//            vo.setParentResource(resourceDto.getParentResource());
             vo.setCreatedBy(resourceDto.getCreatedBy());
             vo.setCreatedDate(resourceDto.getCreatedDate());
             vo.setUpdatedBy(resourceDto.getUpdatedBy());
@@ -73,13 +73,34 @@ public class ResourceServiceImpl implements ResourceService {
             vo.setSystemName(resourceDto.getSystemName());
             vo.setResourceUrl(resourceDto.getResourceUrl());
             vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
-            vo.setParentResource(resourceDto.getParentResource());
+//            vo.setParentResource(resourceDto.getParentResource());
             vo.setCreatedBy(resourceDto.getCreatedBy());
             vo.setCreatedDate(resourceDto.getCreatedDate());
             vo.setUpdatedBy(resourceDto.getUpdatedBy());
             vo.setUpdatedDate(resourceDto.getUpdatedDate());
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ResourceVo getResourceById(String resourceId) {
+        ResourceDto resourceDto = resourceMapper.findResourceByResourceId(resourceId);
+        if (Objects.isNull(resourceDto)) {
+            throw new ResourceExistException();
+        }
+        ResourceVo vo = new ResourceVo();
+        vo.setResourceId(resourceDto.getResourceId());
+        vo.setResourceName(resourceDto.getResourceName());
+        vo.setSystemId(resourceDto.getSystemId());
+        vo.setSystemName(resourceDto.getSystemName());
+        vo.setResourceUrl(resourceDto.getResourceUrl());
+        vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
+//        vo.setParentResource(resourceDto.getParentResource());
+        vo.setCreatedBy(resourceDto.getCreatedBy());
+        vo.setCreatedDate(resourceDto.getCreatedDate());
+        vo.setUpdatedBy(resourceDto.getUpdatedBy());
+        vo.setUpdatedDate(resourceDto.getUpdatedDate());
+        return vo;
     }
 
     @Override
@@ -94,14 +115,14 @@ public class ResourceServiceImpl implements ResourceService {
         if (Objects.nonNull(resourceMapper.findResourceByResourceName(resourceName))) {
             throw new ResourceNameExistException();
         }
-        String parentResource = resourceForm.getParentResource().trim();
-        ResourceDto parent = null;
-        if (StringUtils.isNotBlank(parentResource)) {
-            parent = resourceMapper.findResourceByResourceId(parentResource);
-            if (Objects.isNull(parent)) {
-                throw new ResourceParentExistException();
-            }
-        }
+//        String parentResource = resourceForm.getParentResource().trim();
+//        ResourceDto parent = null;
+//        if (StringUtils.isNotBlank(parentResource)) {
+//            parent = resourceMapper.findResourceByResourceId(parentResource);
+//            if (Objects.isNull(parent)) {
+//                throw new ResourceParentExistException();
+//            }
+//        }
         ResourceDto resourceDto = new ResourceDto();
         resourceDto.setResourceId(GenerateCodeUtil.generateCode(CodeTypeEnum.RESOURCE));
         resourceDto.setResourceName(resourceName);
@@ -110,11 +131,11 @@ public class ResourceServiceImpl implements ResourceService {
         resourceDto.setResourceUrl(resourceForm.getResourceUrl());
         String type = resourceForm.getResourceType();
         int code = Objects.requireNonNull(ResourceTypeEnum.findResourceTypeEnumByMessage(type)).code;
-        if (Objects.nonNull(parent) && code != parent.getResourceType()) {
-            throw new ResourceTypeException();
-        }
+//        if (Objects.nonNull(parent) && code != parent.getResourceType()) {
+//            throw new ResourceTypeException();
+//        }
         resourceDto.setResourceType(code);
-        resourceDto.setParentResource(resourceDto.getParentResource());
+//        resourceDto.setParentResource(resourceDto.getParentResource());
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setCreatedBy(userNo);
         resourceDto.setUpdatedBy(userNo);
@@ -136,23 +157,23 @@ public class ResourceServiceImpl implements ResourceService {
                 throw new ResourceNameExistException();
             }
         }
-        String parentResource = resourceForm.getParentResource();
-        ResourceDto parent = null;
-        if (StringUtils.isNotEmpty(parentResource)) {
-            parent = resourceMapper.findResourceByResourceId(parentResource);
-            if (Objects.isNull(parent)) {
-                throw new ResourceParentExistException();
-            }
-        }
+//        String parentResource = resourceForm.getParentResource();
+//        ResourceDto parent = null;
+//        if (StringUtils.isNotEmpty(parentResource)) {
+//            parent = resourceMapper.findResourceByResourceId(parentResource);
+//            if (Objects.isNull(parent)) {
+//                throw new ResourceParentExistException();
+//            }
+//        }
         resourceDto.setResourceName(resourceName);
         resourceDto.setResourceUrl(resourceForm.getResourceUrl());
         String type = resourceForm.getResourceType();
         int code = Objects.requireNonNull(ResourceTypeEnum.findResourceTypeEnumByMessage(type)).code;
-        if (Objects.nonNull(parent) && code != parent.getResourceType()) {
-            throw new ResourceTypeException();
-        }
+//        if (Objects.nonNull(parent) && code != parent.getResourceType()) {
+//            throw new ResourceTypeException();
+//        }
         resourceDto.setResourceType(code);
-        resourceDto.setParentResource(resourceDto.getParentResource());
+//        resourceDto.setParentResource(resourceDto.getParentResource());
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
         resourceMapper.updateResourceByResourceId(resourceDto);
@@ -165,10 +186,10 @@ public class ResourceServiceImpl implements ResourceService {
         if (Objects.isNull(resourceDto)) {
             throw new ResourceExistException();
         }
-        List<String> ids = resourceMapper.findResourceByParentResource(resourceId);
-        if (!CollectionUtils.isEmpty(ids)) {
-            throw new ResourceChildExistException();
-        }
+//        List<String> ids = resourceMapper.findResourceByParentResource(resourceId);
+//        if (!CollectionUtils.isEmpty(ids)) {
+//            throw new ResourceChildExistException();
+//        }
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
         resourceMapper.deleteResourceByResourceId(resourceDto);

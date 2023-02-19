@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSON;
 
 import java.util.Date;
 
+/**
+ * @author 陈群矜
+ */
 public class ResourceVo {
 
     private String resourceId;
@@ -18,7 +21,7 @@ public class ResourceVo {
 
     private String resourceType;
 
-    private String parentResource;
+//    private String parentResource;
 
     private String createdBy;
 
@@ -78,13 +81,13 @@ public class ResourceVo {
         this.resourceType = resourceType;
     }
 
-    public String getParentResource() {
-        return parentResource;
-    }
-
-    public void setParentResource(String parentResource) {
-        this.parentResource = parentResource;
-    }
+//    public String getParentResource() {
+//        return parentResource;
+//    }
+//
+//    public void setParentResource(String parentResource) {
+//        this.parentResource = parentResource;
+//    }
 
     public String getCreatedBy() {
         return createdBy;

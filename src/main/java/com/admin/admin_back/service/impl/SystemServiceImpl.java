@@ -46,6 +46,23 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public SystemVo getSystemBySystemId(String systemId) {
+        SystemDto systemDto = systemMapper.findSystemBySystemId(systemId);
+        if (Objects.isNull(systemDto)) {
+            throw new SystemExistException();
+        }
+        SystemVo vo = new SystemVo();
+        vo.setSystemId(systemDto.getSystemId());
+        vo.setSystemName(systemDto.getSystemName());
+        vo.setCreatedBy(systemDto.getCreatedBy());
+        vo.setCreatedDate(systemDto.getCreatedDate());
+        vo.setUpdatedBy(systemDto.getUpdatedBy());
+        vo.setUpdatedDate(systemDto.getUpdatedDate());
+        return vo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void addSystem(String systemName) {
         if (systemMapper.findSystemBySystemName(systemName) != null) {
             throw new SystemNameExistException();
