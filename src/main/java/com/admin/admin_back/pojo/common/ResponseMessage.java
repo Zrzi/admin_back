@@ -157,6 +157,11 @@ public enum ResponseMessage {
     NO_AUTHORITIES(800003, "无权限"),
 
     /**
+     * 重复请求
+     */
+    REPEAT_REQUEST(800004, "重复请求"),
+
+    /**
      * 全局异常处理
      */
     SYSTEM_ERROR(900000, "系统内部异常"),
