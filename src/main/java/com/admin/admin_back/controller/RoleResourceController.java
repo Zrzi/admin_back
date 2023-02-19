@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
@@ -46,6 +47,7 @@ public class RoleResourceController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("editRoleResource")
     @PostMapping("/roleResource/post")
     public Result<?> editRoleResource(@RequestBody EditRoleResourceForm editRoleResourceForm) {

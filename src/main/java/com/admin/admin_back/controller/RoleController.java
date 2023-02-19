@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.RoleExistException;
@@ -42,6 +43,7 @@ public class RoleController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("addRole")
     @PostMapping("/role/post")
     public Result<?> addRole(@RequestBody RoleForm roleForm) {
@@ -59,6 +61,7 @@ public class RoleController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("updateRole")
     @PostMapping("/role/update")
     public Result<?> updateRole(@RequestBody RoleForm roleForm) {
@@ -76,6 +79,7 @@ public class RoleController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("removeRole")
     @PostMapping("/role/delete")
     public Result<?> removeRole(@RequestBody DeleteRoleForm deleteRoleForm) {

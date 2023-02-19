@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
@@ -118,6 +119,7 @@ public class UserController {
         return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize));
     }
 
+    @NoRepeatSubmit
     @CheckRole("addUser")
     @PostMapping("/user/post")
     public Result<?> addUser(@RequestBody AddUserForm addUserForm) {
@@ -133,6 +135,7 @@ public class UserController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("updateUser")
     @PostMapping("/user/update")
     public Result<?> updateUser(@RequestBody EditUserForm editUserForm) {
@@ -148,6 +151,7 @@ public class UserController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("removeUser")
     @PostMapping("/user/delete")
     public Result<?> removeUser(@RequestBody DeleteUserForm deleteUserForm) {

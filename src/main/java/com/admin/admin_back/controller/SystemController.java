@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.BaseException;
@@ -46,6 +47,7 @@ public class SystemController {
 //        }
 //    }
 
+    @NoRepeatSubmit
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
     public Result<?> addSystem(@RequestBody SystemForm form) {
@@ -65,6 +67,7 @@ public class SystemController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")
     public Result<?> updateSystem(@RequestBody SystemForm form) {

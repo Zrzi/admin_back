@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
@@ -126,6 +127,7 @@ public class ResourceController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("addResource")
     @PostMapping("/resource/post")
     public Result<?> addResource(@RequestBody ResourceForm resourceForm) {
@@ -147,6 +149,7 @@ public class ResourceController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("updateResource")
     @PostMapping("/resource/update")
     public Result<?> updateResource(@RequestBody ResourceForm resourceForm) {
@@ -170,6 +173,7 @@ public class ResourceController {
         }
     }
 
+    @NoRepeatSubmit
     @CheckRole("deleteResource")
     @PostMapping("/resource/delete")
     public Result<?> deleteResource(@RequestBody DeleteResourceForm deleteResourceForm) {

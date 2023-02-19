@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 public @interface NoRepeatSubmit {
 
     /**
-     * 设置多少时间内不能重复请求，默认是10
+     * 设置多少时间内不能重复请求，默认是10，单位是秒
      */
     int time() default 10;
 
