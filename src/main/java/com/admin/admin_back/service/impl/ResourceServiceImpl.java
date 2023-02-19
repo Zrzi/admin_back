@@ -37,6 +37,24 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public Boolean checkAuthority(String resourceId) {
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        if (StringUtils.isBlank(userNo)) {
+            return false;
+        }
+        List<ResourceDto> resources = resourceMapper.findResourceByUserNo(userNo);
+        if (CollectionUtils.isEmpty(resources)) {
+            return false;
+        }
+        for (ResourceDto resource : resources) {
+            if (StringUtils.equals(resourceId, resource.getResourceId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer pageSize) {
         List<ResourceDto> resourceBySystemId = resourceMapper.findResourcePageBySystemId(systemId, start, pageSize);
         if (CollectionUtils.isEmpty(resourceBySystemId)) {

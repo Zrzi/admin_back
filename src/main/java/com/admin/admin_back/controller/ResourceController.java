@@ -25,11 +25,24 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @CheckRole("getResourcesCount")
-    @GetMapping("/resource/count")
-    public Result<Integer> getResourcesCount(@RequestParam("systemId") String systemId) {
-        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
+    @CheckRole("checkAuthority")
+    @GetMapping("/checkAuthority")
+    public Result<Boolean> checkAuthority(@RequestParam(value = "resourceId", required = false) String resourceId) {
+        if (StringUtils.isBlank(resourceId)) {
+            return new Result<>(ResponseMessage.SUCCESS, false);
+        }
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, resourceService.checkAuthority(resourceId));
+        } catch (RuntimeException exception) {
+            return new Result<>(ResponseMessage.SUCCESS, false);
+        }
     }
+
+//    @CheckRole("getResourcesCount")
+//    @GetMapping("/resource/count")
+//    public Result<Integer> getResourcesCount(@RequestParam("systemId") String systemId) {
+//        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
+//    }
 
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
