@@ -39,3 +39,6 @@ mvnw.cmd
 src/main/resources/application.properties
 src/main/resources/application-dev.yml
 src/main/resources/application-prod.yml
+src/main/resources/application-test.yml
+
+src/main/resources/sql/common.sql

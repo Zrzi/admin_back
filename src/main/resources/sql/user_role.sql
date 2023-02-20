@@ -15,3 +15,6 @@ CREATE TABLE `admin_user_role`(
 
 INSERT INTO `admin_user_role` (`user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('00000000000000000000', 'R4f50951574d7454bb9df093e22ac5b24', 0, 0, '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
+
+INSERT INTO `admin_user_role` (`user_no`, `role_id`, `level`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('00000000000000000001', 'R5b4a5751b88e4855ab16c31d4aa9a3cb', 0, 0, '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);

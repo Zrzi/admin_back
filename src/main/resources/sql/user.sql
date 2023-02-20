@@ -15,3 +15,6 @@ CREATE TABLE `admin_user`(
 
 INSERT INTO `admin_user` (`user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUE ('00000000000000000000', 'admin', '96e79218965eb72c92a549dd5a330112', 0, '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
+
+INSERT INTO `admin_user` (`user_no`, `user_name`, `password`, `user_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUE ('00000000000000000001', '测试用户', '96e79218965eb72c92a549dd5a330112', 0, '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
