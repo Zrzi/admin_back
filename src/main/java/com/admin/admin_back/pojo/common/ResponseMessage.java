@@ -137,6 +137,16 @@ public enum ResponseMessage {
     USER_TYOE_ERROR(400007, "用户类型错误"),
 
     /**
+     *
+     */
+    CONTENT_NOT_FOUND(500000, "数据为空"),
+
+    /**
+     *
+     */
+    KEY_NOT_FOUND(500001, "密钥为空"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),

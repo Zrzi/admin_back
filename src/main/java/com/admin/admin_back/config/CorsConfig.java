@@ -9,7 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//import javax.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 
 /**
  * 当服务器由nginx代理时，不需要配置跨域
@@ -43,9 +43,9 @@ public class CorsConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-//    @PostConstruct
-//    public void post() {
-//        System.out.println("CorsConfig起效");
-//    }
+    @PostConstruct
+    public void post() {
+        System.out.println("CorsConfig起效");
+    }
 
 }
