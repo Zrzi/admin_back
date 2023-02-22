@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.crypto.Cipher;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -84,6 +85,12 @@ public class RsaUtil {
     @PostConstruct
     public void postConstruct() throws NoSuchAlgorithmException {
         this.generateKey();
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        this.redisTemplate.delete(PUBLIC_KEY);
+        this.redisTemplate.delete(PRIVATE_KEY);
     }
 
 }
