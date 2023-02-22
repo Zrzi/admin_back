@@ -172,6 +172,11 @@ public enum ResponseMessage {
     REPEAT_REQUEST(800004, "重复请求"),
 
     /**
+     * 密钥缺失
+     */
+    AES_KEY_NOT_FOUND(800005, "密钥缺失"),
+
+    /**
      * 全局异常处理
      */
     SYSTEM_ERROR(900000, "系统内部异常"),

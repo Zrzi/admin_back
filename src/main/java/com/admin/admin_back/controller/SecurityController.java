@@ -34,7 +34,9 @@ public class SecurityController {
             if (StringUtils.isBlank(publicKey)) {
                 return new Result<>(ResponseMessage.SYSTEM_ERROR);
             }
-            return new Result<>(ResponseMessage.SUCCESS, publicKey);
+            Result<String> result = new Result<>(ResponseMessage.SUCCESS);
+            result.setData(publicKey);
+            return result;
         } catch (Exception exception) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }

@@ -13,7 +13,6 @@ import java.util.Objects;
 /**
  * @author 陈群矜
  */
-@Component
 @WebFilter(filterName = "channelFilter", urlPatterns = {"/*"})
 public class ChannelFilter implements Filter {
 
@@ -24,24 +23,24 @@ public class ChannelFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        HttpServletRequest httpServletRequest = null;
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
+        HttpServletRequest request = null;
         RequestWrapper requestWrapper = null;
-        if (request instanceof HttpServletRequest) {
-            httpServletRequest = (HttpServletRequest) request;
+        if (servletRequest instanceof HttpServletRequest) {
+            request = (HttpServletRequest) servletRequest;
         }
-        if (Objects.isNull(httpServletRequest)) {
+        if (Objects.isNull(request)) {
             // 非HttpServletRequest，放行
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        if (ServletFileUpload.isMultipartContent(httpServletRequest)) {
+        if (ServletFileUpload.isMultipartContent(request)) {
             // 上传文件，放行
-            filterChain.doFilter(httpServletRequest, response);
+            filterChain.doFilter(request, servletResponse);
             return;
         }
-        requestWrapper = new RequestWrapper(httpServletRequest);
-        filterChain.doFilter(requestWrapper, response);
+        requestWrapper = new RequestWrapper(request);
+        filterChain.doFilter(requestWrapper, servletResponse);
     }
 
 }

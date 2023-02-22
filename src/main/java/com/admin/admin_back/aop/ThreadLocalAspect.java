@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author 陈群矜
  */
-@Order(1)
+@Order(2)
 @Aspect
 @Component
 public class ThreadLocalAspect {

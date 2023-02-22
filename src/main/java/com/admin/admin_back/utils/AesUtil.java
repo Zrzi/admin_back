@@ -33,8 +33,8 @@ public class AesUtil {
      * @throws Exception
      */
     public String encrypt(String text, String key) throws Exception {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(128);
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        keyGenerator.init(128);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
         byte[] bytes = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
@@ -49,8 +49,8 @@ public class AesUtil {
      * @throws Exception
      */
     public String decrypt(String text, String key) throws Exception {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(128);
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        keyGenerator.init(128);
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
         byte[] encryptBytes = Base64.decodeBase64(text);

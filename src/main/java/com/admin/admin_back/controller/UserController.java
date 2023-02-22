@@ -2,6 +2,7 @@ package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
+import com.admin.admin_back.annotations.SecurityAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
@@ -13,6 +14,8 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
+import com.admin.admin_back.utils.AesUtil;
+import com.admin.admin_back.utils.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -32,6 +35,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @SecurityAnnotation
     @PostMapping("/login")
     public Result<Map<String, String>> login(@RequestBody LoginForm loginForm) {
         String userNo = loginForm.getUserNo();
@@ -51,6 +55,8 @@ public class UserController {
             return new Result<>(ResponseMessage.USER_NOT_FOUND);
         } catch (PasswordException exception) {
             return new Result<>(ResponseMessage.PASSWORD_ERROR);
+        } catch (Exception exception) {
+            return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }
     }
 

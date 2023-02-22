@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author 陈群矜
  */
-@Order(2)
+@Order(3)
 @Aspect
 @Component
 public class CheckRoleAspect {

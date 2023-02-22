@@ -1,5 +1,8 @@
 package com.admin.admin_back.pojo;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StreamUtils;
+
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
@@ -7,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 
 /**
  * @author 陈群矜
@@ -32,22 +36,29 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * @return String
      */
     public String getBodyString(final ServletRequest request) {
-        try {
-            return inputStream2String(request.getInputStream());
-        } catch (IOException e) {
-            // todo 日志
-            throw new RuntimeException(e);
+        String contentType = request.getContentType();
+        StringBuilder builder = new StringBuilder();
+        if (StringUtils.isNotBlank(contentType)
+                && (contentType.contains("multipart/form-data")
+                || contentType.contains("x-www-form-urlencoded"))) {
+            Enumeration<String> parameterNames = request.getParameterNames();
+            while (parameterNames.hasMoreElements()) {
+                String name = parameterNames.nextElement();
+                builder.append(name).append('=').append(request.getParameter(name)).append('&');
+            }
+            int length = builder.length();
+            if (builder.charAt(length - 1) == '&') {
+                builder.deleteCharAt(length - 1);
+            }
+            return builder.toString();
         }
-    }
+        try {
+            byte[] bytes = StreamUtils.copyToByteArray(request.getInputStream());
+            builder.append(new String(bytes, StandardCharsets.UTF_8));
+        } catch (IOException ignored) {
 
-    /**
-     * 获取请求Body
-     *
-     * @return String
-     */
-    public String getBodyString() {
-        InputStream inputStream = new ByteArrayInputStream(body);
-        return inputStream2String(inputStream);
+        }
+        return builder.toString();
     }
 
     /**
@@ -56,38 +67,6 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     public void setBody(String val){
         body = val.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 将inputStream里的数据读取出来并转换成字符串
-     *
-     * @param inputStream inputStream
-     * @return String
-     */
-    private String inputStream2String(InputStream inputStream) {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            // todo 日志
-            throw new RuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // todo 日志
-                }
-            }
-        }
-
-
-        return  sb.toString();
     }
 
     @Override
