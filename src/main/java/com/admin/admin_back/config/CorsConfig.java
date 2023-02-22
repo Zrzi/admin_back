@@ -46,7 +46,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @PostConstruct
     public void post() {
-        System.out.println("CorsConfig起效");
+//        System.out.println("CorsConfig起效");
     }
 
 }

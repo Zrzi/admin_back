@@ -2,7 +2,7 @@ package com.admin.admin_back.filters;
 
 import com.admin.admin_back.pojo.RequestWrapper;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpMethod;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -19,7 +19,6 @@ public class ChannelFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
-        System.out.println("channel filter init 。。。");
     }
 
     @Override
@@ -32,6 +31,11 @@ public class ChannelFilter implements Filter {
         if (Objects.isNull(request)) {
             // 非HttpServletRequest，放行
             filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+            // OPTIONS请求，放行
+            filterChain.doFilter(request, servletResponse);
             return;
         }
         if (ServletFileUpload.isMultipartContent(request)) {
