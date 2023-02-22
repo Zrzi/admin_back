@@ -14,8 +14,6 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
-import com.admin.admin_back.utils.AesUtil;
-import com.admin.admin_back.utils.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -65,6 +63,7 @@ public class UserController {
         return new Result<>(ResponseMessage.SUCCESS);
     }
 
+    @SecurityAnnotation
     @CheckRole("resetPassword")
     @PostMapping("/resetPassword")
     public Result<?> resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) {
