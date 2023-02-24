@@ -1,50 +1,39 @@
 package com.admin.admin_back.filters;
 
 import com.admin.admin_back.pojo.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * @author 陈群矜
  */
-@WebFilter(filterName = "channelFilter", urlPatterns = {"/*"})
-public class ChannelFilter implements Filter {
+@Order(2)
+@Component
+public class ChannelFilter extends OncePerRequestFilter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
-        HttpServletRequest request = null;
-        RequestWrapper requestWrapper = null;
-        if (servletRequest instanceof HttpServletRequest) {
-            request = (HttpServletRequest) servletRequest;
-        }
-        if (Objects.isNull(request)) {
-            // 非HttpServletRequest，放行
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
-            // OPTIONS请求，放行
-            filterChain.doFilter(request, servletResponse);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (StringUtils.equals(request.getMethod(), HttpMethod.GET.name())) {
+            // GET请求数据都在url上，不需要读取请求体，所以放行
+            filterChain.doFilter(request, response);
             return;
         }
         if (ServletFileUpload.isMultipartContent(request)) {
             // 上传文件，放行
-            filterChain.doFilter(request, servletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
-        requestWrapper = new RequestWrapper(request);
-        filterChain.doFilter(requestWrapper, servletResponse);
+        RequestWrapper requestWrapper = new RequestWrapper(request);
+        filterChain.doFilter(requestWrapper, response);
     }
 
 }
