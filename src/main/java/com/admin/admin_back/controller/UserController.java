@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.annotations.SecurityAnnotation;
 import com.admin.admin_back.pojo.Result;
@@ -33,6 +34,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @LogAnnotation(inEnabled = false)
     @SecurityAnnotation
     @PostMapping("/login")
     public Result<Map<String, String>> login(@RequestBody LoginForm loginForm) {
@@ -58,11 +60,13 @@ public class UserController {
         }
     }
 
+    @LogAnnotation(inEnabled = false)
     @PostMapping("/logout")
     public Result<?> logout() {
         return new Result<>(ResponseMessage.SUCCESS);
     }
 
+    @LogAnnotation(inEnabled = false)
     @SecurityAnnotation
     @CheckRole("resetPassword")
     @PostMapping("/resetPassword")
@@ -88,6 +92,7 @@ public class UserController {
         }
     }
 
+    @LogAnnotation
     @CheckRole("getUserByUserNo")
     @GetMapping("/user/getByUserNo")
     public Result<?> getUserByUserNo(@RequestParam("userNo") String userNo,
@@ -106,6 +111,7 @@ public class UserController {
         }
     }
 
+    @LogAnnotation
     @CheckRole("getUser")
     @GetMapping("/user/get")
     public Result<?> getUser(@RequestParam("userType") String userType,
@@ -124,6 +130,7 @@ public class UserController {
         return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize));
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addUser")
     @PostMapping("/user/post")
@@ -140,6 +147,7 @@ public class UserController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateUser")
     @PostMapping("/user/update")
@@ -156,6 +164,7 @@ public class UserController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeUser")
     @PostMapping("/user/delete")

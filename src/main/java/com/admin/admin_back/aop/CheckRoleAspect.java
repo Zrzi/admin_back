@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 陈群矜
@@ -45,26 +46,24 @@ public class CheckRoleAspect {
 
     @Around("checkRole()")
     public Object around(ProceedingJoinPoint pjp) {
-        Object result = null;
         try {
+            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
+            if (StringUtils.isBlank(userNo)) {
+                return new Result<>(ResponseMessage.NOT_LOGIN);
+            }
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
             CheckRole annotation = methodSignature.getMethod().getAnnotation(CheckRole.class);
             String resourceName = annotation.value();
-            if (!checkAuthority(resourceName)) {
+            if (!checkAuthority(userNo, resourceName)) {
                 return new Result<>(ResponseMessage.NO_AUTHORITIES);
             }
-            result = pjp.proceed();
-            return result;
+            return pjp.proceed();
         } catch (Throwable throwable) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }
     }
 
-    private boolean checkAuthority(String resourceName) {
-        String userNo = UserThreadLocal.getUser().getUserNo();
-        if (StringUtils.isBlank(userNo)) {
-            return false;
-        }
+    private boolean checkAuthority(String userNo, String resourceName) {
         List<ResourceDto> resources = resourceMapper.findResourceByUserNo(userNo);
         if (CollectionUtils.isEmpty(resources)) {
             return false;

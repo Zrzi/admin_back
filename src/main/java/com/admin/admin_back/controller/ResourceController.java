@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -26,6 +27,7 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
+    @LogAnnotation
     @CheckRole("checkAuthority")
     @GetMapping("/checkAuthority")
     public Result<Boolean> checkAuthority(@RequestParam(value = "resourceId", required = false) String resourceId) {
@@ -40,11 +42,12 @@ public class ResourceController {
     }
 
     /**
-     * 不受Aop控制，提供给其它系统使用，因此需要提供userNo
+     * 不受CheckRoleAspect控制，提供给其它系统使用，因此需要提供userNo
      * @param userNo 用户名
      * @param resourceId 资源编码
      * @return 判断用户是否有权访问这项资源
      */
+    @LogAnnotation
     @GetMapping("/checkAuthorityWithUserNoAndResourceId")
     public Result<Boolean> checkAuthorityWithUserNoAndResourceId(@RequestParam(value = "userNo", required = false) String userNo,
                                                                  @RequestParam(value = "resourceId", required = false) String resourceId) {
@@ -67,6 +70,7 @@ public class ResourceController {
      * @param resourceType 资源类型
      * @return ResourveVo列表
      */
+    @LogAnnotation
     @GetMapping("/getResourceWithUserNoAndResourceType")
     public Result<List<?>> getResourceWithUserNoAndResourceType(@RequestParam(value = "userNo", required = false) String userNo,
                                                                 @RequestParam(value = "resourceType", required = false) String resourceType) {
@@ -93,6 +97,7 @@ public class ResourceController {
 //        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
 //    }
 
+    @LogAnnotation
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
     public Result<?> getResourcesBySystemId(@RequestParam("systemId") String systemId,
@@ -117,6 +122,7 @@ public class ResourceController {
         }
     }
 
+    @LogAnnotation
     @CheckRole("getResourceById")
     @GetMapping("/resource/getById")
     public Result<?> getResourceById(@RequestParam("resourceId") String resourceId) {
@@ -127,6 +133,7 @@ public class ResourceController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addResource")
     @PostMapping("/resource/post")
@@ -149,6 +156,7 @@ public class ResourceController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateResource")
     @PostMapping("/resource/update")
@@ -173,6 +181,7 @@ public class ResourceController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteResource")
     @PostMapping("/resource/delete")

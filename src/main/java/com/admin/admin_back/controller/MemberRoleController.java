@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -30,6 +31,7 @@ public class MemberRoleController {
     @Autowired
     private MemberRoleService memberRoleService;
 
+    @LogAnnotation
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
     public Result<?> getMemberRole(@RequestParam("roleId") String roleId,
@@ -50,12 +52,14 @@ public class MemberRoleController {
         return new Result<>(ResponseMessage.SUCCESS, map);
     }
 
+    @LogAnnotation
     @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
     public Result<?> getUnaddedUser(@RequestParam("roleId") String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addMemberRole")
     @PostMapping("/memberRole/addMemberRole")
@@ -90,6 +94,7 @@ public class MemberRoleController {
 //        }
 //    }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")

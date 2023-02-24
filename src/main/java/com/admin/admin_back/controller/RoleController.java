@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -27,12 +28,14 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+    @LogAnnotation
     @CheckRole("getRole")
     @GetMapping("/role/get")
     public Result<List<SystemRoleVo>> getRole() {
         return new Result<>(ResponseMessage.SUCCESS, roleService.getRole());
     }
 
+    @LogAnnotation
     @CheckRole("getRoleByRoleId")
     @GetMapping("/role/getByRoleId")
     public Result<?> getRoleByRoleId(@RequestParam("roleId") String roleId) {
@@ -43,6 +46,7 @@ public class RoleController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addRole")
     @PostMapping("/role/post")
@@ -61,6 +65,7 @@ public class RoleController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateRole")
     @PostMapping("/role/update")
@@ -79,6 +84,7 @@ public class RoleController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeRole")
     @PostMapping("/role/delete")

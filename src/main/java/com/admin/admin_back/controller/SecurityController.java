@@ -1,5 +1,7 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.LogAnnotation;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.form.DecryptForm;
@@ -27,6 +29,7 @@ public class SecurityController {
     @Autowired
     private AesUtil aesUtil;
 
+    @LogAnnotation
     @GetMapping("/getRsaPublicKey")
     public Result<?> getRsaPublicKey() {
         try {
@@ -42,6 +45,8 @@ public class SecurityController {
         }
     }
 
+    @NoRepeatSubmit
+    @LogAnnotation(outEnabled = false)
     @PostMapping("/decrypt")
     public Result<?> decrypt(@RequestBody DecryptForm decryptForm) {
         try {

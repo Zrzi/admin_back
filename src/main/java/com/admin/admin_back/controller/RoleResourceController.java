@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -25,6 +26,7 @@ public class RoleResourceController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @LogAnnotation
     @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
     public Result<?> getRoleResources(@RequestParam("systemId") String systemId,
@@ -47,6 +49,7 @@ public class RoleResourceController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("editRoleResource")
     @PostMapping("/roleResource/post")

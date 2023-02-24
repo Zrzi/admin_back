@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -26,6 +27,7 @@ public class SystemController {
     @Autowired
     private SystemService systemService;
 
+    @LogAnnotation
     @CheckRole("getSystems")
     @GetMapping(value = "/system/get")
     public Result<List<SystemVo>> getSystems() {
@@ -47,6 +49,7 @@ public class SystemController {
 //        }
 //    }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
@@ -67,6 +70,7 @@ public class SystemController {
         }
     }
 
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")
