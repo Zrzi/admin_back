@@ -4,14 +4,13 @@ import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
-import com.alibaba.fastjson.JSON;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.admin.admin_back.service.LogTask;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,8 @@ import java.util.Objects;
 @Component
 public class LogAspect {
 
-    private final static Logger LOGGER = LogManager.getLogger(LogAspect.class);
+    @Autowired
+    private LogTask logTask;
 
     @Pointcut("execution(public * com.admin.admin_back.controller.*.*(..))")
     public void logPoint() {}
@@ -39,16 +39,18 @@ public class LogAspect {
                 MethodSignature signature = (MethodSignature) pjp.getSignature();
                 String methodName = signature.getMethod().getName();
                 Object[] args = pjp.getArgs();
-                LOGGER.info("执行方法{}，参数是{}", methodName, JSON.toJSONString(args));
-                return pjp.proceed(args);
+                logTask.logBeforeMethod(null, methodName, args);
+                Object result = pjp.proceed(args);
+                logTask.logAfterMethod(null, methodName, result);
+                return result;
             } else {
                 String userNo = user.getUserNo();
                 MethodSignature signature = (MethodSignature) pjp.getSignature();
                 String methodName = signature.getMethod().getName();
                 Object[] args = pjp.getArgs();
-                LOGGER.info("用户名：{}，执行方法：{}，参数：{}", userNo, methodName, JSON.toJSONString(args));
+                logTask.logBeforeMethod(userNo, methodName, args);
                 Object result = pjp.proceed(args);
-                LOGGER.info("用户名：{}，执行方法：{}，返回结果：{}", userNo, methodName, JSON.toJSONString(result));
+                logTask.logAfterMethod(userNo, methodName, result);
                 return result;
             }
         } catch (Throwable e) {
