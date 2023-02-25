@@ -4,8 +4,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -56,6 +60,50 @@ public class AesUtil {
         byte[] encryptBytes = Base64.decodeBase64(text);
         byte[] decryptBytes = cipher.doFinal(encryptBytes);
         return new String(decryptBytes);
+    }
+
+    /**
+     * 加密文件
+     * @param in 输入流 外部关闭
+     * @param out 输出流 外部关闭
+     * @param key 密钥
+     * @throws Exception
+     */
+    public void encryptFile(InputStream in, OutputStream out, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
+        try (CipherInputStream cin = new CipherInputStream(in, cipher)) {
+            byte[] cache = new byte[1024];
+            int read = 0;
+            while ((read = cin.read(cache)) != -1) {
+                out.write(cache, 0, read);
+                out.flush();
+            }
+        } catch (Exception exception) {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * 解密文件
+     * @param in 输入流 外部关闭
+     * @param out 输出流 外部关闭
+     * @param key 密钥
+     * @throws Exception
+     */
+    public void decryptFile(InputStream in, OutputStream out, String key) throws Exception {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"));
+        try (CipherOutputStream cout = new CipherOutputStream(out, cipher)) {
+            byte[] cache = new byte[1024];
+            int read = 0;
+            while ((read = in.read(cache)) != -1) {
+                cout.write(cache);
+                cout.flush();
+            }
+        } catch (Exception exception) {
+            throw new Exception();
+        }
     }
 
 }
