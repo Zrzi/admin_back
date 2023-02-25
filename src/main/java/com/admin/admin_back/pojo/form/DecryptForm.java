@@ -1,20 +1,25 @@
 package com.admin.admin_back.pojo.form;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author 陈群矜
  */
+@ApiModel("解密接口相关信息")
 public class DecryptForm {
 
     /**
      * 待解密的内容
      */
+    @ApiModelProperty("待解密的内容")
     private String content;
 
     /**
      * 经过Rsa加密后的Aes密钥
      */
+    @ApiModelProperty("经过Rsa加密后的Aes密钥")
     private String encryptedKey;
 
     public DecryptForm() {}

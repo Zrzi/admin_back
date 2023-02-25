@@ -7,6 +7,8 @@ import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.form.DecryptForm;
 import com.admin.admin_back.utils.AesUtil;
 import com.admin.admin_back.utils.RsaUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 所以，后端先用Rsa私钥机密获取AES密钥，再解密获取真实数据
  * @author 陈群矜
  */
+@Api(tags = "安全相关接口")
 @RestController
 public class SecurityController {
 
@@ -29,6 +32,7 @@ public class SecurityController {
     @Autowired
     private AesUtil aesUtil;
 
+    @ApiOperation("获取服务器RSA公钥")
     @LogAnnotation
     @GetMapping("/getRsaPublicKey")
     public Result<?> getRsaPublicKey() {
@@ -45,6 +49,7 @@ public class SecurityController {
         }
     }
 
+    @ApiOperation("解密接口")
     @NoRepeatSubmit
     @LogAnnotation(outEnabled = false)
     @PostMapping("/decrypt")

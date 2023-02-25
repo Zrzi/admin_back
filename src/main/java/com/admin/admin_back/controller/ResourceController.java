@@ -11,6 +11,10 @@ import com.admin.admin_back.pojo.form.DeleteResourceForm;
 import com.admin.admin_back.pojo.form.ResourceForm;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +25,17 @@ import java.util.*;
  *
  * @author 陈群矜
  */
+@Api(tags = "资源相关接口")
 @RestController
 public class ResourceController {
 
     @Autowired
     private ResourceService resourceService;
 
+    @ApiOperation("检查权限，系统内部使用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "resourceId", value = "资源编码", required = false)
+    })
     @LogAnnotation
     @CheckRole("checkAuthority")
     @GetMapping("/checkAuthority")
@@ -47,6 +56,11 @@ public class ResourceController {
      * @param resourceId 资源编码
      * @return 判断用户是否有权访问这项资源
      */
+    @ApiOperation("检查权限，提供给其它系统使用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userNo", value = "用户名", required = false),
+            @ApiImplicitParam(name = "resourceId", value = "资源编码", required = false)
+    })
     @LogAnnotation
     @GetMapping("/checkAuthorityWithUserNoAndResourceId")
     public Result<Boolean> checkAuthorityWithUserNoAndResourceId(@RequestParam(value = "userNo", required = false) String userNo,
@@ -70,6 +84,11 @@ public class ResourceController {
      * @param resourceType 资源类型
      * @return ResourveVo列表
      */
+    @ApiOperation("通过用户名与资源类型获取资源列表，提供给其它系统使用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userNo", value = "用户名", required = false),
+            @ApiImplicitParam(name = "resourceType", value = "资源类型", required = false)
+    })
     @LogAnnotation
     @GetMapping("/getResourceWithUserNoAndResourceType")
     public Result<List<?>> getResourceWithUserNoAndResourceType(@RequestParam(value = "userNo", required = false) String userNo,
@@ -97,12 +116,18 @@ public class ResourceController {
 //        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
 //    }
 
+    @ApiOperation("根据系统编码获取资源列表，分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),
+            @ApiImplicitParam(name = "start", value = "起始页", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true)
+    })
     @LogAnnotation
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
     public Result<?> getResourcesBySystemId(@RequestParam("systemId") String systemId,
-                                                           @RequestParam(value = "start", required = false) Integer start,
-                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+                                            @RequestParam(value = "start", required = false) Integer start,
+                                            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         try {
             if (start == null || start < 0) {
                 start = 0;
@@ -122,6 +147,10 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation("根据资源编码获取资源信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "resourceId", value = "资源编码", required = true)
+    })
     @LogAnnotation
     @CheckRole("getResourceById")
     @GetMapping("/resource/getById")
@@ -133,6 +162,7 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation("添加资源")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addResource")
@@ -156,6 +186,7 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation("编辑资源")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateResource")
@@ -181,6 +212,7 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation("删除资源")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteResource")

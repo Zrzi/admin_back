@@ -10,6 +10,10 @@ import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.form.EditRoleResourceForm;
 import com.admin.admin_back.pojo.vo.RoleResourceVo;
 import com.admin.admin_back.service.RoleResourceService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -20,12 +24,18 @@ import java.util.List;
 /**
  * @author 陈群矜
  */
+@Api(tags = "管理角色资源关联接口")
 @RestController
 public class RoleResourceController {
 
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @ApiOperation("根据系统编码与角色编码获取角色资源关联信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+    })
     @LogAnnotation
     @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
@@ -49,6 +59,7 @@ public class RoleResourceController {
         }
     }
 
+    @ApiOperation("编辑角色资源关联")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("editRoleResource")

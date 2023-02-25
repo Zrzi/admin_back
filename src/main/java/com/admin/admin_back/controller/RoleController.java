@@ -12,6 +12,10 @@ import com.admin.admin_back.pojo.form.DeleteRoleForm;
 import com.admin.admin_back.pojo.form.RoleForm;
 import com.admin.admin_back.pojo.vo.SystemRoleVo;
 import com.admin.admin_back.service.RoleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +26,14 @@ import java.util.List;
  *
  * @author 陈群矜
  */
+@Api(tags = "角色相关接口")
 @RestController
 public class RoleController {
 
     @Autowired
     private RoleService roleService;
 
+    @ApiOperation("获取角色列表")
     @LogAnnotation
     @CheckRole("getRole")
     @GetMapping("/role/get")
@@ -35,6 +41,10 @@ public class RoleController {
         return new Result<>(ResponseMessage.SUCCESS, roleService.getRole());
     }
 
+    @ApiOperation("根据角色编码获取角色信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+    })
     @LogAnnotation
     @CheckRole("getRoleByRoleId")
     @GetMapping("/role/getByRoleId")
@@ -46,6 +56,7 @@ public class RoleController {
         }
     }
 
+    @ApiOperation("添加角色")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addRole")
@@ -65,6 +76,7 @@ public class RoleController {
         }
     }
 
+    @ApiOperation("添加角色")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateRole")
@@ -84,6 +96,7 @@ public class RoleController {
         }
     }
 
+    @ApiOperation("删除角色")
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeRole")

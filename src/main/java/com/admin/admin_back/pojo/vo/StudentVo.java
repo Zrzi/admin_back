@@ -1,36 +1,52 @@
 package com.admin.admin_back.pojo.vo;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author 陈群矜
  */
+@ApiModel("学生信息")
 public class StudentVo {
 
+    @ApiModelProperty("学号")
     private String stuNo;
 
+    @ApiModelProperty("学生姓名")
     private String stuName;
 
+    @ApiModelProperty("性别")
     private String sex;
 
+    @ApiModelProperty("专业号")
     private String majorNo;
 
+    @ApiModelProperty("班号")
     private String classNo;
 
+    @ApiModelProperty("当前级")
     private Integer curGrade;
 
+    @ApiModelProperty("入学年份")
     private Integer enterYear;
 
+    @ApiModelProperty("生日")
     private String birthday;
 
+    @ApiModelProperty("身份证")
     private String id;
 
+    @ApiModelProperty("状态")
     private String status;
 
+    @ApiModelProperty("民族")
     private String nation;
 
+    @ApiModelProperty("政治面貌")
     private String politicalStatus;
 
+    @ApiModelProperty("生源所在地")
     private String sourcePlace;
 
     public StudentVo() {}
