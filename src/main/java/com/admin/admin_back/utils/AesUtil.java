@@ -98,7 +98,7 @@ public class AesUtil {
             byte[] cache = new byte[1024];
             int read = 0;
             while ((read = in.read(cache)) != -1) {
-                cout.write(cache);
+                cout.write(cache, 0, read);
                 cout.flush();
             }
         } catch (Exception exception) {
