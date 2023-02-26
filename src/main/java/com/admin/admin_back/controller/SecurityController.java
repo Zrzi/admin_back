@@ -1,20 +1,29 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.LogAnnotation;
-import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.form.DecryptForm;
 import com.admin.admin_back.utils.AesUtil;
 import com.admin.admin_back.utils.RsaUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * 安全相关接口，提供给其它系统使用
@@ -23,8 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 陈群矜
  */
 @Api(tags = "安全相关接口")
-@RestController
+@Controller
 public class SecurityController {
+
+    private final static Logger logger = LogManager.getLogger(SecurityController.class);
 
     @Autowired
     private RsaUtil rsaUtil;
@@ -34,6 +45,7 @@ public class SecurityController {
 
     @ApiOperation("获取服务器RSA公钥")
     @LogAnnotation
+    @ResponseBody
     @GetMapping("/getRsaPublicKey")
     public Result<?> getRsaPublicKey() {
         try {
@@ -50,8 +62,9 @@ public class SecurityController {
     }
 
     @ApiOperation("解密接口")
-    @NoRepeatSubmit
+    // todo @NoRepeatSubmit
     @LogAnnotation(outEnabled = false)
+    @ResponseBody
     @PostMapping("/decrypt")
     public Result<?> decrypt(@RequestBody DecryptForm decryptForm) {
         try {
@@ -68,6 +81,44 @@ public class SecurityController {
             return new Result<>(ResponseMessage.SUCCESS, data);
         } catch (Exception exception) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
+        }
+    }
+
+    /**
+     * 返回的类型为application/octet-stream，restTemplate可以用Resource接受
+     * @param file 待解密的文件
+     * @param encryptedKey 被RSA公钥加密的AES密钥
+     * @param response
+     */
+    @ApiOperation("解密文件接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "上传的文件", required = true),
+            @ApiImplicitParam(name = "encryptedKey", value = "密钥", required = true)
+    })
+    // todo @NoRepeatSubmit
+    @LogAnnotation(inEnabled = false, outEnabled = false)
+    @PostMapping(value = "/decryptFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void decryptFile(@RequestPart("file") MultipartFile file,
+                            @RequestParam("encryptedKey") String encryptedKey,
+                            HttpServletResponse response) {
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        if (Objects.isNull(file) || file.isEmpty()) {
+            // 文件为空
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return;
+        }
+        if (StringUtils.isBlank(encryptedKey)) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return;
+        }
+        String originalFilename = file.getOriginalFilename();
+        response.addHeader("Content-disposition", "attachment; filename=" + originalFilename);
+        try (InputStream input = file.getInputStream(); OutputStream output = response.getOutputStream()) {
+            String key = rsaUtil.decryptByPrivateKey(encryptedKey);
+            aesUtil.decryptFile(input, output, key);
+        } catch (Exception exception) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            logger.warn(exception.getMessage());
         }
     }
 

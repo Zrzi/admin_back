@@ -13,13 +13,13 @@ public class DecryptForm {
     /**
      * 待解密的内容
      */
-    @ApiModelProperty("待解密的内容")
+    @ApiModelProperty(value = "待解密的内容", required = true)
     private String content;
 
     /**
      * 经过Rsa加密后的Aes密钥
      */
-    @ApiModelProperty("经过Rsa加密后的Aes密钥")
+    @ApiModelProperty(value = "经过Rsa加密后的Aes密钥", required = true)
     private String encryptedKey;
 
     public DecryptForm() {}

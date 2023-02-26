@@ -13,7 +13,7 @@ public class SystemForm {
     @ApiModelProperty("系统id：添加时不需要；修改时需要")
     private String systemId;
 
-    @ApiModelProperty("系统名称")
+    @ApiModelProperty(value = "系统名称", required = true)
     private String systemName;
 
     public SystemForm() {}

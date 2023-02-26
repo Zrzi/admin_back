@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("删除用户接口参数信息")
 public class DeleteUserForm {
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     private String userNo;
 
     public DeleteUserForm() {}

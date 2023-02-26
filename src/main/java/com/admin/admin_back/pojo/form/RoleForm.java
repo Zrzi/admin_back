@@ -11,13 +11,13 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("角色信息")
 public class RoleForm {
 
-    @ApiModelProperty("角色编码，修改角色时需要提供")
+    @ApiModelProperty(value = "角色编码，修改角色时需要提供")
     private String roleId;
 
-    @ApiModelProperty("角色名称")
+    @ApiModelProperty(value = "角色名称", required = true)
     private String roleName;
 
-    @ApiModelProperty("系统编码，添加角色时需要提供")
+    @ApiModelProperty(value = "系统编码，添加角色时需要提供")
     private String systemId;
 
     public RoleForm() {}

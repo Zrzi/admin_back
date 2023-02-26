@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("删除资源相关信息")
 public class DeleteResourceForm {
 
-    @ApiModelProperty("资源编码")
+    @ApiModelProperty(value = "资源编码", required = true)
     private String resourceId;
 
     public DeleteResourceForm() {}

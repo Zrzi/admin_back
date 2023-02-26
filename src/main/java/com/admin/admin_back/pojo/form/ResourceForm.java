@@ -11,19 +11,19 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("资源信息")
 public class ResourceForm {
 
-    @ApiModelProperty("资源编码，添加时不需要提供")
+    @ApiModelProperty(value = "资源编码，添加时不需要提供")
     private String resourceId;
 
-    @ApiModelProperty("资源名称")
+    @ApiModelProperty(value = "资源名称", required = true)
     private String resourceName;
 
-    @ApiModelProperty("系统编码")
+    @ApiModelProperty(value = "系统编码", required = true)
     private String systemId;
 
-    @ApiModelProperty("资源路径")
+    @ApiModelProperty(value = "资源路径", required = true)
     private String resourceUrl;
 
-    @ApiModelProperty("资源类型")
+    @ApiModelProperty(value = "资源类型", required = true)
     private String resourceType;
 
     public ResourceForm() {}

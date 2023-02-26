@@ -12,10 +12,10 @@ import java.util.List;
 @ApiModel("添加用户角色关联信息")
 public class AddMemberRoleForm {
 
-    @ApiModelProperty("角色编码")
+    @ApiModelProperty(value = "角色编码", required = true)
     private String roleId;
 
-    @ApiModelProperty("用户名列表")
+    @ApiModelProperty(value = "用户名列表", required = true)
     private List<String> userNos;
 
     public AddMemberRoleForm() {}

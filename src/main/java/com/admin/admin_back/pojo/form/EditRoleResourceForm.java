@@ -12,13 +12,13 @@ import java.util.List;
 @ApiModel("编辑角色资源关联信息")
 public class EditRoleResourceForm {
 
-    @ApiModelProperty("角色编码")
+    @ApiModelProperty(value = "角色编码", required = true)
     private String roleId;
 
-    @ApiModelProperty("系统编码")
+    @ApiModelProperty(value = "系统编码", required = true)
     private String systemId;
 
-    @ApiModelProperty("资源编码列表")
+    @ApiModelProperty(value = "资源编码列表", required = true)
     private List<String> resourceIds;
 
     public EditRoleResourceForm() {}

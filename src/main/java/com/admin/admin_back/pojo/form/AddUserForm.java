@@ -15,13 +15,13 @@ import java.util.Date;
 @ApiModel("添加用户相关信息")
 public class AddUserForm {
 
-    @ApiModelProperty("是否是学生类型")
+    @ApiModelProperty(value = "是否是学生类型", required = true)
     private Boolean isStudent;
 
-    @ApiModelProperty("学生信息")
+    @ApiModelProperty(value = "学生信息")
     private StudentVo student;
 
-    @ApiModelProperty("教工信息")
+    @ApiModelProperty(value = "教工信息")
     private TeacherVo teacher;
 
     public AddUserForm() {}

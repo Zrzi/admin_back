@@ -12,16 +12,16 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("编辑用户相关信息")
 public class EditUserForm {
 
-    @ApiModelProperty("是否是学生")
+    @ApiModelProperty(value = "是否是学生", required = true)
     private Boolean isStudent;
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     private String userNo;
 
-    @ApiModelProperty("学生信息")
+    @ApiModelProperty(value = "学生信息")
     private StudentVo student;
 
-    @ApiModelProperty("教工信息")
+    @ApiModelProperty(value = "教工信息")
     private TeacherVo teacher;
 
     public EditUserForm() {}

@@ -10,10 +10,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("删除用户角色关联")
 public class DeleteMemberRoleForm {
 
-    @ApiModelProperty("角色编码")
+    @ApiModelProperty(value = "角色编码", required = true)
     private String roleId;
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     private String userNo;
 
     public DeleteMemberRoleForm() {}
