@@ -1,21 +1,29 @@
 package com.admin.admin_back.pojo.form;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  *
  * @author 陈群矜
  */
+@ApiModel("资源信息")
 public class ResourceForm {
 
+    @ApiModelProperty(value = "资源编码，添加时不需要提供")
     private String resourceId;
 
+    @ApiModelProperty(value = "资源名称", required = true)
     private String resourceName;
 
+    @ApiModelProperty(value = "系统编码", required = true)
     private String systemId;
 
+    @ApiModelProperty(value = "资源路径", required = true)
     private String resourceUrl;
 
+    @ApiModelProperty(value = "资源类型", required = true)
     private String resourceType;
 
     public ResourceForm() {}

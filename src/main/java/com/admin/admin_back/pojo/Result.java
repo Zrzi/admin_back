@@ -1,18 +1,24 @@
 package com.admin.admin_back.pojo;
 
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  *
  * @param <T> data的类型
  * @author 陈群矜
  */
+@ApiModel
 public class Result<T> {
 
+    @ApiModelProperty("返回编码")
     private int code;
 
+    @ApiModelProperty("返回信息")
     private String message;
 
+    @ApiModelProperty("返回数据")
     private T data;
 
     public Result(ResponseMessage responseMessage) {

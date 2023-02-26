@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -12,6 +13,10 @@ import com.admin.admin_back.pojo.form.DeleteMemberRoleForm;
 import com.admin.admin_back.pojo.form.EditMemberRoleForm;
 import com.admin.admin_back.pojo.vo.UserVo;
 import com.admin.admin_back.service.MemberRoleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -24,12 +29,20 @@ import java.util.Map;
 /**
  * @author 陈群矜
  */
+@Api(tags = "用户角色关联相关接口")
 @RestController
 public class MemberRoleController {
 
     @Autowired
     private MemberRoleService memberRoleService;
 
+    @ApiOperation("根据角色编码获取用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
+            @ApiImplicitParam(name = "start", value = "起始页", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true)
+    })
+    @LogAnnotation
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
     public Result<?> getMemberRole(@RequestParam("roleId") String roleId,
@@ -50,12 +63,19 @@ public class MemberRoleController {
         return new Result<>(ResponseMessage.SUCCESS, map);
     }
 
+    @ApiOperation("根据角色编码获取不具有该角色的用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+    })
+    @LogAnnotation
     @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
     public Result<?> getUnaddedUser(@RequestParam("roleId") String roleId) {
         return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
     }
 
+    @ApiOperation("添加用户角色关联")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addMemberRole")
     @PostMapping("/memberRole/addMemberRole")
@@ -90,6 +110,8 @@ public class MemberRoleController {
 //        }
 //    }
 
+    @ApiOperation("删除用户角色关联")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteMemberRole")
     @PostMapping("/memberRole/deleteMemberRole")

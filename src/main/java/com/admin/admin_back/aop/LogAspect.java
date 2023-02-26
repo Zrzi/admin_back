@@ -1,10 +1,11 @@
 package com.admin.admin_back.aop;
 
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
-import com.admin.admin_back.utils.JwtTokenUtil;
+import com.admin.admin_back.service.LogTask;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,31 +15,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+import java.util.Optional;
+
 /**
  * @author 陈群矜
  */
-@Order(3)
+@Order(4)
 @Aspect
 @Component
 public class LogAspect {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private LogTask logTask;
 
-    @Pointcut("@annotation(com.admin.admin_back.annotations.CheckRole)")
+    @Pointcut("@annotation(com.admin.admin_back.annotations.LogAnnotation)")
     public void logPoint() {}
 
     @Around("logPoint()")
     public Object around(ProceedingJoinPoint pjp) {
         try {
-            UserDto user = UserThreadLocal.getUser();
-            String username = user.getUsername();
+            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
             MethodSignature signature = (MethodSignature) pjp.getSignature();
-            String methodName = signature.getMethod().getName();
+            Method method = signature.getMethod();
+            LogAnnotation annotation = method.getAnnotation(LogAnnotation.class);
+            String methodName = method.getName();
             Object[] args = pjp.getArgs();
-            // todo 打印日志
+            logTask.logBeforeMethod(userNo, methodName, annotation.inEnabled() ? args : null);
             Object result = pjp.proceed(args);
-            // todo 打印result
+            logTask.logAfterMethod(userNo, methodName, annotation.outEnabled() ? result : null);
             return result;
         } catch (Throwable e) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);

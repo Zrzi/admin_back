@@ -3,18 +3,25 @@ package com.admin.admin_back.pojo.form;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author 陈群矜
  */
+@ApiModel("编辑用户相关信息")
 public class EditUserForm {
 
+    @ApiModelProperty(value = "是否是学生", required = true)
     private Boolean isStudent;
 
+    @ApiModelProperty(value = "用户名", required = true)
     private String userNo;
 
+    @ApiModelProperty(value = "学生信息")
     private StudentVo student;
 
+    @ApiModelProperty(value = "教工信息")
     private TeacherVo teacher;
 
     public EditUserForm() {}

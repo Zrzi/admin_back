@@ -1,17 +1,23 @@
 package com.admin.admin_back.pojo.form;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  *
  * @author 陈群矜
  */
+@ApiModel("角色信息")
 public class RoleForm {
 
+    @ApiModelProperty(value = "角色编码，修改角色时需要提供")
     private String roleId;
 
+    @ApiModelProperty(value = "角色名称", required = true)
     private String roleName;
 
+    @ApiModelProperty(value = "系统编码，添加角色时需要提供")
     private String systemId;
 
     public RoleForm() {}

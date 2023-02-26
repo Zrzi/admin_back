@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -10,6 +11,8 @@ import com.admin.admin_back.pojo.exception.SystemNameExistException;
 import com.admin.admin_back.pojo.form.SystemForm;
 import com.admin.admin_back.pojo.vo.SystemVo;
 import com.admin.admin_back.service.SystemService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +23,15 @@ import java.util.List;
  *
  * @author 陈群矜
  */
+@Api(tags = "系统相关接口")
 @RestController
 public class SystemController {
 
     @Autowired
     private SystemService systemService;
 
+    @ApiOperation("获取系统列表接口")
+    @LogAnnotation
     @CheckRole("getSystems")
     @GetMapping(value = "/system/get")
     public Result<List<SystemVo>> getSystems() {
@@ -47,6 +53,8 @@ public class SystemController {
 //        }
 //    }
 
+    @ApiOperation("添加系统接口")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addSystem")
     @PostMapping(value = "/system/post")
@@ -67,6 +75,8 @@ public class SystemController {
         }
     }
 
+    @ApiOperation("更新系统接口")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateSystem")
     @PostMapping(value = "/system/update")

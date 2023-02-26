@@ -1,54 +1,78 @@
 package com.admin.admin_back.pojo.vo;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
 /**
  * @author 陈群矜
  */
+@ApiModel
 public class TeacherVo {
 
+    @ApiModelProperty("教工号")
     private String empNo;
 
+    @ApiModelProperty("教工姓名")
     private String empName;
 
+    @ApiModelProperty("性别")
     private String sex;
 
+    @ApiModelProperty("生日")
     private Date birthday;
 
+    @ApiModelProperty("手机")
     private String phone;
 
+    @ApiModelProperty("身份证")
     private String idNo;
 
+    @ApiModelProperty("婚姻状况")
     private String marriage;
 
+    @ApiModelProperty("编制类别")
     private String orgType;
 
+    @ApiModelProperty("教职工类别")
     private String staffType;
 
+    @ApiModelProperty("教师职称")
     private String title;
 
+    @ApiModelProperty("文化程度")
     private String degree;
 
+    @ApiModelProperty("职业等级")
     private String titleLevel;
 
+    @ApiModelProperty("教师类别")
     private String teachType;
 
+    @ApiModelProperty("教师所属单位")
     private String school;
 
+    @ApiModelProperty("来校日期")
     private Date enterDate;
 
+    @ApiModelProperty("从教年月")
     private String teachDate;
 
+    @ApiModelProperty("当前状态")
     private String status;
 
+    @ApiModelProperty("职级")
     private Integer rank;
 
+    @ApiModelProperty("技术职务")
     private String tecposition;
 
+    @ApiModelProperty("备注")
     private String memo;
 
+    @ApiModelProperty("单位编号")
     private Integer schoolId;
 
     public TeacherVo() {}

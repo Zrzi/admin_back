@@ -3,6 +3,8 @@ package com.admin.admin_back.pojo.form;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
@@ -10,12 +12,16 @@ import java.util.Date;
 /**
  * @author 陈群矜
  */
+@ApiModel("添加用户相关信息")
 public class AddUserForm {
 
+    @ApiModelProperty(value = "是否是学生类型", required = true)
     private Boolean isStudent;
 
+    @ApiModelProperty(value = "学生信息")
     private StudentVo student;
 
+    @ApiModelProperty(value = "教工信息")
     private TeacherVo teacher;
 
     public AddUserForm() {}

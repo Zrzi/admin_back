@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author 陈群矜
  */
-@Order(1)
+@Order(2)
 @Aspect
 @Component
 public class ThreadLocalAspect {
@@ -31,19 +31,25 @@ public class ThreadLocalAspect {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Pointcut("@annotation(com.admin.admin_back.annotations.CheckRole)")
-    public void aspectPoint() {}
+    @Pointcut("execution(public * com.admin.admin_back.controller.*.*(..))")
+    public void threadLocalAspect() {}
 
-    @Around("aspectPoint()")
+    @Around("threadLocalAspect()")
     public Object around(ProceedingJoinPoint pjp) {
         try {
             HttpServletRequest request = ((ServletRequestAttributes) (Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))).getRequest();
             String token = request.getHeader("Authorization");
-            if (StringUtils.isBlank(token) || !jwtTokenUtil.validateToken(token)) {
-                return new Result<>(ResponseMessage.NOT_LOGIN);
+            if (StringUtils.isBlank(token)) {
+                // 部分接口不需要提供token，这里放行，如果需要检验在之后的Aspect中检查
+                return pjp.proceed();
+            } else {
+                if (!jwtTokenUtil.validateToken(token)) {
+                    // 携带的token过期
+                    return new Result<>(ResponseMessage.NOT_LOGIN);
+                }
+                setThreadLocal(token);
+                return pjp.proceed();
             }
-            setThreadLocal(token);
-            return pjp.proceed();
         } catch (Throwable e) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         } finally {

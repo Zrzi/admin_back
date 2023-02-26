@@ -137,6 +137,16 @@ public enum ResponseMessage {
     USER_TYOE_ERROR(400007, "用户类型错误"),
 
     /**
+     *
+     */
+    CONTENT_NOT_FOUND(500000, "数据为空"),
+
+    /**
+     *
+     */
+    KEY_NOT_FOUND(500001, "密钥为空"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),
@@ -160,6 +170,11 @@ public enum ResponseMessage {
      * 重复请求
      */
     REPEAT_REQUEST(800004, "重复请求"),
+
+    /**
+     * 密钥缺失
+     */
+    AES_KEY_NOT_FOUND(800005, "密钥缺失"),
 
     /**
      * 全局异常处理

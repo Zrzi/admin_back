@@ -1,7 +1,9 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
+import com.admin.admin_back.annotations.SecurityAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
@@ -13,6 +15,10 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -26,12 +32,20 @@ import java.util.Objects;
 /**
  * @author 陈群矜
  */
+@Api(tags = "用户管理等相关接口")
 @RestController
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    @ApiOperation("登录接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "key", value = "经过RSA加密的AES密钥", required = true),
+            @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
+    })
+    @LogAnnotation(inEnabled = false)
+    @SecurityAnnotation
     @PostMapping("/login")
     public Result<Map<String, String>> login(@RequestBody LoginForm loginForm) {
         String userNo = loginForm.getUserNo();
@@ -51,14 +65,25 @@ public class UserController {
             return new Result<>(ResponseMessage.USER_NOT_FOUND);
         } catch (PasswordException exception) {
             return new Result<>(ResponseMessage.PASSWORD_ERROR);
+        } catch (Exception exception) {
+            return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }
     }
 
+    @ApiOperation("退出接口")
+    @LogAnnotation
     @PostMapping("/logout")
     public Result<?> logout() {
         return new Result<>(ResponseMessage.SUCCESS);
     }
 
+    @ApiOperation("重置密码接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "key", value = "经过RSA加密的AES密钥", required = true),
+            @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
+    })
+    @LogAnnotation(inEnabled = false)
+    @SecurityAnnotation
     @CheckRole("resetPassword")
     @PostMapping("/resetPassword")
     public Result<?> resetPassword(@RequestBody ResetPasswordForm resetPasswordForm) {
@@ -83,6 +108,12 @@ public class UserController {
         }
     }
 
+    @ApiOperation("根据用户名与用户类型获取用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userNo", value = "用户名", required = true),
+            @ApiImplicitParam(name = "userType", value = "用户类型", required = true)
+    })
+    @LogAnnotation
     @CheckRole("getUserByUserNo")
     @GetMapping("/user/getByUserNo")
     public Result<?> getUserByUserNo(@RequestParam("userNo") String userNo,
@@ -101,6 +132,13 @@ public class UserController {
         }
     }
 
+    @ApiOperation("根据用户类型获取用户信息列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userType", value = "用户类型", required = true),
+            @ApiImplicitParam(name = "start", value = "起始页", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true),
+    })
+    @LogAnnotation
     @CheckRole("getUser")
     @GetMapping("/user/get")
     public Result<?> getUser(@RequestParam("userType") String userType,
@@ -119,6 +157,8 @@ public class UserController {
         return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize));
     }
 
+    @ApiOperation("添加用户接口")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addUser")
     @PostMapping("/user/post")
@@ -135,6 +175,8 @@ public class UserController {
         }
     }
 
+    @ApiOperation("更新用户接口")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateUser")
     @PostMapping("/user/update")
@@ -151,6 +193,8 @@ public class UserController {
         }
     }
 
+    @ApiOperation("删除用户接口")
+    @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeUser")
     @PostMapping("/user/delete")

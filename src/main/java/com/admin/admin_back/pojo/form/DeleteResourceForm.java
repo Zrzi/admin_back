@@ -1,12 +1,16 @@
 package com.admin.admin_back.pojo.form;
 
 import com.alibaba.fastjson.JSON;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * author 陈群矜
+ * @author 陈群矜
  */
+@ApiModel("删除资源相关信息")
 public class DeleteResourceForm {
 
+    @ApiModelProperty(value = "资源编码", required = true)
     private String resourceId;
 
     public DeleteResourceForm() {}
