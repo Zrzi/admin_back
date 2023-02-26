@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.*;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TestAesUtil {
@@ -27,6 +29,76 @@ public class TestAesUtil {
         System.out.println(encrypted);
         String decrypted = aesUtil.decrypt(encrypted, key);
         System.out.println(decrypted);
+    }
+
+    @Test
+    public void testEncryptFile() {
+        String srcPath = "D:\\申请\\cornell成绩单_1.pdf";
+        String destPath = "D:\\申请\\cornell成绩单_2.pdf";
+        File src = new File(srcPath);
+        File dest = new File(destPath);
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            if (!dest.exists()) {
+                dest.createNewFile();
+            }
+            input = new FileInputStream(src);
+            output = new FileOutputStream(dest);
+            aesUtil.encryptFile(input, output, AesUtil.KEY);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testDecryptFile() {
+        String srcPath = "D:\\申请\\cornell成绩单_2.pdf";
+        String destPath = "D:\\申请\\cornell成绩单_3.pdf";
+        File src = new File(srcPath);
+        File dest = new File(destPath);
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            if (!dest.exists()) {
+                dest.createNewFile();
+            }
+            input = new FileInputStream(src);
+            output = new FileOutputStream(dest);
+            aesUtil.decryptFile(input, output, AesUtil.KEY);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }
