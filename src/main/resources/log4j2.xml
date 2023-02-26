@@ -2,7 +2,8 @@
 <configuration status="info" monitorInterval="600">
 
     <properties>
-        <property name="LOG_HOME">D:/logs/admin</property>
+        <property name="LOG_HOME">/var/log/admin_back</property>
+<!--        <property name="LOG_HOME">D:/logs/admin</property>-->
         <property name="FILE_NAME_INFO">std</property>
         <property name="FILE_NAME_ERROR">error</property>
     </properties>
