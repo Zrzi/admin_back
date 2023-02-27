@@ -177,6 +177,11 @@ public enum ResponseMessage {
     AES_KEY_NOT_FOUND(800005, "密钥缺失"),
 
     /**
+     * 已经在其它设备登录
+     */
+    OTHER_LOGIN(800006, "已经在其它设备登录"),
+
+    /**
      * 全局异常处理
      */
     SYSTEM_ERROR(900000, "系统内部异常"),

@@ -24,6 +24,7 @@ import com.admin.admin_back.utils.JwtTokenUtil;
 import com.admin.admin_back.utils.Md5Util;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -53,6 +54,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public String login(String userNo, String password) {
@@ -64,9 +68,10 @@ public class UserServiceImpl implements UserService {
         if (!checkPassword) {
             throw new PasswordException();
         }
+        String jwtToken = null;
         List<UserRoleDto> dtos = userRoleMapper.findUserRoleByNo(userNo);
         if (CollectionUtils.isEmpty(dtos)) {
-            return jwtTokenUtil.generateToken(user, new ArrayList<>());
+            jwtToken = jwtTokenUtil.generateToken(user, new ArrayList<>());
         } else {
             List<UserRoleVo> userRoleVos = new ArrayList<>();
             for (UserRoleDto dto : dtos) {
@@ -81,8 +86,10 @@ public class UserServiceImpl implements UserService {
                 vo.setUpdatedDate(dto.getUpdatedDate());
                 userRoleVos.add(vo);
             }
-            return jwtTokenUtil.generateToken(user, userRoleVos);
+            jwtToken = jwtTokenUtil.generateToken(user, userRoleVos);
         }
+        redisTemplate.opsForValue().set(userNo, Md5Util.digest(jwtToken));
+        return jwtToken;
     }
 
     @Override

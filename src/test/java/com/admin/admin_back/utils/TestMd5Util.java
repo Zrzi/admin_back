@@ -10,6 +10,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class TestMd5Util {
 
     @Test
+    public void testMd5Digest() {
+        // EluFdjBKtOUZ1F7WqoT7jg==
+        String text = "1111111111111111111111111111111111111111111111111111";
+        System.out.println(Md5Util.digest(text));
+        System.out.println(Md5Util.digest(text));
+    }
+
+    @Test
     public void testEncrypt() {
         // admin密码为111111 -> 96e79218965eb72c92a549dd5a330112
         String password = "111111";

@@ -3,9 +3,12 @@ package com.admin.admin_back.aop;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
+import com.admin.admin_back.pojo.exception.BaseException;
+import com.admin.admin_back.pojo.exception.OtherLoginException;
 import com.admin.admin_back.pojo.threadlocals.TokenThreadLocal;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.utils.JwtTokenUtil;
+import com.admin.admin_back.utils.Md5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,12 +16,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author 陈群矜
@@ -30,6 +35,9 @@ public class ThreadLocalAspect {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Pointcut("execution(public * com.admin.admin_back.controller.*.*(..))")
     public void threadLocalAspect() {}
@@ -50,6 +58,8 @@ public class ThreadLocalAspect {
                 setThreadLocal(token);
                 return pjp.proceed();
             }
+        } catch (OtherLoginException exception) {
+            return new Result<>(ResponseMessage.OTHER_LOGIN);
         } catch (Throwable e) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         } finally {
@@ -60,6 +70,14 @@ public class ThreadLocalAspect {
     private void setThreadLocal(String token) {
         String userNo = jwtTokenUtil.getUserNoFromToken(token);
         String username = jwtTokenUtil.getUsernameFromToken(token);
+        // 检查是否已经在其它设备上登录
+        String md5Digest = Optional.ofNullable(redisTemplate.opsForValue().get(userNo)).orElse("").toString();
+        if (StringUtils.isNotBlank(md5Digest)) {
+            String digest = Md5Util.digest(token);
+            if (!StringUtils.equals(digest, md5Digest)) {
+                throw new OtherLoginException();
+            }
+        }
         UserDto user = new UserDto();
         user.setUserNo(userNo);
         user.setUsername(username);
