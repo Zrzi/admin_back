@@ -53,7 +53,7 @@ public class ThreadLocalAspect {
             } else {
                 if (!jwtTokenUtil.validateToken(token)) {
                     // 携带的token过期
-                    return new Result<>(ResponseMessage.NOT_LOGIN);
+                    return new Result<>(ResponseMessage.TOKEN_EXPIRED);
                 }
                 setThreadLocal(token);
                 return pjp.proceed();

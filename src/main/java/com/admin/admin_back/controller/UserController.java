@@ -15,6 +15,7 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
+import com.admin.admin_back.utils.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     @ApiOperation("登录接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "key", value = "经过RSA加密的AES密钥", required = true),
@@ -47,7 +51,7 @@ public class UserController {
     @LogAnnotation(inEnabled = false)
     @SecurityAnnotation
     @PostMapping("/login")
-    public Result<Map<String, String>> login(@RequestBody LoginForm loginForm) {
+    public Result<?> login(@RequestBody LoginForm loginForm) {
         String userNo = loginForm.getUserNo();
         String password = loginForm.getPassword();
         if (StringUtils.isBlank(userNo)) {
@@ -57,10 +61,7 @@ public class UserController {
             return new Result<>(ResponseMessage.PASSWORD_NOT_FOUND);
         }
         try {
-            String token = userService.login(userNo, password);
-            Map<String, String> map = new HashMap<>();
-            map.put("token", token);
-            return new Result<>(ResponseMessage.SUCCESS, map);
+            return new Result<>(ResponseMessage.SUCCESS, userService.login(userNo, password));
         } catch (UserExistException exception) {
             return new Result<>(ResponseMessage.USER_NOT_FOUND);
         } catch (PasswordException exception) {
@@ -75,6 +76,22 @@ public class UserController {
     @PostMapping("/logout")
     public Result<?> logout() {
         return new Result<>(ResponseMessage.SUCCESS);
+    }
+
+    @ApiOperation("刷新token")
+    @PostMapping("/refreshToken")
+    public Result<?> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+        if (!jwtTokenUtil.validateToken(refreshToken)) {
+            // refresh token也过期了
+            return new Result<>(ResponseMessage.NOT_LOGIN);
+        }
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, userService.refreshToken(refreshToken));
+        } catch (UserExistException exception) {
+            return new Result<>(ResponseMessage.USER_NOT_FOUND);
+        } catch (Exception exception) {
+            return new Result<>(ResponseMessage.SYSTEM_ERROR);
+        }
     }
 
     @ApiOperation("重置密码接口")

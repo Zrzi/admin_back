@@ -2,8 +2,8 @@
 <configuration status="info" monitorInterval="600">
 
     <properties>
-<!--        <property name="LOG_HOME">/var/log/admin_back</property>-->
-        <property name="LOG_HOME">D:/logs/admin</property>
+        <property name="LOG_HOME">/var/log/admin_back</property>
+<!--        <property name="LOG_HOME">D:/logs/admin</property>-->
         <property name="FILE_NAME_INFO">std</property>
         <property name="FILE_NAME_ERROR">error</property>
     </properties>
@@ -13,7 +13,7 @@
         <!--输出控制台的配置 -->
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
-            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式 -->
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %t %-5level (%class{36}.java %L) %M - %msg%n" />
         </Console>
@@ -57,8 +57,8 @@
             <appender-ref ref="error" />
         </root>
 
-        <!-- 向root上报这个包下的debug级别的日志 -->
-        <logger name="com.admin.admin_back" level="debug" />
+        <!-- 向root上报这个包下的info级别的日志 -->
+        <logger name="com.admin.admin_back" level="INFO" />
 
     </loggers>
 

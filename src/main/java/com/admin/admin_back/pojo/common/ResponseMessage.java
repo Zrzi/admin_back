@@ -182,6 +182,11 @@ public enum ResponseMessage {
     OTHER_LOGIN(800006, "已经在其它设备登录"),
 
     /**
+     * token过期
+     */
+    TOKEN_EXPIRED(800007, "token过期"),
+
+    /**
      * 全局异常处理
      */
     SYSTEM_ERROR(900000, "系统内部异常"),

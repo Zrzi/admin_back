@@ -19,7 +19,8 @@ public class JwtTokenUtil {
     private static final String CLAIM_KEY_ROLES = "roles";
     private static final String SECRET = "secret";
     private static final String ISSUER = "sdu-admin";
-    private static final int EXPIRATION = 604800;
+    private static final int JWT_TOKEN_EXPIRATION = 300;
+    private static final int REFRESH_TOKEN_EXPIRATION = 604800;
 
     public String getUserNoFromToken(String token) {
         String userNo;
@@ -98,19 +99,19 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(UserDto user, List<UserRoleVo> roles) {
+    public String generateToken(UserDto user, List<UserRoleVo> roles, boolean isRefreshToken) {
         Map<String, Object> claims = new HashMap<String, Object>(16) {{
             put(CLAIM_KEY_USER_NO, user.getUserNo());
             put(CLAIM_KEY_USERNAME, user.getUsername());
             put(CLAIM_KEY_ROLES, roles);
         }};
-        return generateToken(claims);
+        return generateToken(claims, isRefreshToken);
     }
 
-    public String generateToken(Map<String, Object> claims) {
+    public String generateToken(Map<String, Object> claims, boolean isRefreshToken) {
         long now = System.currentTimeMillis();
         final Date created = new Date(now);
-        final Date expired = new Date(now + EXPIRATION * 1000L);
+        final Date expired = new Date(now + (isRefreshToken ? REFRESH_TOKEN_EXPIRATION : JWT_TOKEN_EXPIRATION) * 1000L);
         return Jwts.builder()
                 // 头部
                 .setHeaderParam("type", "JWT")
@@ -126,21 +127,21 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token) {
-        return !isTokenExpired(token);
-    }
+//    public Boolean canTokenBeRefreshed(String token) {
+//        return !isTokenExpired(token);
+//    }
 
-    public String refreshToken(String token, Map<String, Object> info) {
-        String refreshedToken;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            info.forEach((key, value) -> claims.put(key, value));
-            refreshedToken = generateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
-    }
+//    public String refreshToken(String token, Map<String, Object> info) {
+//        String refreshedToken;
+//        try {
+//            final Claims claims = getClaimsFromToken(token);
+//            info.forEach((key, value) -> claims.put(key, value));
+//            refreshedToken = generateToken(claims);
+//        } catch (Exception e) {
+//            refreshedToken = null;
+//        }
+//        return refreshedToken;
+//    }
 
     public boolean validateToken(String token) {
         if (StringUtils.isEmpty(token)) {
