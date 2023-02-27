@@ -13,6 +13,7 @@
         <result column="resource_url" property="resourceUrl" />
         <result column="resource_type" property="resourceType" />
 <!--        <result column="parent_resource" property="parentResource" />-->
+        <result column="is_menu" property="isMenu" />
         <result column="created_by" property="createdBy" />
         <result column="created_date" property="createdDate" />
         <result column="updated_by" property="updatedBy" />
@@ -28,7 +29,7 @@
     </select>
 
     <select id="findResourceByUserNo" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `resource_id` IN (
             SELECT `resource_id`
@@ -44,8 +45,27 @@
           AND `status` = 0
     </select>
 
+    <select id="findMenuBySystemId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `system_id` = #{systemId}
+          AND `is_menu` = 1
+          AND `resource_id` IN (
+              SELECT `resource_id`
+              FROM `admin_role_resource`
+              WHERE `role_id` IN (
+                  SELECT `role_id`
+                  FROM `admin_user_role`
+                  WHERE `user_no` = #{userNo}
+                    AND `status` = 0
+              )
+                AND `status` = 0
+            )
+          AND `status` = 0
+    </select>
+
     <select id="findResourceByUserNoAndResourceType" resultMap="baseMap">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `resource_id` IN (
             SELECT `resource_id`
@@ -63,7 +83,7 @@
     </select>
 
     <select id="findResourcePageBySystemId" resultMap="baseMap">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `system_id` = #{systemId}
           AND `status` = 0
@@ -71,7 +91,7 @@
     </select>
 
     <select id="findResourceBySystemId" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `system_id` = #{systemId}
           AND `status` = 0
@@ -85,21 +105,21 @@
 <!--    </select>-->
 
     <select id="findResourceByResourceId" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `resource_id` = #{resourceId}
           AND `status` = 0
     </select>
 
     <select id="findResourceByResourceName" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `resource_name` = #{resourceName}
           AND `status` = 0
     </select>
 
     <select id="findResourceByResourceNameAndSystemId" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_resource`
         WHERE `resource_name` = #{resourceName}
           AND `system_id` = #{systemId}
@@ -107,8 +127,8 @@
     </select>
 
     <insert id="addResource" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
-        INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-        VALUES (#{resource.resourceId}, #{resource.resourceName}, #{resource.systemId}, #{resource.systemName}, #{resource.resourceUrl}, #{resource.resourceType}, #{resource.createdBy}, NOW(), #{resource.updatedBy}, NOW(), 0)
+        INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{resource.resourceId}, #{resource.resourceName}, #{resource.systemId}, #{resource.systemName}, #{resource.resourceUrl}, #{resource.resourceType}, #{resource.isMenu}, #{resource.createdBy}, NOW(), #{resource.updatedBy}, NOW(), 0)
     </insert>
 
     <update id="updateResourceByResourceId" parameterType="com.admin.admin_back.pojo.dto.ResourceDto">
@@ -116,6 +136,7 @@
         SET `resource_name` = #{resource.resourceName},
             `resource_url` = #{resource.resourceUrl},
             `resource_type` = #{resource.resourceType},
+            `is_menu` = #{resource.isMenu},
             `updated_by` = #{resource.updatedBy},
             `updated_date` = NOW()
         WHERE `resource_id` = #{resource.resourceId}

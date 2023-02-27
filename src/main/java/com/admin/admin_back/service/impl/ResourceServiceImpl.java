@@ -9,6 +9,8 @@ import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.ResourceForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
+import com.admin.admin_back.pojo.vo.MenuResourceVo;
+import com.admin.admin_back.pojo.vo.MenuSystemVo;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
@@ -67,6 +69,34 @@ public class ResourceServiceImpl implements ResourceService {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<MenuSystemVo> getMenu(String userNo) {
+        List<MenuSystemVo> result = new ArrayList<>();
+        List<SystemDto> systemList = systemMapper.findSystemList();
+        if (CollectionUtils.isEmpty(systemList)) {
+            return result;
+        }
+        for (SystemDto system : systemList) {
+            MenuSystemVo menuSystemVo = new MenuSystemVo();
+            menuSystemVo.setSystemId(system.getSystemId());
+            menuSystemVo.setSystemName(system.getSystemName());
+            List<MenuResourceVo> menus = new ArrayList<>();
+            List<ResourceDto> resources = resourceMapper.findMenuBySystemId(system.getSystemId(), userNo);
+            if (!CollectionUtils.isEmpty(resources)) {
+                for (ResourceDto resource : resources) {
+                    MenuResourceVo menuResourceVo = new MenuResourceVo();
+                    menuResourceVo.setMenuId(resource.getResourceId());
+                    menuResourceVo.setMenuName(resource.getResourceName());
+                    menuResourceVo.setPath(resource.getResourceUrl());
+                    menus.add(menuResourceVo);
+                }
+            }
+            menuSystemVo.setMenus(menus);
+            result.add(menuSystemVo);
+        }
+        return result;
     }
 
     @Override

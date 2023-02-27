@@ -2,6 +2,7 @@ package com.admin.admin_back.service;
 
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.form.ResourceForm;
+import com.admin.admin_back.pojo.vo.MenuSystemVo;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public interface ResourceService {
     Boolean checkAuthority(String resourceId);
 
     Boolean checkAuthorityWithUserNoAndResourceId(String userNo, String resourceId);
+
+    List<MenuSystemVo> getMenu(String userNo);
 
     List<ResourceVo> getResourceByUserNoAndResourceType(String userNo, ResourceTypeEnum resourceTypeEnum);
 

@@ -142,3 +142,6 @@ VALUES ('R4f50951574d7454bb9df093e22ac5b24', 'R25b04ab19eb24a32a470fbcaed4e3b53'
 
 INSERT INTO `admin_role_resource`(`role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R4f50951574d7454bb9df093e22ac5b24', 'Rc4a57f3e530141468bacda5408a6798a', '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_role_resource`(`role_id`, `resource_id`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R4f50951574d7454bb9df093e22ac5b24', 'R9fd764676bb644dfb8f554e1b56bf5d4', '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);

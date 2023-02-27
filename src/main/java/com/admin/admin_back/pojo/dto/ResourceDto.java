@@ -25,6 +25,8 @@ public class ResourceDto {
 
 //    private String parentResource;
 
+    private Integer isMenu;
+
     private String createdBy;
 
     private Date createdDate;
@@ -98,6 +100,14 @@ public class ResourceDto {
 //    public void setParentResource(String parentResource) {
 //        this.parentResource = parentResource;
 //    }
+
+    public Integer getIsMenu() {
+        return isMenu;
+    }
+
+    public void setIsMenu(Integer isMenu) {
+        this.isMenu = isMenu;
+    }
 
     public String getCreatedBy() {
         return createdBy;

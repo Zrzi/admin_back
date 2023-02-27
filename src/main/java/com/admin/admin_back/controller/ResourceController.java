@@ -9,6 +9,7 @@ import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.DeleteResourceForm;
 import com.admin.admin_back.pojo.form.ResourceForm;
+import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
 import io.swagger.annotations.Api;
@@ -78,11 +79,20 @@ public class ResourceController {
         }
     }
 
+    @ApiOperation("获取导航菜单")
+    @LogAnnotation
+    @CheckRole("getMenus")
+    @GetMapping("/getMenus")
+    public Result<?> getMenus() {
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        return new Result<>(ResponseMessage.SUCCESS, resourceService.getMenu(userNo));
+    }
+
     /**
      * 提供给其它系统使用
      * @param userNo 用户名
      * @param resourceType 资源类型
-     * @return ResourveVo列表
+     * @return ResourceVo列表
      */
     @ApiOperation("通过用户名与资源类型获取资源列表，提供给其它系统使用")
     @ApiImplicitParams({
