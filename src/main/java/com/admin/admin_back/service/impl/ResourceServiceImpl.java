@@ -114,6 +114,7 @@ public class ResourceServiceImpl implements ResourceService {
             vo.setSystemName(resource.getSystemName());
             vo.setResourceUrl(resource.getResourceUrl());
             vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resource.getResourceType()).message);
+            vo.setIsMenu(resource.getIsMenu() != 0);
             vo.setCreatedBy(resource.getCreatedBy());
             vo.setCreatedDate(resource.getCreatedDate());
             vo.setUpdatedBy(resource.getUpdatedBy());
@@ -138,6 +139,7 @@ public class ResourceServiceImpl implements ResourceService {
             vo.setResourceUrl(resourceDto.getResourceUrl());
             vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
 //            vo.setParentResource(resourceDto.getParentResource());
+            vo.setIsMenu(resourceDto.getIsMenu() != 0);
             vo.setCreatedBy(resourceDto.getCreatedBy());
             vo.setCreatedDate(resourceDto.getCreatedDate());
             vo.setUpdatedBy(resourceDto.getUpdatedBy());
@@ -161,6 +163,7 @@ public class ResourceServiceImpl implements ResourceService {
             vo.setResourceUrl(resourceDto.getResourceUrl());
             vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
 //            vo.setParentResource(resourceDto.getParentResource());
+            vo.setIsMenu(resourceDto.getIsMenu() != 0);
             vo.setCreatedBy(resourceDto.getCreatedBy());
             vo.setCreatedDate(resourceDto.getCreatedDate());
             vo.setUpdatedBy(resourceDto.getUpdatedBy());
@@ -183,6 +186,7 @@ public class ResourceServiceImpl implements ResourceService {
         vo.setResourceUrl(resourceDto.getResourceUrl());
         vo.setResourceType(ResourceTypeEnum.findResourceTypeEnumByCode(resourceDto.getResourceType()).message);
 //        vo.setParentResource(resourceDto.getParentResource());
+        vo.setIsMenu(resourceDto.getIsMenu() != 0);
         vo.setCreatedBy(resourceDto.getCreatedBy());
         vo.setCreatedDate(resourceDto.getCreatedDate());
         vo.setUpdatedBy(resourceDto.getUpdatedBy());
@@ -223,6 +227,7 @@ public class ResourceServiceImpl implements ResourceService {
 //        }
         resourceDto.setResourceType(code);
 //        resourceDto.setParentResource(resourceDto.getParentResource());
+        resourceDto.setIsMenu(resourceForm.getIsMenu() ? 1 : 0);
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setCreatedBy(userNo);
         resourceDto.setUpdatedBy(userNo);
@@ -261,6 +266,7 @@ public class ResourceServiceImpl implements ResourceService {
 //        }
         resourceDto.setResourceType(code);
 //        resourceDto.setParentResource(resourceDto.getParentResource());
+        resourceDto.setIsMenu(resourceForm.getIsMenu() ? 1 : 0);
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
         resourceMapper.updateResourceByResourceId(resourceDto);

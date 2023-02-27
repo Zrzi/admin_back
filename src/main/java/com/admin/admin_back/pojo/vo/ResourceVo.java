@@ -23,6 +23,8 @@ public class ResourceVo {
 
 //    private String parentResource;
 
+    private boolean isMenu;
+
     private String createdBy;
 
     private Date createdDate;
@@ -88,6 +90,14 @@ public class ResourceVo {
 //    public void setParentResource(String parentResource) {
 //        this.parentResource = parentResource;
 //    }
+
+    public boolean getIsMenu() {
+        return isMenu;
+    }
+
+    public void setIsMenu(boolean isMenu) {
+        this.isMenu = isMenu;
+    }
 
     public String getCreatedBy() {
         return createdBy;

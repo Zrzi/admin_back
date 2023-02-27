@@ -26,6 +26,9 @@ public class ResourceForm {
     @ApiModelProperty(value = "资源类型", required = true)
     private String resourceType;
 
+    @ApiModelProperty(value = "是否是导航菜单")
+    private boolean isMenu;
+
     public ResourceForm() {}
 
     public String getResourceId() {
@@ -66,6 +69,14 @@ public class ResourceForm {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
+    }
+
+    public boolean getIsMenu() {
+        return isMenu;
+    }
+
+    public void setIsMenu(boolean isMenu) {
+        this.isMenu = isMenu;
     }
 
     @Override
