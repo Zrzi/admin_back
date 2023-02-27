@@ -1,9 +1,6 @@
 package com.admin.admin_back.controller;
 
-import com.admin.admin_back.annotations.CheckRole;
-import com.admin.admin_back.annotations.LogAnnotation;
-import com.admin.admin_back.annotations.NoRepeatSubmit;
-import com.admin.admin_back.annotations.SecurityAnnotation;
+import com.admin.admin_back.annotations.*;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
@@ -49,6 +46,7 @@ public class UserController {
             @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
     })
     @LogAnnotation(inEnabled = false)
+    // todo @NoRepeatSubmit
     @SecurityAnnotation
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginForm loginForm) {
@@ -79,6 +77,8 @@ public class UserController {
     }
 
     @ApiOperation("刷新token")
+    // todo @NoRepeatSubmit
+    @RefreshToken
     @PostMapping("/refreshToken")
     public Result<?> refreshToken(@RequestParam("refreshToken") String refreshToken) {
         if (!jwtTokenUtil.validateToken(refreshToken)) {
@@ -87,10 +87,8 @@ public class UserController {
         }
         try {
             return new Result<>(ResponseMessage.SUCCESS, userService.refreshToken(refreshToken));
-        } catch (UserExistException exception) {
-            return new Result<>(ResponseMessage.USER_NOT_FOUND);
         } catch (Exception exception) {
-            return new Result<>(ResponseMessage.SYSTEM_ERROR);
+            return new Result<>(ResponseMessage.NOT_LOGIN);
         }
     }
 

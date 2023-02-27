@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * @author 陈群矜
+ */
 @Component
 public class JwtTokenUtil {
 
@@ -19,7 +22,9 @@ public class JwtTokenUtil {
     private static final String CLAIM_KEY_ROLES = "roles";
     private static final String SECRET = "secret";
     private static final String ISSUER = "sdu-admin";
+    // 5 * 60
     private static final int JWT_TOKEN_EXPIRATION = 300;
+    // 7 * 24 * 60 * 60
     private static final int REFRESH_TOKEN_EXPIRATION = 604800;
 
     public String getUserNoFromToken(String token) {

@@ -1,5 +1,6 @@
 package com.admin.admin_back.aop;
 
+import com.admin.admin_back.annotations.RefreshToken;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
@@ -14,14 +15,17 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,9 +57,14 @@ public class ThreadLocalAspect {
             } else {
                 if (!jwtTokenUtil.validateToken(token)) {
                     // 携带的token过期
-                    return new Result<>(ResponseMessage.TOKEN_EXPIRED);
+                    RefreshToken annotation = ((MethodSignature) pjp.getSignature()).getMethod().getAnnotation(RefreshToken.class);
+                    if (Objects.isNull(annotation)) {
+                        // 如果不存在该注解，说明目标方法不是refreshToken，拦截
+                        return new Result<>(ResponseMessage.TOKEN_EXPIRED);
+                    }
+                } else {
+                    setThreadLocal(token);
                 }
-                setThreadLocal(token);
                 return pjp.proceed();
             }
         } catch (OtherLoginException exception) {
