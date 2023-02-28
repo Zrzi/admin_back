@@ -80,7 +80,11 @@ public class UserController {
     // todo @NoRepeatSubmit
     @RefreshToken
     @PostMapping("/refreshToken")
-    public Result<?> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+    public Result<?> refreshToken(@RequestBody RefreshTokenForm refreshTokenForm) {
+        String refreshToken = refreshTokenForm.getRefreshToken();
+        if (StringUtils.isBlank(refreshToken)) {
+            return new Result<>(ResponseMessage.NOT_LOGIN);
+        }
         if (!jwtTokenUtil.validateToken(refreshToken)) {
             // refresh token也过期了
             return new Result<>(ResponseMessage.NOT_LOGIN);

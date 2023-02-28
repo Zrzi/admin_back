@@ -65,34 +65,7 @@ public class UserServiceImpl implements UserService {
         if (!checkPassword) {
             throw new PasswordException();
         }
-        TokenVo tokenVo = new TokenVo();
-        String jwtToken = null;
-        String refreshToken = null;
-        List<UserRoleDto> dtos = userRoleMapper.findUserRoleByNo(userNo);
-        if (CollectionUtils.isEmpty(dtos)) {
-            jwtToken = jwtTokenUtil.generateToken(user, new ArrayList<>(), false);
-            refreshToken = jwtTokenUtil.generateToken(user, new ArrayList<>(), true);
-        } else {
-            List<UserRoleVo> userRoleVos = new ArrayList<>();
-            for (UserRoleDto dto : dtos) {
-                UserRoleVo vo = new UserRoleVo();
-                vo.setUserNo(dto.getUserNo());
-                vo.setRoleId(dto.getRoleId());
-                vo.setLevel(dto.getLevel());
-                vo.setUserType(Objects.requireNonNull(UserTypeEnum.findUserTypeEnumByCode(dto.getUserType())).message);
-                vo.setCreatedBy(dto.getCreatedBy());
-                vo.setCreatedDate(dto.getCreatedDate());
-                vo.setUpdatedBy(dto.getUpdatedBy());
-                vo.setUpdatedDate(dto.getUpdatedDate());
-                userRoleVos.add(vo);
-            }
-            jwtToken = jwtTokenUtil.generateToken(user, userRoleVos, false);
-            refreshToken = jwtTokenUtil.generateToken(user, new ArrayList<>(), true);
-        }
-        redisTemplate.opsForValue().set(userNo, Md5Util.digest(jwtToken));
-        tokenVo.setToken(jwtToken);
-        tokenVo.setRefreshToken(refreshToken);
-        return tokenVo;
+        return generateTokenVo(user);
     }
 
     @Override
@@ -118,8 +91,14 @@ public class UserServiceImpl implements UserService {
         if (Objects.isNull(user)) {
             throw new UserExistException();
         }
+        return generateTokenVo(user);
+    }
+
+    private TokenVo generateTokenVo(UserDto user) {
         TokenVo tokenVo = new TokenVo();
+        String userNo = user.getUserNo();
         String jwtToken = null;
+        String refreshToken = null;
         List<UserRoleDto> dtos = userRoleMapper.findUserRoleByNo(userNo);
         if (CollectionUtils.isEmpty(dtos)) {
             jwtToken = jwtTokenUtil.generateToken(user, new ArrayList<>(), false);
