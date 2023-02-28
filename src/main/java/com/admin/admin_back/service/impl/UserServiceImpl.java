@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 陈群矜
@@ -120,7 +121,8 @@ public class UserServiceImpl implements UserService {
             jwtToken = jwtTokenUtil.generateToken(user, userRoleVos, false);
             refreshToken = jwtTokenUtil.generateToken(user, userRoleVos, true);
         }
-        redisTemplate.opsForValue().set(userNo, Md5Util.digest(jwtToken));
+        // jwt token过期时间是5分钟，所以在redis中缓存大于5分钟即可，这里设置为10分钟
+        redisTemplate.opsForValue().set(userNo, Md5Util.digest(jwtToken), 600, TimeUnit.SECONDS);
         tokenVo.setToken(jwtToken);
         tokenVo.setRefreshToken(refreshToken);
         return tokenVo;
