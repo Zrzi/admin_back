@@ -43,10 +43,14 @@
     </insert>
 
     <delete id="deleteRoleResource" parameterType="com.admin.admin_back.pojo.dto.RoleResourceDto">
-        UPDATE `admin_role_resource`
-        SET `updated_by` = #{roleResource.updatedBy},
-            `updated_date` = NOW(),
-            `status` = 1
+--         UPDATE `admin_role_resource`
+--         SET `updated_by` = #{roleResource.updatedBy},
+--             `updated_date` = NOW(),
+--             `status` = 1
+--         WHERE `role_id` = #{roleResource.roleId}
+--           AND `resource_id` = #{roleResource.resourceId}
+--           AND `status` = 0
+        DELETE FROM `admin_role_resource`
         WHERE `role_id` = #{roleResource.roleId}
           AND `resource_id` = #{roleResource.resourceId}
           AND `status` = 0
