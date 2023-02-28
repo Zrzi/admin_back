@@ -1,11 +1,9 @@
 package com.admin.admin_back.aop;
 
-import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
-import com.admin.admin_back.pojo.exception.UserNoException;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
@@ -17,11 +15,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +54,8 @@ public class NoRepeatAspect {
                 args.add(arg);
             }
             // 注意，此处不一定有user，所以userNo可能是空字符串
-            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
-            String sign = methodName + '/' + userNo;
+            UserDto user = UserThreadLocal.getUser();
+            String sign = methodName + '/' + (Objects.isNull(user) ? "" : user.getUserNo());
             String value = JSON.toJSONString(args);
             String cachedValue = (String) redisTemplate.opsForValue().get(sign);
             if (StringUtils.equals(value, cachedValue)) {

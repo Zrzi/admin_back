@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.LogAnnotation;
+import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.form.DecryptForm;
@@ -62,7 +63,7 @@ public class SecurityController {
     }
 
     @ApiOperation("解密接口")
-    // todo @NoRepeatSubmit
+    @NoRepeatSubmit
     @LogAnnotation(outEnabled = false)
     @ResponseBody
     @PostMapping("/decrypt")
@@ -95,7 +96,7 @@ public class SecurityController {
             @ApiImplicitParam(name = "file", value = "上传的文件", required = true),
             @ApiImplicitParam(name = "encryptedKey", value = "密钥", required = true)
     })
-    // todo @NoRepeatSubmit
+    @NoRepeatSubmit
     @LogAnnotation(inEnabled = false, outEnabled = false)
     @PostMapping(value = "/decryptFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void decryptFile(@RequestPart("file") MultipartFile file,

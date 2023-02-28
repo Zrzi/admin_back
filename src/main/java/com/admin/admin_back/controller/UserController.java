@@ -46,7 +46,7 @@ public class UserController {
             @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
     })
     @LogAnnotation(inEnabled = false)
-    // todo @NoRepeatSubmit
+    @NoRepeatSubmit
     @SecurityAnnotation
     @PostMapping("/login")
     public Result<?> login(@RequestBody LoginForm loginForm) {
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @ApiOperation("刷新token")
-    // todo @NoRepeatSubmit
+    @NoRepeatSubmit
     @RefreshToken
     @PostMapping("/refreshToken")
     public Result<?> refreshToken(@RequestBody RefreshTokenForm refreshTokenForm) {
