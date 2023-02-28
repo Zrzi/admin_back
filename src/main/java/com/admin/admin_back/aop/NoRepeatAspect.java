@@ -7,6 +7,7 @@ import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.exception.UserNoException;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,9 +19,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -44,20 +48,25 @@ public class NoRepeatAspect {
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
             Method method = methodSignature.getMethod();
             NoRepeatSubmit annotation = method.getAnnotation(NoRepeatSubmit.class);
-            CheckRole checkRole = method.getAnnotation(CheckRole.class);
+            String methodName = method.getName();
             int seconds = annotation.time();
-            HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-            String path = request.getServletPath();
-            // 注意，此处不一定有user，但一般post请求上都有@CheckRole注解，所以一定user不是null
-            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
-            if (StringUtils.isBlank(userNo) && Objects.nonNull(checkRole)) {
-                return new Result<>(ResponseMessage.NOT_LOGIN);
+            List<Object> args = new ArrayList<>();
+            for (Object arg : pjp.getArgs()) {
+                if (arg instanceof MultipartFile) {
+                    // 如果是文件，跳过
+                    continue;
+                }
+                args.add(arg);
             }
-            String sign = path + '/' + userNo;
-            if (Boolean.TRUE.equals(redisTemplate.hasKey(sign))) {
+            // 注意，此处不一定有user，所以userNo可能是空字符串
+            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
+            String sign = methodName + '/' + userNo;
+            String value = JSON.toJSONString(args);
+            String cachedValue = (String) redisTemplate.opsForValue().get(sign);
+            if (StringUtils.equals(value, cachedValue)) {
                 return new Result<>(ResponseMessage.REPEAT_REQUEST);
             }
-            redisTemplate.opsForValue().set(sign, "", seconds, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(sign, value, seconds, TimeUnit.SECONDS);
             return pjp.proceed();
         } catch (Throwable throwable) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
