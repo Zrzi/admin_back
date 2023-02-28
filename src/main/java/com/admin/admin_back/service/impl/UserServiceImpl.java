@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
                 userRoleVos.add(vo);
             }
             jwtToken = jwtTokenUtil.generateToken(user, userRoleVos, false);
-            refreshToken = jwtTokenUtil.generateToken(user, new ArrayList<>(), true);
+            refreshToken = jwtTokenUtil.generateToken(user, userRoleVos, true);
         }
         redisTemplate.opsForValue().set(userNo, Md5Util.digest(jwtToken));
         tokenVo.setToken(jwtToken);
