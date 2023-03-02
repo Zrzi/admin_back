@@ -13,6 +13,8 @@ public class UserVo {
 
     private String username;
 
+    private String userType;
+
     private String createdBy;
 
     private Date createdDate;
@@ -37,6 +39,14 @@ public class UserVo {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getCreatedBy() {

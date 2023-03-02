@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author 陈群矜
@@ -241,6 +242,24 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteUser(userDto);
         studentMapper.deleteStudent(userNo);
         teacherMapper.deleteTeacher(userNo);
+    }
+
+    @Override
+    public List<UserVo> getUsersByRoleId(String roleId) {
+        return userMapper
+                .findUsersByRoleId(roleId)
+                .stream()
+                .map(userDto -> {
+                    UserVo userVo = new UserVo();
+                    userVo.setUserNo(userDto.getUserNo());
+                    userVo.setUsername(userDto.getUsername());
+                    userVo.setUserType(Objects.requireNonNull(UserTypeEnum.findUserTypeEnumByCode(userDto.getUserType())).message);
+                    userVo.setCreatedBy(userDto.getCreatedBy());
+                    userVo.setCreatedDate(userDto.getCreatedDate());
+                    userVo.setUpdatedBy(userDto.getUpdatedBy());
+                    userVo.setUpdatedDate(userDto.getUpdatedDate());
+                    return userVo;
+        }).collect(Collectors.toList());
     }
 
     private void addStudent(StudentVo student) {

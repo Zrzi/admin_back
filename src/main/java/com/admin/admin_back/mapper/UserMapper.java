@@ -24,6 +24,8 @@ public interface UserMapper {
 
     UserDto findUserByUserNo(String userNo);
 
+    List<UserDto> findUsersByRoleId(String roleId);
+
     Integer addUser(@Param("userDto") UserDto userDto);
 
     Integer updateUser(@Param("userDto") UserDto userDto);

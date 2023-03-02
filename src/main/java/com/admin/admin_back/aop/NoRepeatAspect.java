@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,7 +52,7 @@ public class NoRepeatAspect {
                 }
                 args.add(arg);
             }
-            // 注意，此处不一定有user，所以userNo可能是空字符串
+            // 注意，此处不一定有user，所以userDto可能是null
             UserDto user = UserThreadLocal.getUser();
             String sign = methodName + '/' + (Objects.isNull(user) ? "" : user.getUserNo());
             String value = JSON.toJSONString(args);

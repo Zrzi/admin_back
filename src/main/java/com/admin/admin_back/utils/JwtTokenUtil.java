@@ -1,6 +1,7 @@
 package com.admin.admin_back.utils;
 
 import com.admin.admin_back.pojo.dto.UserDto;
+import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.exception.UnAuthorizedException;
 import com.admin.admin_back.pojo.vo.UserRoleVo;
 import io.jsonwebtoken.Claims;
@@ -19,12 +20,19 @@ public class JwtTokenUtil {
 
     private static final String CLAIM_KEY_USER_NO = "userNo";
     private static final String CLAIM_KEY_USERNAME = "username";
+    private static final String CLAIM_KEY_USER_TYPE = "userType";
     private static final String CLAIM_KEY_ROLES = "roles";
     private static final String SECRET = "secret";
     private static final String ISSUER = "sdu-admin";
-    // 5 * 60
+    /**
+     * 令牌过期时间
+     * 5 * 60 单位：秒
+     */
     private static final int JWT_TOKEN_EXPIRATION = 300;
-    // 7 * 24 * 60 * 60
+    /**
+     * 刷新令牌过期时间
+     * 7 * 24 * 60 * 60 单位：秒
+     */
     private static final int REFRESH_TOKEN_EXPIRATION = 604800;
 
     public String getUserNoFromToken(String token) {
@@ -47,6 +55,21 @@ public class JwtTokenUtil {
             username = null;
         }
         return username;
+    }
+
+    public int getUserTypeFromToken(String token) {
+        int userType = -1;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            String userTypeStr = claims.get(CLAIM_KEY_USER_TYPE, String.class);
+            UserTypeEnum userTypeEnum = UserTypeEnum.findUserTypeByMessage(userTypeStr);
+            if (Objects.nonNull(userTypeEnum)) {
+                userType = userTypeEnum.code;
+            }
+        } catch (Exception ignored) {
+
+        }
+        return userType;
     }
 
     public Date getCreatedDateFromToken(String token) {
@@ -108,6 +131,7 @@ public class JwtTokenUtil {
         Map<String, Object> claims = new HashMap<String, Object>(16) {{
             put(CLAIM_KEY_USER_NO, user.getUserNo());
             put(CLAIM_KEY_USERNAME, user.getUsername());
+            put(CLAIM_KEY_USER_TYPE, UserTypeEnum.findUserTypeEnumByCode(user.getUserType()));
             put(CLAIM_KEY_ROLES, roles);
         }};
         return generateToken(claims, isRefreshToken);

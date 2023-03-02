@@ -6,6 +6,7 @@ import com.admin.admin_back.mapper.UserRoleMapper;
 import com.admin.admin_back.pojo.dto.RoleDto;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.dto.UserRoleDto;
+import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.UserExistException;
 import com.admin.admin_back.pojo.exception.UserRoleExistException;
@@ -51,10 +52,7 @@ public class MemberRoleServiceImpl implements MemberRoleService {
         for (String userNo : unaddedUser) {
             UserDto userDto = userMapper.findUserByUserNo(userNo);
             if (Objects.nonNull(userDto)) {
-                UserVo userVo = new UserVo();
-                userVo.setUserNo(userNo);
-                userVo.setUsername(userDto.getUsername());
-                result.add(userVo);
+                result.add(generateUserVoByUserDto(userDto));
             }
         }
         return result;
@@ -78,14 +76,7 @@ public class MemberRoleServiceImpl implements MemberRoleService {
             String userNo = userRoleDto.getUserNo();
             UserDto userDto = userMapper.findUserByUserNo(userNo);
             if (Objects.nonNull(userDto)) {
-                UserVo userVo = new UserVo();
-                userVo.setUserNo(userNo);
-                userVo.setUsername(userDto.getUsername());
-                userVo.setCreatedBy(userDto.getCreatedBy());
-                userVo.setCreatedDate(userDto.getCreatedDate());
-                userVo.setUpdatedBy(userDto.getUpdatedBy());
-                userVo.setUpdatedDate(userDto.getUpdatedDate());
-                result.add(userVo);
+                result.add(generateUserVoByUserDto(userDto));
             }
         }
         return result;
@@ -103,10 +94,7 @@ public class MemberRoleServiceImpl implements MemberRoleService {
             String userNo = userRoleDto.getUserNo();
             UserDto userDto = userMapper.findUserByUserNo(userNo);
             if (Objects.nonNull(userDto)) {
-                UserVo userVo = new UserVo();
-                userVo.setUserNo(userNo);
-                userVo.setUserNo(userDto.getUsername());
-                result.add(userVo);
+                result.add(generateUserVoByUserDto(userDto));
             }
         }
         return result;
@@ -168,6 +156,18 @@ public class MemberRoleServiceImpl implements MemberRoleService {
         String updatedBy = UserThreadLocal.getUser().getUserNo();
         userRoleDto.setUpdatedBy(updatedBy);
         userRoleMapper.deleteUserRole(userRoleDto);
+    }
+
+    private UserVo generateUserVoByUserDto(UserDto userDto) {
+        UserVo userVo = new UserVo();
+        userVo.setUserNo(userDto.getUserNo());
+        userVo.setUsername(userDto.getUsername());
+        userVo.setUserType(Objects.requireNonNull(UserTypeEnum.findUserTypeEnumByCode(userDto.getUserType())).message);
+        userVo.setCreatedBy(userDto.getCreatedBy());
+        userVo.setCreatedDate(userDto.getCreatedDate());
+        userVo.setUpdatedBy(userDto.getUpdatedBy());
+        userVo.setUpdatedDate(userDto.getUpdatedDate());
+        return userVo;
     }
 
 }

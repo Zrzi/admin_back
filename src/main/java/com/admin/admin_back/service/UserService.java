@@ -3,10 +3,9 @@ package com.admin.admin_back.service;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.form.AddUserForm;
 import com.admin.admin_back.pojo.form.EditUserForm;
-import com.admin.admin_back.pojo.vo.StudentVo;
-import com.admin.admin_back.pojo.vo.TeacherVo;
-import com.admin.admin_back.pojo.vo.TokenVo;
-import com.admin.admin_back.pojo.vo.UsersVo;
+import com.admin.admin_back.pojo.vo.*;
+
+import java.util.List;
 
 /**
  * @author 陈群矜
@@ -32,5 +31,7 @@ public interface UserService {
     void updateUser(EditUserForm editUserForm);
 
     void deleteUser(String userNo);
+
+    List<UserVo> getUsersByRoleId(String roleId);
 
 }

@@ -232,6 +232,18 @@ public class UserController {
         }
     }
 
+    @ApiOperation("根据角色编码获取具有该角色的用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+    })
+    @GetMapping("/user/getUsersByRoleId")
+    public Result<?> getUsersByRoleId(@RequestParam(value = "roleId", required = false) String roleId) {
+        if (StringUtils.isBlank(roleId)) {
+            return new Result<>(ResponseMessage.ROLE_ID_IS_NULL);
+        }
+        return new Result<>(ResponseMessage.SUCCESS, userService.getUsersByRoleId(roleId));
+    }
+
     private String checkAddUserForm(AddUserForm addUserForm) {
         boolean isStudent = addUserForm.getIsStudent();
         if (isStudent) {
