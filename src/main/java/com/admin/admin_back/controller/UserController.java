@@ -23,8 +23,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -232,10 +230,12 @@ public class UserController {
         }
     }
 
-    @ApiOperation("根据角色编码获取具有该角色的用户列表")
+    @ApiOperation("根据角色编码获取具有该角色的用户列表（提供给外部系统使用）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
     })
+//    @NoRepeatSubmit
+    @LogAnnotation
     @GetMapping("/user/getUsersByRoleId")
     public Result<?> getUsersByRoleId(@RequestParam(value = "roleId", required = false) String roleId) {
         if (StringUtils.isBlank(roleId)) {

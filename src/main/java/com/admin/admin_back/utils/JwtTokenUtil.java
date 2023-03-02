@@ -131,7 +131,7 @@ public class JwtTokenUtil {
         Map<String, Object> claims = new HashMap<String, Object>(16) {{
             put(CLAIM_KEY_USER_NO, user.getUserNo());
             put(CLAIM_KEY_USERNAME, user.getUsername());
-            put(CLAIM_KEY_USER_TYPE, UserTypeEnum.findUserTypeEnumByCode(user.getUserType()));
+            put(CLAIM_KEY_USER_TYPE, Objects.requireNonNull(UserTypeEnum.findUserTypeEnumByCode(user.getUserType())).message);
             put(CLAIM_KEY_ROLES, roles);
         }};
         return generateToken(claims, isRefreshToken);
