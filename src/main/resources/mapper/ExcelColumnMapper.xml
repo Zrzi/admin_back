@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.ExcelColumnMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.ExcelColumnDto">
+        <id column="id" property="id" />
+        <result column="excel_id" property="excelId" />
+        <result column="excel_column" property="excelColumn" />
+        <result column="sql_column" property="sqlColumn" />
+        <result column="is_primary_key" property="isPrimaryKey" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findExcelColumnsByExcelId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel_column`
+        WHERE `excel_id` = #{excelId}
+          AND `status` = 0
+    </select>
+
+    <select id="findExcelColumnByColumnNames" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel_column`
+        WHERE `excel_column` = #{excelColumn}
+          AND `sql_column` = #{sqlColumn}
+          AND `status` = 0
+    </select>
+
+    <insert id="excelColumnDto" parameterType="com.admin.admin_back.pojo.dto.ExcelColumnDto">
+        INSERT INTO `admin_excel_column` (`id`, `excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelColumnDto.id}, #{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isPrimaryKey}, #{excelColumnDto.createdBy}, #{excelColumnDto.createdDate}, #{excelColumnDto.updatedBy}, #{excelColumnDto.updatedDate}, 0)
+    </insert>
+
+    <delete id="deleteExcelColumn" parameterType="com.admin.admin_back.pojo.dto.ExcelColumnDto">
+        DELETE FROM `admin_excel_column`
+        WHERE `excel_column` = #{excelColumnDto.excelColumn}
+          AND `sql_column` = #{excelColumnDto.sqlColumn}
+          AND `status` = 0
+    </delete>
+
+</mapper>
