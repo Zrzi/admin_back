@@ -27,7 +27,7 @@ public class Result<T> {
         this.data = null;
     }
 
-    public Result(ResponseMessage responseMessage, String message) {
+    public Result(ResponseMessage responseMessage, T data, String message) {
         this.code = responseMessage.code;
         this.message = message;
         this.data = null;

@@ -180,7 +180,7 @@ public class ResourceController {
     public Result<?> addResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, false);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, null, flag);
         }
         try {
             resourceService.addResource(resourceForm);
@@ -204,7 +204,7 @@ public class ResourceController {
     public Result<?> updateResource(@RequestBody ResourceForm resourceForm) {
         String flag = checkValidResourceForm(resourceForm, true);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.RESOURCE_FORM_ERROR, null, flag);
         }
         try {
             resourceService.updateResource(resourceForm);

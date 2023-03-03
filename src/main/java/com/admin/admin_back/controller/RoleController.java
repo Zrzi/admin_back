@@ -64,7 +64,7 @@ public class RoleController {
     public Result<?> addRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, null, flag);
         }
         try {
             roleService.addRole(roleForm);
@@ -84,7 +84,7 @@ public class RoleController {
     public Result<?> updateRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, null, flag);
         }
         try {
             roleService.updateRole(roleForm);

@@ -67,7 +67,7 @@ public class RoleResourceController {
     public Result<?> editRoleResource(@RequestBody EditRoleResourceForm editRoleResourceForm) {
         String flag = checkEditRoleResourceForm(editRoleResourceForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.EDIT_ROLE_RESOURCE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.EDIT_ROLE_RESOURCE_FORM_ERROR, null, flag);
         }
         try {
             roleResourceService.editRoleResources(editRoleResourceForm);

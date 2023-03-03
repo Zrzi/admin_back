@@ -39,7 +39,7 @@
         SET `excel_name` = #{excelDto.excelName},
             `sql_name` = #{excelDto.sqlName},
             `updated_by` = #{excelDto.updatedBy},
-            `updated_date` = #{excelDto.updatedDate}
+            `updated_date` = NOW()
         WHERE `excel_id` = #{excelDto.excelId}
           AND `status` = 0
     </update>
@@ -48,7 +48,7 @@
         UPDATE `admin_excel`
         SET `status` = 1,
             `updated_by` = #{excelDto.updatedBy},
-            `updated_date` = #{excelDto.updatedDate}
+            `updated_date` = NOW()
         WHERE `excel_id` = #{excelDto.excelId}
           AND `status` = 0
     </update>

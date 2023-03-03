@@ -182,7 +182,7 @@ public class UserController {
     public Result<?> addUser(@RequestBody AddUserForm addUserForm) {
         String flag = checkAddUserForm(addUserForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             userService.addUser(addUserForm);
@@ -200,7 +200,7 @@ public class UserController {
     public Result<?> updateUser(@RequestBody EditUserForm editUserForm) {
         String flag = checkEditUserForm(editUserForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             userService.updateUser(editUserForm);

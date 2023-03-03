@@ -82,7 +82,7 @@ public class MemberRoleController {
     public Result<?> addMemberRole(@RequestBody AddMemberRoleForm addMemberRoleForm) {
         String flag = checkAddMemberRoleForm(addMemberRoleForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             memberRoleService.addMemberRole(addMemberRoleForm);

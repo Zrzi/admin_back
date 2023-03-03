@@ -137,14 +137,29 @@ public enum ResponseMessage {
     USER_TYOE_ERROR(400007, "用户类型错误"),
 
     /**
-     *
+     * 数据为空
      */
     CONTENT_NOT_FOUND(500000, "数据为空"),
 
     /**
-     *
+     * 密钥为空
      */
     KEY_NOT_FOUND(500001, "密钥为空"),
+
+    /**
+     * Excel映射配置编码不存在
+     */
+    EXCEL_ID_IS_NULL(600000, "Excel映射配置编码不存在"),
+
+    /**
+     * Excel映射配置不存在
+     */
+    EXCEL_NOT_FOUND(600001, "Excel映射配置不存在"),
+
+    /**
+     * Excel表单错误
+     */
+    EXCEL_FORM_ERROR(600002, "Excel表单错误"),
 
     /**
      * 参数异常
