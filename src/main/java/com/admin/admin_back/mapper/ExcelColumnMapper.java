@@ -20,6 +20,15 @@ public interface ExcelColumnMapper {
 
     Integer insertExcelColumn(@Param("excelColumnDto") ExcelColumnDto excelColumnDto);
 
+    /**
+     * 批量插入ExcelColumnDto数据
+     * @param excelColumnDtos 数据列表
+     * @return 影响行数
+     */
+    Integer batchInsertExcelColumns(List<ExcelColumnDto> excelColumnDtos);
+
     Integer deleteExcelColumn(@Param("excelColumnDto") ExcelColumnDto excelColumnDto);
+
+    Integer batchDeleteExcelColumns(@Param("excelId") String excelId);
 
 }

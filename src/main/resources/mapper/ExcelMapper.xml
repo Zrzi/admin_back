@@ -29,9 +29,16 @@
           AND `status` = 0
     </select>
 
+    <select id="findExcelByExcelName" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel`
+        WHERE `excel_name` = #{excelName}
+          AND `status` = 0
+    </select>
+
     <insert id="insertExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
-        INSERT INTO `admin_excel` (`id`, `excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-        VALUES (#{excelDto.id}, #{excelDto.excelId}, #{excelDto.excelName}, #{excelDto.sqlName}, #{excelDto.createdBy}, #{excelDto.createdDate}, #{excelDto.updatedBy}, #{excelDto.updatedDate}, 0)
+        INSERT INTO `admin_excel` (`excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelDto.excelId}, #{excelDto.excelName}, #{excelDto.sqlName}, #{excelDto.createdBy}, NOW(), #{excelDto.updatedBy}, NOW(), 0)
     </insert>
 
     <update id="updateExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">

@@ -162,6 +162,11 @@ public enum ResponseMessage {
     EXCEL_FORM_ERROR(600002, "Excel表单错误"),
 
     /**
+     * Excel名称已经存在
+     */
+    EXCEL_NAME_EXIST(600003, "Excel名称已经存在"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),

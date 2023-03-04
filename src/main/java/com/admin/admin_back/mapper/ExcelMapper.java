@@ -18,6 +18,8 @@ public interface ExcelMapper {
 
     ExcelDto findExcelByExcelId(@Param("excelId") String excelId);
 
+    ExcelDto findExcelByExcelName(@Param("excelName") String excelName);
+
     Integer insertExcelDto(@Param("excelDto") ExcelDto excelDto);
 
     Integer updateExcelDto(@Param("excelDto") ExcelDto excelDto);

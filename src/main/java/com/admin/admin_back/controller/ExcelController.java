@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.exception.ExcelExistException;
+import com.admin.admin_back.pojo.exception.ExcelNameExistException;
 import com.admin.admin_back.pojo.form.DeleteExcelForm;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
@@ -60,6 +61,25 @@ public class ExcelController {
         }
     }
 
+    @ApiOperation("获取数据库中的所有sql表格名称")
+    @LogAnnotation
+    @CheckRole("getSqlTables")
+    @GetMapping("/excel/getSqlTables")
+    public Result<?> getSqlTables() {
+        return new Result<>(ResponseMessage.SUCCESS, excelService.getSqlTables());
+    }
+
+    @ApiOperation("根据数据库表格名称获取数据库中表格的所有列名称")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sqlTableName", value = "数据库表格名称", required = true)
+    })
+    @LogAnnotation
+    @CheckRole("getSqlColumns")
+    @GetMapping("/excel/getSqlColumns")
+    public Result<?> getSqlColumns(@RequestParam("sqlTableName") String sqlTableName) {
+        return new Result<>(ResponseMessage.SUCCESS, excelService.getSqlColumns(sqlTableName));
+    }
+
     @ApiOperation("添加Excel映射配置")
     @LogAnnotation
     @CheckRole("addExcel")
@@ -69,7 +89,12 @@ public class ExcelController {
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.EXCEL_FORM_ERROR, null, flag);
         }
-        return null;
+        try {
+            excelService.addExcel(excelForm);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (ExcelNameExistException exception) {
+            return new Result<>(ResponseMessage.EXCEL_NAME_EXIST);
+        }
     }
 
     @ApiOperation("编辑Excel映射配置")
@@ -81,7 +106,12 @@ public class ExcelController {
         if (StringUtils.isNotBlank(flag)) {
             return new Result<>(ResponseMessage.EXCEL_FORM_ERROR, null, flag);
         }
-        return null;
+        try {
+            excelService.updateExcel(excelForm);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (ExcelExistException exception) {
+            return new Result<>(ResponseMessage.EXCEL_NOT_FOUND);
+        }
     }
 
     @ApiOperation("删除Excel映射配置")

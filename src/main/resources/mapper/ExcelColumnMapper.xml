@@ -33,14 +33,28 @@
     </select>
 
     <insert id="excelColumnDto" parameterType="com.admin.admin_back.pojo.dto.ExcelColumnDto">
-        INSERT INTO `admin_excel_column` (`id`, `excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-        VALUES (#{excelColumnDto.id}, #{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isPrimaryKey}, #{excelColumnDto.createdBy}, #{excelColumnDto.createdDate}, #{excelColumnDto.updatedBy}, #{excelColumnDto.updatedDate}, 0)
+        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isPrimaryKey}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
+    </insert>
+
+    <insert id="batchInsertExcelColumns">
+        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `is_primary_key`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUE
+        <foreach collection="list" item="excelColumnDto" index="index" separator=",">
+            (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isPrimaryKey}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
+        </foreach>
     </insert>
 
     <delete id="deleteExcelColumn" parameterType="com.admin.admin_back.pojo.dto.ExcelColumnDto">
         DELETE FROM `admin_excel_column`
         WHERE `excel_column` = #{excelColumnDto.excelColumn}
           AND `sql_column` = #{excelColumnDto.sqlColumn}
+          AND `status` = 0
+    </delete>
+
+    <delete id="batchDeleteExcelColumns" parameterType="java.lang.String">
+        DELETE FROM `admin_excel_column`
+        WHERE `excel_id` = #{excelId}
           AND `status` = 0
     </delete>
 
