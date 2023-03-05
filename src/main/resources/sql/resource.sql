@@ -157,3 +157,28 @@ VALUES ('Rc4a57f3e530141468bacda5408a6798a', 'addResourceButton', 'Saeda408ef5de
 
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R9fd764676bb644dfb8f554e1b56bf5d4', 'getMenus', 'Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '/getMenus', 0, NULL, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+--- Excel 新增 ---
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R5197664e9df34269b99da27e5c33483f', 'Excel映射配置', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/home/excels', 1, NULL, 1, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Rb8cba5e8ea264301b8dde8ef3f6be95d', 'getExcels', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getExcels', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R1c36aef7d59049f9ad9a30bfe51f2f53', 'getExcelByExcelId', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getExcelByExcelId', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Rd5049d704c16492b980d46f808dbe7b4', 'getSqlTables', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getSqlTables', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R7f18cec0bd4547428712be04764fbea9', 'getSqlColumns', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getSqlColumns', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R3f965fc4d2034ff39736d1766cfd6077', 'addExcel', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/add', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('R408a805928c3449e91b658a29b48b7da', 'updateExcel', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/update', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Rf657fa831f85425fa2a8af478ee2c7d0', 'deleteExcel', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/delete', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);

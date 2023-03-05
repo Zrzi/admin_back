@@ -17,6 +17,8 @@ public class ExcelDto {
 
     private String sqlName;
 
+    private Integer isCover;
+
     private String createdBy;
 
     private Date createdDate;
@@ -59,6 +61,14 @@ public class ExcelDto {
 
     public void setSqlName(String sqlName) {
         this.sqlName = sqlName;
+    }
+
+    public Integer getIsCover() {
+        return isCover;
+    }
+
+    public void setIsCover(Integer isCover) {
+        this.isCover = isCover;
     }
 
     public String getCreatedBy() {

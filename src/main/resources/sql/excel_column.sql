@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `admin_excel_column`;
 CREATE TABLE `admin_excel_column` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `excel_id` VARCHAR(40) NOT NULL UNIQUE COMMENT '关联的Excel映射编码',
+    `excel_id` VARCHAR(40) NOT NULL COMMENT '关联的Excel映射编码',
     `excel_column` VARCHAR(16) NOT NULL COMMENT 'Excel列名称',
     `sql_column` VARCHAR(40) NOT NULL COMMENT 'Excel列名称',
     `is_primary_key` INTEGER NOT NULL DEFAULT 0 COMMENT '是否是主键 0：不是；1：是',

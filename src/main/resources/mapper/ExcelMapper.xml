@@ -9,6 +9,7 @@
         <result column="excel_id" property="excelId" />
         <result column="excel_name" property="excelName" />
         <result column="sql_name" property="sqlName" />
+        <result column="is_cover" property="isCover" />
         <result column="created_by" property="createdBy" />
         <result column="created_date" property="createdDate" />
         <result column="updated_by" property="updatedBy" />
@@ -17,34 +18,35 @@
     </resultMap>
 
     <select id="findExcels" resultMap="baseMap">
-        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_excel`
         WHERE `status` = 0;
     </select>
 
     <select id="findExcelByExcelId" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_excel`
         WHERE `excel_id` = #{excelId}
           AND `status` = 0
     </select>
 
     <select id="findExcelByExcelName" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_excel`
         WHERE `excel_name` = #{excelName}
           AND `status` = 0
     </select>
 
     <insert id="insertExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
-        INSERT INTO `admin_excel` (`excel_id`, `excel_name`, `sql_name`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-        VALUES (#{excelDto.excelId}, #{excelDto.excelName}, #{excelDto.sqlName}, #{excelDto.createdBy}, NOW(), #{excelDto.updatedBy}, NOW(), 0)
+        INSERT INTO `admin_excel` (`excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelDto.excelId}, #{excelDto.excelName}, #{excelDto.sqlName}, #{excelDto.isCover}, #{excelDto.createdBy}, NOW(), #{excelDto.updatedBy}, NOW(), 0)
     </insert>
 
     <update id="updateExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
         UPDATE `admin_excel`
         SET `excel_name` = #{excelDto.excelName},
             `sql_name` = #{excelDto.sqlName},
+            `is_cover` = #{excelDto.isCover},
             `updated_by` = #{excelDto.updatedBy},
             `updated_date` = NOW()
         WHERE `excel_id` = #{excelDto.excelId}

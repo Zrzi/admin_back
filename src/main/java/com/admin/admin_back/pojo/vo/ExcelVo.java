@@ -21,6 +21,9 @@ public class ExcelVo {
     @ApiModelProperty("sql表名称")
     private String sqlName;
 
+    @ApiModelProperty("插入数据时，出现重复，是否覆盖")
+    private Boolean isCover;
+
     @ApiModelProperty("Excel映射列名配置")
     private List<ExcelColumnVo> rows;
 
@@ -48,6 +51,14 @@ public class ExcelVo {
 
     public void setSqlName(String sqlName) {
         this.sqlName = sqlName;
+    }
+
+    public Boolean getIsCover() {
+        return this.isCover;
+    }
+
+    public void setIsCover(Boolean isCover) {
+        this.isCover = isCover;
     }
 
     public List<ExcelColumnVo> getRows() {

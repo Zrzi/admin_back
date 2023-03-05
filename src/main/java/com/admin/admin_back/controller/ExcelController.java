@@ -155,6 +155,10 @@ public class ExcelController {
             return "sql名称最长40个字符";
         }
         excelForm.setSqlName(sqlName);
+        Boolean isCover = excelForm.getIsCover();
+        if (isCover == null) {
+            excelForm.setIsCover(false);
+        }
         return checkExcelColumns(excelForm.getRows());
     }
 
@@ -169,27 +173,27 @@ public class ExcelController {
             ExcelColumnForm excelColumnForm = excelColumnForms.get(i);
             String excelColumn = excelColumnForm.getExcelColumn();
             if (StringUtils.isBlank(excelColumn)) {
-                return "第" + i + "项Excel列名为空";
+                return "第" + (i + 1) + "项Excel列名为空";
             }
             excelColumn = excelColumn.trim();
             if (excelColumn.length() > 16) {
-                return "第" + i + "项Excel列名长度大于16位";
+                return "第" + (i + 1) + "项Excel列名长度大于16位";
             }
             if (excelColumnSet.contains(excelColumn)) {
-                return "第" + i + "项Excel列名重复";
+                return "第" + (i + 1) + "项Excel列名重复";
             }
             excelColumnSet.add(excelColumn);
             excelColumnForm.setExcelColumn(excelColumn);
             String sqlColumn = excelColumnForm.getSqlColumn();
             if (StringUtils.isBlank(sqlColumn)) {
-                return "第" + i + "项sql列名为空";
+                return "第" + (i + 1) + "项sql列名为空";
             }
             sqlColumn = sqlColumn.trim();
             if (sqlColumn.length() > 40) {
-                return "第" + i + "项sql列名长度大于40位";
+                return "第" + (i + 1) + "项sql列名长度大于40位";
             }
             if (sqlColumnSet.contains(sqlColumn)) {
-                return "第" + i + "项sql列名重复";
+                return "第" + (i + 1) + "项sql列名重复";
             }
             sqlColumnSet.add(sqlColumn);
             excelColumnForm.setSqlColumn(sqlColumn);

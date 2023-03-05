@@ -21,6 +21,9 @@ public class ExcelForm {
     @ApiModelProperty(value = "sql表格名称", required = true)
     private String sqlName;
 
+    @ApiModelProperty("插入数据时，出现重复，是否覆盖")
+    private Boolean isCover;
+
     @ApiModelProperty(value = "Excel列映射配置列表", required = true)
     private List<ExcelColumnForm> rows;
 
@@ -48,6 +51,14 @@ public class ExcelForm {
 
     public void setSqlName(String sqlName) {
         this.sqlName = sqlName;
+    }
+
+    public Boolean getIsCover() {
+        return this.isCover;
+    }
+
+    public void setIsCover(Boolean isCover) {
+        this.isCover = isCover;
     }
 
     public List<ExcelColumnForm> getRows() {

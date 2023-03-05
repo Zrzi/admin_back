@@ -95,13 +95,14 @@ public class ExcelServiceImpl implements ExcelService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateExcel(ExcelForm excelForm) {
+        String excelId = excelForm.getExcelId();
         ExcelDto excelDto = excelMapper.findExcelByExcelId(excelForm.getExcelId());
         if (Objects.isNull(excelDto)) {
             throw new ExcelExistException();
         }
         excelDto = getExcelDtoFromExcelForm(excelForm, true);
+        excelDto.setExcelId(excelId);
         excelMapper.updateExcelDto(excelDto);
-        String excelId = excelDto.getExcelId();
         excelColumnMapper.batchDeleteExcelColumns(excelId);
         saveExcelColumns(excelForm.getRows(), excelId);
     }
@@ -133,6 +134,7 @@ public class ExcelServiceImpl implements ExcelService {
         excelVo.setExcelId(excelDto.getExcelId());
         excelVo.setExcelName(excelDto.getExcelName());
         excelVo.setSqlName(excelDto.getSqlName());
+        excelVo.setIsCover(excelDto.getIsCover() == 1);
         excelVo.setRows(null);
         return excelVo;
     }
@@ -142,6 +144,7 @@ public class ExcelServiceImpl implements ExcelService {
         excelColumnVo.setExcelId(excelColumnDto.getExcelId());
         excelColumnVo.setExcelColumn(excelColumnDto.getExcelColumn());
         excelColumnVo.setSqlColumn(excelColumnDto.getSqlColumn());
+        excelColumnVo.setIsPrimaryKey(excelColumnDto.getIsPrimaryKey() == 1);
         return excelColumnVo;
     }
 
@@ -150,6 +153,7 @@ public class ExcelServiceImpl implements ExcelService {
         ExcelDto excelDto = new ExcelDto();
         excelDto.setExcelName(excelForm.getExcelName());
         excelDto.setSqlName(excelForm.getSqlName());
+        excelDto.setIsCover(excelForm.getIsCover() ? 1 : 0);
         if (!isUpdate) {
             excelDto.setExcelId(GenerateCodeUtil.generateCode(CodeTypeEnum.EXCEL));
             excelDto.setCreatedBy(userNo);
