@@ -168,7 +168,9 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
+        if (nums == 0) {
+            throw new ExcelDataException("Excel表内数据为空");
+        }
     }
 
 }

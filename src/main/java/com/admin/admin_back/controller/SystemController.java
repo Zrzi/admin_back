@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.exception.BaseException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.exception.SystemNameExistException;
@@ -64,7 +65,7 @@ public class SystemController {
             return new Result<>(ResponseMessage.SYSTEM_NAME_IS_NULL);
         }
         systemName = systemName.trim();
-        if (systemName.length() > 16) {
+        if (systemName.length() > Constant.INT_16) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_LENGTH_EXCESS);
         }
         try {
@@ -91,7 +92,7 @@ public class SystemController {
         }
         systemId = systemId.trim();
         systemName = systemName.trim();
-        if (systemName.length() > 16) {
+        if (systemName.length() > Constant.INT_16) {
             return new Result<>(ResponseMessage.SYSTEM_NAME_LENGTH_EXCESS);
         }
         try {

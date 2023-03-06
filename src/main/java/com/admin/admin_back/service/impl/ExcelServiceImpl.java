@@ -7,6 +7,7 @@ import com.admin.admin_back.pojo.dto.ExcelColumnDto;
 import com.admin.admin_back.pojo.dto.ExcelDto;
 import com.admin.admin_back.pojo.enums.CodeTypeEnum;
 import com.admin.admin_back.pojo.excel.ExcelAnalysisListener;
+import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelExistException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
@@ -145,6 +146,7 @@ public class ExcelServiceImpl implements ExcelService {
                     .read(file.getInputStream(), listener)
                     .sheet()
                     .doRead();
+            ExcelDto excelDto = listener.getExcelDto();
             List<JSONObject> dataList = listener.getDataList();
         } catch (IOException exception) {
             throw new RuntimeException();

@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.RoleNameExistException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
@@ -133,7 +134,7 @@ public class RoleController {
             return "角色名称为空";
         }
         roleName = roleName.trim();
-        if (roleName.length() > 16) {
+        if (roleName.length() > Constant.INT_16) {
             return "角色名称超过16个字符";
         }
         roleForm.setRoleName(roleName);

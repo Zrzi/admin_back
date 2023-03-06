@@ -1,5 +1,6 @@
 package com.admin.admin_back.utils;
 
+import com.admin.admin_back.pojo.constant.Constant;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class AesUtil {
     /**
      * 参数分别代表 算法名称/加密模式/数据填充方式
      */
-    private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
+    private static final String ALGORITHM = Constant.AES_ALGORITHM;
 
     /**
      * AES加密

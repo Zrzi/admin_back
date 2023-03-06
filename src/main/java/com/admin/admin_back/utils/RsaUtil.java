@@ -1,5 +1,6 @@
 package com.admin.admin_back.utils;
 
+import com.admin.admin_back.pojo.constant.Constant;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,9 +22,9 @@ import java.util.Optional;
 @Component
 public class RsaUtil {
 
-    private final static String ALGORITHM = "RSA";
-    private final static String PUBLIC_KEY = "RSA_PUBLIC_KEY";
-    private final static String PRIVATE_KEY = "RSA_PRIVATE_KEY";
+    private final static String ALGORITHM = Constant.RSA_ALGORITHM;
+    private final static String PUBLIC_KEY = Constant.PUBLIC_KEY;
+    private final static String PRIVATE_KEY = Constant.PRIVATE_KEY;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;

@@ -177,7 +177,7 @@ public class ExcelController {
             return "Excel表格名称不存在";
         }
         excelName = excelName.trim();
-        if (excelName.length() > 16) {
+        if (excelName.length() > Constant.INT_16) {
             return "Excel表格名称最长16个字符";
         }
         excelForm.setExcelName(excelName);
@@ -186,7 +186,7 @@ public class ExcelController {
             return "sql名称不存在";
         }
         sqlName = sqlName.trim();
-        if (sqlName.length() > 40) {
+        if (sqlName.length() > Constant.INT_40) {
             return "sql名称最长40个字符";
         }
         excelForm.setSqlName(sqlName);
@@ -211,7 +211,7 @@ public class ExcelController {
                 return "第" + (i + 1) + "项Excel列名为空";
             }
             excelColumn = excelColumn.trim();
-            if (excelColumn.length() > 16) {
+            if (excelColumn.length() > Constant.INT_16) {
                 return "第" + (i + 1) + "项Excel列名长度大于16位";
             }
             if (excelColumnSet.contains(excelColumn)) {
@@ -224,7 +224,7 @@ public class ExcelController {
                 return "第" + (i + 1) + "项sql列名为空";
             }
             sqlColumn = sqlColumn.trim();
-            if (sqlColumn.length() > 40) {
+            if (sqlColumn.length() > Constant.INT_40) {
                 return "第" + (i + 1) + "项sql列名长度大于40位";
             }
             if (sqlColumnSet.contains(sqlColumn)) {

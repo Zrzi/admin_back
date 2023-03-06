@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.enums.ResourceTypeEnum;
 import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.DeleteResourceForm;
@@ -263,7 +264,7 @@ public class ResourceController {
             return "资源名称为空";
         }
         resourceName = resourceName.trim();
-        if (resourceName.length() > 50) {
+        if (resourceName.length() > Constant.INT_50) {
             return "资源名称长度大于50个字符";
         }
         resourceForm.setResourceName(resourceName);
