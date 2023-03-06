@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.DataMapper">
+    
+    <select id="selectCountDataByPrimaryKeys" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM #{excelDto.sqlName}
+        WHERE
+        <foreach collection="map" index="key" item="value" separator=" AND " >
+            #{key} = #{value}
+        </foreach>
+    </select>
+    
+    <insert id="insertData">
+        INSERT INTO #{excelDto.sqlName}
+        <foreach collection="columnList" item="column" index="index" open="(" separator="," close=")">
+            #{column}
+        </foreach>
+        VALUES
+        <foreach collection="valueList" item="value" index="index" open="(" separator="," close=")">
+            #{value}
+        </foreach>
+    </insert>
+    
+    <update id="updateData">
+        UPDATE #{excelDto.sqlName}
+        SET
+        <foreach collection="keys" index="key" item="value" separator=",">
+            #{key} = #{value}
+        </foreach>
+        WHERE
+        <foreach collection="primaryKeys" index="key" item="value" separator=" AND ">
+            #{key} = #{value}
+        </foreach>
+    </update>
+
+</mapper>
