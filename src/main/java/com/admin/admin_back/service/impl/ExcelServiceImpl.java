@@ -6,6 +6,7 @@ import com.admin.admin_back.mapper.SqlMapper;
 import com.admin.admin_back.pojo.dto.ExcelColumnDto;
 import com.admin.admin_back.pojo.dto.ExcelDto;
 import com.admin.admin_back.pojo.enums.CodeTypeEnum;
+import com.admin.admin_back.pojo.excel.ExcelAnalysisListener;
 import com.admin.admin_back.pojo.exception.ExcelExistException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
@@ -15,11 +16,17 @@ import com.admin.admin_back.pojo.vo.ExcelColumnVo;
 import com.admin.admin_back.pojo.vo.ExcelVo;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.enums.CellExtraTypeEnum;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -127,6 +134,21 @@ public class ExcelServiceImpl implements ExcelService {
         String userNo = UserThreadLocal.getUser().getUserNo();
         excelDto.setUpdatedBy(userNo);
         excelMapper.deleteExcelDto(excelDto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void uploadExcel(MultipartFile file) {
+        ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper);
+        try {
+            EasyExcel
+                    .read(file.getInputStream(), listener)
+                    .sheet()
+                    .doRead();
+            List<JSONObject> dataList = listener.getDataList();
+        } catch (IOException exception) {
+            throw new RuntimeException();
+        }
     }
 
     private ExcelVo getExcelVoFromExcelDto(ExcelDto excelDto) {

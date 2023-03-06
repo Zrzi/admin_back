@@ -167,6 +167,26 @@ public enum ResponseMessage {
     EXCEL_NAME_EXIST(600003, "Excel名称已经存在"),
 
     /**
+     * 文件类型错误
+     */
+    FILE_TYPE_ERROR(600004, "文件类型错误"),
+
+    /**
+     * 不存在对应的Excel映射
+     */
+    EXCEL_NAME_NOT_FOUND(600005, "不存在对应的Excel映射"),
+
+    /**
+     * Excel某一列不存在对应的配置
+     */
+    EXCEL_COLUMN_NAME_ERROR(600006, "Excel某一列不存在对应的配置"),
+
+    /**
+     * Excel表格中存在数据错误
+     */
+    EXCEL_DATA_ERROR(600007, "Excel表格中存在数据错误"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),

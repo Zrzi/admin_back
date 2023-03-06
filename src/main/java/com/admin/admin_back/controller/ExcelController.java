@@ -4,8 +4,11 @@ import com.admin.admin_back.annotations.CheckRole;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
+import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelExistException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
+import com.admin.admin_back.pojo.exception.SqlColumnNameNotFoundException;
 import com.admin.admin_back.pojo.form.DeleteExcelForm;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
@@ -19,9 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -128,6 +133,36 @@ public class ExcelController {
             return new Result<>(ResponseMessage.SUCCESS);
         } catch (ExcelExistException exception) {
             return new Result<>(ResponseMessage.EXCEL_NOT_FOUND);
+        }
+    }
+
+    @ApiOperation("上传Excel文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "Excel文件", required = true)
+    })
+    @LogAnnotation(inEnabled = false)
+    @CheckRole("uploadExcel")
+    @PostMapping("/excel/upload")
+    public Result<?> uploadExcel(@RequestPart("file") MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        if (Objects.isNull(filename)) {
+            return new Result<>(ResponseMessage.FILE_TYPE_ERROR);
+        }
+        String suffix = filename.substring(filename.lastIndexOf('.') + 1);
+        if (!StringUtils.equalsAny(suffix, Constant.FILE_XLS, Constant.FILE_XLSX)) {
+            return new Result<>(ResponseMessage.FILE_TYPE_ERROR);
+        }
+        try {
+            excelService.uploadExcel(file);
+            return new Result<>(ResponseMessage.SUCCESS);
+        } catch (ExcelNameExistException exception) {
+            return new Result<>(ResponseMessage.EXCEL_NAME_NOT_FOUND);
+        } catch (SqlColumnNameNotFoundException exception) {
+            return new Result<>(ResponseMessage.EXCEL_COLUMN_NAME_ERROR, null, exception.getMessage());
+        } catch (ExcelDataException exception) {
+            return new Result<>(ResponseMessage.EXCEL_DATA_ERROR, null, exception.getMessage());
+        } catch (Exception exception) {
+            return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }
     }
 

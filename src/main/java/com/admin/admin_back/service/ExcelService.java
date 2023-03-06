@@ -2,6 +2,7 @@ package com.admin.admin_back.service;
 
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.vo.ExcelVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,5 +24,7 @@ public interface ExcelService {
     void updateExcel(ExcelForm excelForm);
 
     void deleteExcel(String excelId);
+
+    void uploadExcel(MultipartFile file);
 
 }
