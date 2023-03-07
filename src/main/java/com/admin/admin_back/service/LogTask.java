@@ -21,4 +21,6 @@ public interface LogTask {
      */
     void logAfterMethod(String userNo, String methodName, Object result);
 
+    void logInfo(String info);
+
 }

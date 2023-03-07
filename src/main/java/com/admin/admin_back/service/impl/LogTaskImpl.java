@@ -36,4 +36,10 @@ public class LogTaskImpl implements LogTask {
         }
     }
 
+    @Override
+    @Async("logTaskExecutor")
+    public void logInfo(String info) {
+        logger.info(info);
+    }
+
 }

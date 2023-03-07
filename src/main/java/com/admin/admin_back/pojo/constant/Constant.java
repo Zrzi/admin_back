@@ -74,4 +74,13 @@ public class Constant {
 
     public final static String AES_ALGORITHM = "AES/ECB/PKCS5Padding";
 
+    /**
+     * Excel任务 常量
+     */
+    public final static int TASK_CREATE = 0;
+
+    public final static int TASK_SUCCESS = 1;
+
+    public final static int TASK_ERROR = 2;
+
 }

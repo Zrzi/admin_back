@@ -5,10 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.constant.Constant;
-import com.admin.admin_back.pojo.exception.ExcelDataException;
-import com.admin.admin_back.pojo.exception.ExcelExistException;
-import com.admin.admin_back.pojo.exception.ExcelNameExistException;
-import com.admin.admin_back.pojo.exception.SqlColumnNameNotFoundException;
+import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.DeleteExcelForm;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
@@ -153,8 +150,8 @@ public class ExcelController {
             return new Result<>(ResponseMessage.FILE_TYPE_ERROR);
         }
         try {
-            excelService.uploadExcel(file);
-            return new Result<>(ResponseMessage.SUCCESS);
+            String result = excelService.uploadExcel(file);
+            return new Result<>(ResponseMessage.SUCCESS, result);
         } catch (ExcelNameExistException exception) {
             return new Result<>(ResponseMessage.EXCEL_NAME_NOT_FOUND);
         } catch (SqlColumnNameNotFoundException exception) {
@@ -163,6 +160,21 @@ public class ExcelController {
             return new Result<>(ResponseMessage.EXCEL_DATA_ERROR, null, exception.getMessage());
         } catch (Exception exception) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
+        }
+    }
+
+    @ApiOperation("获取上传文件结果")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "taskId", value = "任务编码", required = true)
+    })
+    @LogAnnotation
+    @CheckRole("getUploadExcelResult")
+    @GetMapping("/excel/getUploadExcelResult")
+    public Result<?> getUploadExcelResult(@RequestParam("taskId") String taskId) {
+        try {
+            return new Result<>(ResponseMessage.SUCCESS, excelService.getUploadExcelResult(taskId));
+        } catch (ExcelTaskExistException exception) {
+            return new Result<>(ResponseMessage.EXCEL_TASK_NOT_FOUND);
         }
     }
 

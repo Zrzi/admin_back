@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.TaskErrorMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.TaskErrorDto">
+        <id column="id" property="id" />
+        <result column="task_id" property="taskId" />
+        <result column="error_message" property="errorMessage" />
+    </resultMap>
+
+    <select id="findTaskErrorsByTaskId" resultMap="baseMap">
+        SELECT `id`, `task_id`, `error_message`
+        FROM `admin_task_error`
+        WHERE `task_id` = #{taskId}
+    </select>
+
+    <insert id="insertTaskError" parameterType="com.admin.admin_back.pojo.dto.TaskErrorDto">
+        INSERT INTO `admin_task_error` (`task_id`, `error_message`)
+        VALUES (#{taskError.taskId}, #{taskError.errorMessage})
+    </insert>
+
+</mapper>

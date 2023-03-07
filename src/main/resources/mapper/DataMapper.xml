@@ -8,18 +8,29 @@
         SELECT COUNT(1)
         FROM #{excelDto.sqlName}
         WHERE
-        <foreach collection="map" index="key" item="value" separator=" AND " >
+        <foreach collection="primaryKeys" index="key" item="value" separator=" AND " >
             #{key} = #{value}
         </foreach>
     </select>
     
+<!--    <insert id="insertData">-->
+<!--        INSERT INTO #{excelDto.sqlName}-->
+<!--        <foreach collection="columnList" item="column" index="index" open="(" separator="," close=")">-->
+<!--            #{column}-->
+<!--        </foreach>-->
+<!--        VALUES-->
+<!--        <foreach collection="valueList" item="value" index="index" open="(" separator="," close=")">-->
+<!--            #{value}-->
+<!--        </foreach>-->
+<!--    </insert>-->
+
     <insert id="insertData">
         INSERT INTO #{excelDto.sqlName}
-        <foreach collection="columnList" item="column" index="index" open="(" separator="," close=")">
-            #{column}
+        <foreach collection="data" item="key" index="value" open="(" separator="," close=")">
+            #{key}
         </foreach>
         VALUES
-        <foreach collection="valueList" item="value" index="index" open="(" separator="," close=")">
+        <foreach collection="data" item="key" index="value" open="(" separator="," close=")">
             #{value}
         </foreach>
     </insert>
@@ -27,7 +38,7 @@
     <update id="updateData">
         UPDATE #{excelDto.sqlName}
         SET
-        <foreach collection="keys" index="key" item="value" separator=",">
+        <foreach collection="data" index="key" item="value" separator=",">
             #{key} = #{value}
         </foreach>
         WHERE

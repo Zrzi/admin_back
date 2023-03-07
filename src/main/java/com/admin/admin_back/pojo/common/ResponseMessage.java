@@ -187,6 +187,11 @@ public enum ResponseMessage {
     EXCEL_DATA_ERROR(600007, "Excel表格中存在数据错误"),
 
     /**
+     * Excel上传任务不存在
+     */
+    EXCEL_TASK_NOT_FOUND(600008, "Excel上传任务不存在"),
+
+    /**
      * 参数异常
      */
     METHOD_ARGUMENT_NOT_VALID(800000, "参数异常"),

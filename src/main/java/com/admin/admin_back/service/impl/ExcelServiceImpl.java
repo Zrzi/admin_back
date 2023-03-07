@@ -1,26 +1,23 @@
 package com.admin.admin_back.service.impl;
 
-import com.admin.admin_back.mapper.ExcelColumnMapper;
-import com.admin.admin_back.mapper.ExcelMapper;
-import com.admin.admin_back.mapper.SqlMapper;
-import com.admin.admin_back.pojo.dto.ExcelColumnDto;
-import com.admin.admin_back.pojo.dto.ExcelDto;
+import com.admin.admin_back.mapper.*;
+import com.admin.admin_back.pojo.constant.Constant;
+import com.admin.admin_back.pojo.dto.*;
 import com.admin.admin_back.pojo.enums.CodeTypeEnum;
 import com.admin.admin_back.pojo.excel.ExcelAnalysisListener;
-import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelExistException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
+import com.admin.admin_back.pojo.exception.ExcelTaskExistException;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ExcelColumnVo;
+import com.admin.admin_back.pojo.vo.ExcelTaskVo;
 import com.admin.admin_back.pojo.vo.ExcelVo;
+import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.enums.CellExtraTypeEnum;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +44,15 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Autowired
     private SqlMapper sqlMapper;
+
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @Autowired
+    private TaskErrorMapper taskErrorMapper;
+
+    @Autowired
+    private ExcelHelper excelHelper;
 
     private final static String SQL_DATABASE_NAME = "emp";
 
@@ -139,7 +145,7 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void uploadExcel(MultipartFile file) {
+    public String uploadExcel(MultipartFile file) {
         ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper);
         try {
             EasyExcel
@@ -147,10 +153,44 @@ public class ExcelServiceImpl implements ExcelService {
                     .sheet()
                     .doRead();
             ExcelDto excelDto = listener.getExcelDto();
-            List<JSONObject> dataList = listener.getDataList();
+            List<ExcelDataDto> dataList = listener.getDataList();
+            boolean isCover = excelDto.getIsCover() == Constant.IS_COVER;
+            String code = GenerateCodeUtil.generateCode(CodeTypeEnum.TASK);
+            TaskDto taskDto = new TaskDto();
+            taskDto.setTaskId(code);
+            taskDto.setTaskStatus(Constant.TASK_CREATE);
+            taskMapper.insertTask(taskDto);
+            excelHelper.batchSave(code, excelDto, dataList, isCover);
+            return code;
         } catch (IOException exception) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public ExcelTaskVo getUploadExcelResult(String taskId) {
+        TaskDto taskDto = taskMapper.findTaskByTaskId(taskId);
+        if (Objects.isNull(taskDto)) {
+            throw new ExcelTaskExistException();
+        }
+        ExcelTaskVo excelTaskVo = new ExcelTaskVo();
+        switch (taskDto.getTaskStatus()) {
+            case Constant.TASK_CREATE:
+                excelTaskVo.setTaskStatus(Constant.TASK_CREATE);
+                break;
+            case Constant.TASK_SUCCESS:
+                excelTaskVo.setTaskStatus(Constant.TASK_SUCCESS);
+                break;
+            case Constant.TASK_ERROR:
+                excelTaskVo.setTaskStatus(Constant.TASK_ERROR);
+                List<TaskErrorDto> taskErrors = taskErrorMapper.findTaskErrorsByTaskId(taskId);
+                List<String> errors = taskErrors.stream().map(TaskErrorDto::getErrorMessage).collect(Collectors.toList());
+                excelTaskVo.setErrorMessage(errors);
+                break;
+            default:
+                throw new ExcelTaskExistException();
+        }
+        return excelTaskVo;
     }
 
     private ExcelVo getExcelVoFromExcelDto(ExcelDto excelDto) {

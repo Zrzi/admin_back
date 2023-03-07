@@ -1,6 +1,7 @@
 package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.ExcelDto;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,14 +17,17 @@ import java.util.Map;
 public interface DataMapper {
 
     Integer selectCountDataByPrimaryKeys(@Param("excelDto") ExcelDto excelDto,
-                                         @Param("map") Map<String, String> map);
+                                         @Param("primaryKeys") Map<String, String> primaryKeys);
+
+//    Integer insertData(@Param("excelDto") ExcelDto excelDto,
+//                       @Param("columnList") List<String> columnList,
+//                       @Param("valueList") List<String> valueList);
 
     Integer insertData(@Param("excelDto") ExcelDto excelDto,
-                       @Param("columnList") List<String> columnList,
-                       @Param("valueList") List<String> valueList);
+                       @Param("data") Map<String, String> data);
 
     Integer updateData(@Param("excelDto") ExcelDto excelDto,
-                       @Param("keys") Map<String, String> keys,
+                       @Param("data") Map<String, String> data,
                        @Param("primaryKeys") Map<String, String> primaryKeys);
 
 }

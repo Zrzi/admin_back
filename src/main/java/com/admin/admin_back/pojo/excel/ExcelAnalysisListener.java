@@ -4,6 +4,7 @@ import com.admin.admin_back.mapper.ExcelColumnMapper;
 import com.admin.admin_back.mapper.ExcelMapper;
 import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.ExcelColumnDto;
+import com.admin.admin_back.pojo.dto.ExcelDataDto;
 import com.admin.admin_back.pojo.dto.ExcelDto;
 import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
@@ -29,7 +30,7 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
     /**
      * Excel表格中的数据
      */
-    private final List<JSONObject> dataList = new ArrayList<>();
+    private final List<ExcelDataDto> dataList = new ArrayList<>();
 
     /**
      * 代表数据中第nums行
@@ -77,7 +78,7 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         return excelDto;
     }
 
-    public List<JSONObject> getDataList() {
+    public List<ExcelDataDto> getDataList() {
         return dataList;
     }
 
@@ -104,41 +105,49 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
 
     private void handleData(LinkedHashMap<Integer, String> linkedHashMap) {
         ++nums;
-        JSONObject data = new JSONObject();
+        ExcelDataDto excelDataDto = new ExcelDataDto();
+        Map<String, String> data = excelDataDto.getData();
         for (Integer key : linkedHashMap.keySet()) {
             if (key < columnNames.size()) {
-                data.put(columnNames.get(key), linkedHashMap.get(key));
+                String sqlColumnName = columnNames.get(key);
+                data.put(sqlColumnName, linkedHashMap.get(key));
             }
         }
-        checkData(data);
-        dataList.add(data);
+        checkData(excelDataDto);
+        dataList.add(excelDataDto);
     }
 
     /**
      * 根据主键检查数据
      * 主键不能为空，主键不能重复
-     * @param data 数据
+     * @param excelDataDto 数据
      */
-    private void checkData(JSONObject data) {
+    private void checkData(ExcelDataDto excelDataDto) {
         // 如果没有配置主键，说明数据正确，直接返回
         if (CollectionUtils.isEmpty(primaryKeys)) {
             return;
         }
 
+        Map<String, String> keys = excelDataDto.getPrimaryKeys();
+        Map<String, String> data = excelDataDto.getData();
+
         // 检查主键字段是否为空
         for (ExcelColumnDto primaryKey : primaryKeys) {
-            String value = (String) data.get(primaryKey.getSqlColumn());
+            String value = data.get(primaryKey.getSqlColumn());
             if (StringUtils.isBlank(value)) {
                 throw new ExcelDataException("第" + nums + "行，" + primaryKey.getExcelColumn() + "为空");
             }
+            // 将主键的sql列名和对应的值存入excelDataDto.primaryKeys中
+            keys.put(primaryKey.getSqlColumn(), value);
         }
 
         // 检查重复
-        for (JSONObject object : dataList) {
+        for (ExcelDataDto other : dataList) {
             boolean isEqual = true;
-            for (ExcelColumnDto primaryKey : primaryKeys) {
-                String value1 = (String) data.get(primaryKey.getSqlColumn());
-                String value2 = (String) object.get(primaryKey.getSqlColumn());
+            Map<String, String> otherKeys = other.getPrimaryKeys();
+            for (ExcelColumnDto primaryKey : this.primaryKeys) {
+                String value1 = keys.get(primaryKey.getSqlColumn());
+                String value2 = otherKeys.get(primaryKey.getSqlColumn());
                 if (!StringUtils.equals(value1, value2)) {
                     isEqual = false;
                     break;

@@ -26,6 +26,11 @@ public enum CodeTypeEnum {
      */
     EXCEL('E'),
 
+    /**
+     * Excel上传任务
+     */
+    TASK('T'),
+
     ;
 
     public final char letter;

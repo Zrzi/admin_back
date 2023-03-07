@@ -30,4 +30,23 @@ public class AsyncPoolConfig {
         return executor;
     }
 
+    /**
+     * 线程池，用于存储Excel数据
+     * @return 线程池
+     */
+    @Bean("uploadExcelExecutor")
+    public ThreadPoolTaskExecutor uploadExcelExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(8);
+        executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(200);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("uploadExcelExecutor");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.initialize();
+        return executor;
+    }
+
 }
