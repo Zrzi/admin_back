@@ -202,6 +202,9 @@ public class ExcelController {
         if (sqlName.length() > Constant.INT_40) {
             return "sql名称最长40个字符";
         }
+        if (checkIfExistSpace(sqlName)) {
+            return "sql名称中不能有空格";
+        }
         excelForm.setSqlName(sqlName);
         Boolean isCover = excelForm.getIsCover();
         if (isCover == null) {
@@ -240,6 +243,9 @@ public class ExcelController {
             if (sqlColumn.length() > Constant.INT_40) {
                 return "第" + (i + 1) + "项sql列名长度大于40位";
             }
+            if (checkIfExistSpace(sqlColumn)) {
+                return "sql列名中不能有空格";
+            }
             if (sqlColumnSet.contains(sqlColumn)) {
                 return "第" + (i + 1) + "项sql列名重复";
             }
@@ -247,6 +253,18 @@ public class ExcelController {
             excelColumnForm.setSqlColumn(sqlColumn);
         }
         return "";
+    }
+
+    /**
+     * 检查是否存在空格
+     * 由于MyBatis中传入动态表名、列名需要通过${}，为了防止sql注入，需要预先检查名称
+     * 如果这是语句，会出现空格
+     * 因此，规定所有表名、列名不能有空格
+     * @param string 待检验的字符串
+     * @return true表示由空格，false表示没有
+     */
+    private boolean checkIfExistSpace(String string) {
+        return StringUtils.contains(string, ' ');
     }
 
 }
