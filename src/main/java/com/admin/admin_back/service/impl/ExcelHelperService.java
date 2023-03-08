@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +62,17 @@ public class ExcelHelperService implements ExcelHelper {
                         taskErrorMapper.insertTaskError(taskErrorDto);
                     }
                 } else {
-                    // 不存在数据
-                    insertData(excelDto, data);
+                    // 不存在数据，直接插入
+                    LinkedList<String> keys = new LinkedList<>();
+                    LinkedList<String> values = new LinkedList<>();
+                    data.forEach((key, value) -> {
+                        System.out.println(key + "=" + value);
+                        keys.addLast(key);
+                        values.addLast(value);
+                    });
+                    System.out.println(keys);
+                    System.out.println(values);
+                    insertData(excelDto, keys, values);
                 }
             } catch (Exception exception) {
                 isSuccess = false;
@@ -87,8 +97,8 @@ public class ExcelHelperService implements ExcelHelper {
         return dataMapper.selectCountDataByPrimaryKeys(excelDto, primaryKeys) != 0;
     }
 
-    private void insertData(ExcelDto excelDto, Map<String, String> data) {
-        dataMapper.insertData(excelDto, data);
+    private void insertData(ExcelDto excelDto, List<String> keys, List<String> values) {
+        dataMapper.insertData(excelDto, keys, values);
     }
 
     private void updateDate(ExcelDto excelDto, Map<String, String> data, Map<String, String> primaryKeys) {

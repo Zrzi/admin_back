@@ -92,6 +92,9 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
     }
 
     private void handleColumnNames(LinkedHashMap<Integer, String> linkedHashMap) {
+        if (linkedHashMap.isEmpty()) {
+            return;
+        }
         this.isColumnName = false;
         for (Integer key : linkedHashMap.keySet()) {
             String excelColumnName = linkedHashMap.get(key);

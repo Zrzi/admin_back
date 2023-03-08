@@ -24,7 +24,8 @@ public interface DataMapper {
 //                       @Param("valueList") List<String> valueList);
 
     Integer insertData(@Param("excelDto") ExcelDto excelDto,
-                       @Param("data") Map<String, String> data);
+                       @Param("keys") List<String> data,
+                       @Param("values") List<String> values);
 
     Integer updateData(@Param("excelDto") ExcelDto excelDto,
                        @Param("data") Map<String, String> data,

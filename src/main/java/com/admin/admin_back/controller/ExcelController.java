@@ -11,6 +11,7 @@ import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.vo.ExcelVo;
 import com.admin.admin_back.service.ExcelService;
+import com.alibaba.excel.exception.ExcelAnalysisException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -152,12 +153,12 @@ public class ExcelController {
         try {
             String result = excelService.uploadExcel(file);
             return new Result<>(ResponseMessage.SUCCESS, result);
-        } catch (ExcelNameExistException exception) {
-            return new Result<>(ResponseMessage.EXCEL_NAME_NOT_FOUND);
-        } catch (SqlColumnNameNotFoundException exception) {
-            return new Result<>(ResponseMessage.EXCEL_COLUMN_NAME_ERROR, null, exception.getMessage());
-        } catch (ExcelDataException exception) {
-            return new Result<>(ResponseMessage.EXCEL_DATA_ERROR, null, exception.getMessage());
+        } catch (ExcelAnalysisException exception) {
+            if (exception.getCause() instanceof BaseException) {
+                return new Result<>(ResponseMessage.EXCEL_DATA_ERROR, null, exception.getCause().getMessage());
+            } else {
+                return new Result<>(ResponseMessage.SYSTEM_ERROR);
+            }
         } catch (Exception exception) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }

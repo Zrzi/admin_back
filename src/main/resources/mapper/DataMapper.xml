@@ -6,10 +6,10 @@
     
     <select id="selectCountDataByPrimaryKeys" resultType="java.lang.Integer">
         SELECT COUNT(1)
-        FROM #{excelDto.sqlName}
+        FROM ${excelDto.sqlName}
         WHERE
         <foreach collection="primaryKeys" index="key" item="value" separator=" AND " >
-            #{key} = #{value}
+            ${key} = #{value}
         </foreach>
     </select>
     
@@ -25,25 +25,25 @@
 <!--    </insert>-->
 
     <insert id="insertData">
-        INSERT INTO #{excelDto.sqlName}
-        <foreach collection="data" item="key" index="value" open="(" separator="," close=")">
-            #{key}
+        INSERT INTO ${excelDto.sqlName}
+        <foreach collection="keys" item="key" index="index" open="(" separator="," close=")">
+            ${key}
         </foreach>
         VALUES
-        <foreach collection="data" item="key" index="value" open="(" separator="," close=")">
+        <foreach collection="values" item="value" index="index" open="(" separator="," close=")">
             #{value}
         </foreach>
     </insert>
     
     <update id="updateData">
-        UPDATE #{excelDto.sqlName}
+        UPDATE ${excelDto.sqlName}
         SET
         <foreach collection="data" index="key" item="value" separator=",">
-            #{key} = #{value}
+            ${key} = #{value}
         </foreach>
         WHERE
         <foreach collection="primaryKeys" index="key" item="value" separator=" AND ">
-            #{key} = #{value}
+            ${key} = #{value}
         </foreach>
     </update>
 
