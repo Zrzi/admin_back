@@ -40,7 +40,7 @@ public class ExcelHelperService implements ExcelHelper {
     @Override
     @Async("uploadExcelExecutor")
     @Transactional(rollbackFor = RuntimeException.class)
-    public void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover) {
+    public void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
         TaskErrorDto taskErrorDto = new TaskErrorDto();
         taskErrorDto.setTaskId(taskCode);
         boolean isSuccess = true;
@@ -84,6 +84,20 @@ public class ExcelHelperService implements ExcelHelper {
         taskDto.setTaskId(taskCode);
         taskDto.setTaskStatus(isSuccess ? Constant.TASK_SUCCESS : Constant.TASK_ERROR);
         taskMapper.updateTask(taskDto);
+    }
+
+    @Override
+    @Async("uploadExcelExecutor")
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void batchSaveStudent(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
+        // todo 批量插入学生数据 注意添加用户
+    }
+
+    @Override
+    @Async("uploadExcelExecutor")
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void batchSaveTeacher(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
+        // todo 批量插入教师数据 注意添加用户
     }
 
     /**

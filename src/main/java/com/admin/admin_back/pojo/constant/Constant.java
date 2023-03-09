@@ -104,6 +104,16 @@ public class Constant {
      */
     public final static String TABLE_SCHEMA = "emp";
 
+    /**
+     * 学生表
+     */
+    public final static String STUDENT_TABLE = "students";
+
+    /**
+     * 教师表
+     */
+    public final static String TEACHER_TABLE = "teacheres";
+
     public final static String DATE_TYPE_DATE = "date";
 
     public final static String DATE_TYPE_DATE_TIME = "datetime";

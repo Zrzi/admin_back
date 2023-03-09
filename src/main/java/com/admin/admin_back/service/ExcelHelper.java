@@ -10,6 +10,10 @@ import java.util.List;
  */
 public interface ExcelHelper {
 
-    void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover);
+    void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo);
+
+    void batchSaveStudent(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo);
+
+    void batchSaveTeacher(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo);
 
 }

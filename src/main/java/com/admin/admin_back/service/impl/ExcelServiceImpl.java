@@ -16,6 +16,7 @@ import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
 import com.alibaba.excel.EasyExcel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,11 +145,13 @@ public class ExcelServiceImpl implements ExcelService {
     public String uploadExcel(MultipartFile file) {
         ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper, sqlMapper);
         try {
+            String userNo = UserThreadLocal.getUser().getUserNo();
             EasyExcel
                     .read(file.getInputStream(), listener)
                     .sheet()
                     .doRead();
             ExcelDto excelDto = listener.getExcelDto();
+            String sqlName = excelDto.getSqlName();
             List<ExcelDataDto> dataList = listener.getDataList();
             boolean isCover = excelDto.getIsCover() == Constant.IS_COVER;
             String code = GenerateCodeUtil.generateCode(CodeTypeEnum.TASK);
@@ -156,7 +159,15 @@ public class ExcelServiceImpl implements ExcelService {
             taskDto.setTaskId(code);
             taskDto.setTaskStatus(Constant.TASK_CREATE);
             taskMapper.insertTask(taskDto);
-            excelHelper.batchSave(code, excelDto, dataList, isCover);
+            if (StringUtils.equalsAny(sqlName, Constant.STUDENT_TABLE, Constant.TEACHER_TABLE)) {
+                if (StringUtils.equals(sqlName, Constant.STUDENT_TABLE)) {
+                    excelHelper.batchSaveStudent(code, excelDto, dataList, isCover, userNo);
+                } else {
+                    excelHelper.batchSaveTeacher(code, excelDto, dataList, isCover, userNo);
+                }
+            } else {
+                excelHelper.batchSave(code, excelDto, dataList, isCover, userNo);
+            }
             return code;
         } catch (IOException exception) {
             throw new RuntimeException();
