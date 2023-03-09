@@ -9,17 +9,17 @@ import java.util.Map;
  */
 public class ExcelDataDto {
 
-    private final Map<String, String> primaryKeys = new HashMap<>();
+    private final Map<String, Object> primaryKeys = new HashMap<>();
 
-    private final Map<String, String> data = new HashMap<>();
+    private final Map<String, Object> data = new HashMap<>();
 
     public ExcelDataDto() {}
 
-    public Map<String, String> getPrimaryKeys() {
+    public Map<String, Object> getPrimaryKeys() {
         return primaryKeys;
     }
 
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 

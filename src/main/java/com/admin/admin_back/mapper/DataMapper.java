@@ -17,7 +17,7 @@ import java.util.Map;
 public interface DataMapper {
 
     Integer selectCountDataByPrimaryKeys(@Param("excelDto") ExcelDto excelDto,
-                                         @Param("primaryKeys") Map<String, String> primaryKeys);
+                                         @Param("primaryKeys") Map<String, Object> primaryKeys);
 
 //    Integer insertData(@Param("excelDto") ExcelDto excelDto,
 //                       @Param("columnList") List<String> columnList,
@@ -25,10 +25,10 @@ public interface DataMapper {
 
     Integer insertData(@Param("excelDto") ExcelDto excelDto,
                        @Param("keys") List<String> data,
-                       @Param("values") List<String> values);
+                       @Param("values") List<Object> values);
 
     Integer updateData(@Param("excelDto") ExcelDto excelDto,
-                       @Param("data") Map<String, String> data,
-                       @Param("primaryKeys") Map<String, String> primaryKeys);
+                       @Param("data") Map<String, Object> data,
+                       @Param("primaryKeys") Map<String, Object> primaryKeys);
 
 }

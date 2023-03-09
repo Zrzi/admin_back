@@ -52,8 +52,6 @@ public class ExcelServiceImpl implements ExcelService {
     @Autowired
     private ExcelHelper excelHelper;
 
-    private final static String SQL_DATABASE_NAME = "emp";
-
     @Override
     public List<ExcelVo> getExcels() {
         return excelMapper
@@ -84,12 +82,12 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Override
     public List<String> getSqlTables() {
-        return sqlMapper.findSqlTableNames(SQL_DATABASE_NAME);
+        return sqlMapper.findSqlTableNames(Constant.TABLE_SCHEMA);
     }
 
     @Override
     public List<String> getSqlColumns(String sqlTableName) {
-        return sqlMapper.findSqlColumnNames(SQL_DATABASE_NAME, sqlTableName);
+        return sqlMapper.findSqlColumnNames(Constant.TABLE_SCHEMA, sqlTableName);
     }
 
     @Override
@@ -144,7 +142,7 @@ public class ExcelServiceImpl implements ExcelService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public String uploadExcel(MultipartFile file) {
-        ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper);
+        ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper, sqlMapper);
         try {
             EasyExcel
                     .read(file.getInputStream(), listener)

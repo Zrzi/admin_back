@@ -4,6 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.admin.admin_back.mapper.SqlMapper">
 
+    <resultMap id="sqlColumnInfoMap" type="com.admin.admin_back.pojo.dto.SqlColumnInfoDto">
+        <result column="COLUMN_NAME" property="columnName" />
+        <result column="IS_NULLABLE" property="isNullable" />
+        <result column="DATA_TYPE" property="dataType" />
+    </resultMap>
+
     <select id="findSqlTableNames" resultType="java.lang.String" parameterType="java.lang.String">
         SELECT `TABLE_NAME`
         FROM `information_schema`.`TABLES`
@@ -15,6 +21,14 @@
         FROM `information_schema`.`COLUMNS`
         WHERE `TABLE_SCHEMA` = #{dataBaseName}
           AND `TABLE_NAME` = #{sqlTableName}
+    </select>
+
+    <select id="findSqlColumnInfo" resultMap="sqlColumnInfoMap">
+        SELECT `COLUMN_NAME`, `IS_NULLABLE`, `DATA_TYPE`
+        FROM `information_schema`.`COLUMNS`
+        WHERE `TABLE_SCHEMA` = #{dataBaseName}
+          AND `TABLE_NAME` = #{sqlTableName}
+          AND `COLUMN_NAME` = #{sqlColumnName}
     </select>
 
 </mapper>

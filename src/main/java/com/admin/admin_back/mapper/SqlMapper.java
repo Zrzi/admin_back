@@ -1,5 +1,6 @@
 package com.admin.admin_back.mapper;
 
+import com.admin.admin_back.pojo.dto.SqlColumnInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,9 @@ public interface SqlMapper {
     List<String> findSqlTableNames(@Param("dataBaseName") String dataBaseName);
 
     List<String> findSqlColumnNames(@Param("dataBaseName") String dataBaseName, @Param("sqlTableName") String sqlTableName);
+
+    SqlColumnInfoDto findSqlColumnInfo(@Param("dataBaseName") String dataBaseName,
+                                       @Param("sqlTableName") String sqlTableName,
+                                       @Param("sqlColumnName") String sqlColumnName);
 
 }

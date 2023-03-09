@@ -1,5 +1,7 @@
 package com.admin.admin_back.pojo.constant;
 
+import java.text.SimpleDateFormat;
+
 /**
  * @author 陈群矜
  */
@@ -82,5 +84,30 @@ public class Constant {
     public final static int TASK_SUCCESS = 1;
 
     public final static int TASK_ERROR = 2;
+
+    /**
+     * 日期格式
+     */
+    public final static SimpleDateFormat[] SIMPLE_DATE_FORMATS = new SimpleDateFormat[]{
+            new SimpleDateFormat("yyyy-MM-dd"), new SimpleDateFormat("yyyyMMdd")
+    };
+
+    /**
+     * 日期时间格式
+     */
+    public final static SimpleDateFormat[] SIMPLE_DATE_TIME_FORMATS = new SimpleDateFormat[]{
+            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+    };
+
+    /**
+     * 数据库名称
+     */
+    public final static String TABLE_SCHEMA = "emp";
+
+    public final static String DATE_TYPE_DATE = "date";
+
+    public final static String DATE_TYPE_DATE_TIME = "datetime";
+
+    public final static String IS_NULLABLE = "YES";
 
 }

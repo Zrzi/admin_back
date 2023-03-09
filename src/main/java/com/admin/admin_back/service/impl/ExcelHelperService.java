@@ -47,8 +47,8 @@ public class ExcelHelperService implements ExcelHelper {
         int size = dataList.size();
         for (int i=0; i<size; ++i) {
             ExcelDataDto excelDataDto = dataList.get(i);
-            Map<String, String> primaryKeys = excelDataDto.getPrimaryKeys();
-            Map<String, String> data = excelDataDto.getData();
+            Map<String, Object> primaryKeys = excelDataDto.getPrimaryKeys();
+            Map<String, Object> data = excelDataDto.getData();
             boolean exist = findDataByPrimaryKeys(excelDto, primaryKeys);
             try {
                 if (exist) {
@@ -64,9 +64,8 @@ public class ExcelHelperService implements ExcelHelper {
                 } else {
                     // 不存在数据，直接插入
                     LinkedList<String> keys = new LinkedList<>();
-                    LinkedList<String> values = new LinkedList<>();
+                    LinkedList<Object> values = new LinkedList<>();
                     data.forEach((key, value) -> {
-                        System.out.println(key + "=" + value);
                         keys.addLast(key);
                         values.addLast(value);
                     });
@@ -93,15 +92,15 @@ public class ExcelHelperService implements ExcelHelper {
      * @param primaryKeys 主键及对应值
      * @return true代表存在；false代表不存在
      */
-    private boolean findDataByPrimaryKeys(ExcelDto excelDto, Map<String, String> primaryKeys) {
+    private boolean findDataByPrimaryKeys(ExcelDto excelDto, Map<String, Object> primaryKeys) {
         return dataMapper.selectCountDataByPrimaryKeys(excelDto, primaryKeys) != 0;
     }
 
-    private void insertData(ExcelDto excelDto, List<String> keys, List<String> values) {
+    private void insertData(ExcelDto excelDto, List<String> keys, List<Object> values) {
         dataMapper.insertData(excelDto, keys, values);
     }
 
-    private void updateDate(ExcelDto excelDto, Map<String, String> data, Map<String, String> primaryKeys) {
+    private void updateDate(ExcelDto excelDto, Map<String, Object> data, Map<String, Object> primaryKeys) {
         dataMapper.updateData(excelDto, data, primaryKeys);
     }
 
