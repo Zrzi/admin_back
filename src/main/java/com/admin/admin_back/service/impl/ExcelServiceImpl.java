@@ -161,15 +161,7 @@ public class ExcelServiceImpl implements ExcelService {
             taskDto.setCreatedBy(userNo);
             taskDto.setUpdatedBy(userNo);
             taskMapper.insertTask(taskDto);
-            if (StringUtils.equalsAny(sqlName, Constant.STUDENT_TABLE, Constant.TEACHER_TABLE)) {
-                if (StringUtils.equals(sqlName, Constant.STUDENT_TABLE)) {
-                    excelHelper.batchSaveStudent(code, excelDto, dataList, isCover, userNo);
-                } else {
-                    excelHelper.batchSaveTeacher(code, excelDto, dataList, isCover, userNo);
-                }
-            } else {
-                excelHelper.batchSave(code, excelDto, dataList, isCover, userNo);
-            }
+            excelHelper.batchSave(code, excelDto, dataList, isCover, userNo);
             return code;
         } catch (IOException exception) {
             throw new RuntimeException();

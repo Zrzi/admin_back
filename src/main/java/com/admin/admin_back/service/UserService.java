@@ -1,6 +1,7 @@
 package com.admin.admin_back.service;
 
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
+import com.admin.admin_back.pojo.event.ExcelEvent;
 import com.admin.admin_back.pojo.form.AddUserForm;
 import com.admin.admin_back.pojo.form.EditUserForm;
 import com.admin.admin_back.pojo.vo.*;
@@ -33,5 +34,7 @@ public interface UserService {
     void deleteUser(String userNo);
 
     List<UserVo> getUsersByRoleId(String roleId);
+
+    void onListenExcel(ExcelEvent excelEvent);
 
 }

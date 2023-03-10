@@ -8,9 +8,13 @@ import com.admin.admin_back.pojo.dto.ExcelDataDto;
 import com.admin.admin_back.pojo.dto.ExcelDto;
 import com.admin.admin_back.pojo.dto.TaskDto;
 import com.admin.admin_back.pojo.dto.TaskErrorDto;
+import com.admin.admin_back.pojo.event.ExcelEvent;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.LogTask;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +27,7 @@ import java.util.Map;
  * @author 陈群矜
  */
 @Service
-public class ExcelHelperService implements ExcelHelper {
+public class ExcelHelperService implements ExcelHelper, ApplicationContextAware {
 
     @Autowired
     private DataMapper dataMapper;
@@ -36,6 +40,13 @@ public class ExcelHelperService implements ExcelHelper {
 
     @Autowired
     private LogTask logTask;
+
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     @Async("uploadExcelExecutor")
@@ -56,6 +67,7 @@ public class ExcelHelperService implements ExcelHelper {
                     if (isCover) {
                         // 存在数据，设置为覆盖
                         updateDate(excelDto, data, primaryKeys);
+                        applicationContext.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, true));
                     } else {
                         // 存在数据，设置为不覆盖
                         isSuccess = false;
@@ -71,6 +83,7 @@ public class ExcelHelperService implements ExcelHelper {
                         values.addLast(value);
                     });
                     insertData(excelDto, keys, values);
+                    applicationContext.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
                 }
             } catch (Exception exception) {
                 isSuccess = false;
@@ -84,20 +97,6 @@ public class ExcelHelperService implements ExcelHelper {
         taskDto.setTaskStatus(isSuccess ? Constant.TASK_SUCCESS : Constant.TASK_ERROR);
         taskDto.setUpdatedBy(userNo);
         taskMapper.updateTask(taskDto);
-    }
-
-    @Override
-    @Async("uploadExcelExecutor")
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void batchSaveStudent(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
-        // todo 批量插入学生数据 注意添加用户
-    }
-
-    @Override
-    @Async("uploadExcelExecutor")
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void batchSaveTeacher(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
-        // todo 批量插入教师数据 注意添加用户
     }
 
     /**
@@ -129,4 +128,5 @@ public class ExcelHelperService implements ExcelHelper {
         int i = 1 / 0;
         taskMapper.updateTask(taskDto);
     }
+
 }
