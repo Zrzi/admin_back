@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
                 usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
                 break;
             default:
-                // 不返沪系统用户
+                // 不返回系统用户
                 break;
         }
         return usersVo;

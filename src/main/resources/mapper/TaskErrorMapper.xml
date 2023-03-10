@@ -8,17 +8,19 @@
         <id column="id" property="id" />
         <result column="task_id" property="taskId" />
         <result column="error_message" property="errorMessage" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
     </resultMap>
 
     <select id="findTaskErrorsByTaskId" resultMap="baseMap">
-        SELECT `id`, `task_id`, `error_message`
+        SELECT `id`, `task_id`, `error_message`, `created_by`, `created_date`
         FROM `admin_task_error`
         WHERE `task_id` = #{taskId}
     </select>
 
     <insert id="insertTaskError" parameterType="com.admin.admin_back.pojo.dto.TaskErrorDto">
-        INSERT INTO `admin_task_error` (`task_id`, `error_message`)
-        VALUES (#{taskError.taskId}, #{taskError.errorMessage})
+        INSERT INTO `admin_task_error` (`task_id`, `error_message`, `created_by`, `created_date`)
+        VALUES (#{taskError.taskId}, #{taskError.errorMessage}, #{taskError.createdBy}, NOW())
     </insert>
 
 </mapper>

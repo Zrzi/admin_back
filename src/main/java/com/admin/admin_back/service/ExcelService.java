@@ -30,4 +30,6 @@ public interface ExcelService {
 
     ExcelTaskVo getUploadExcelResult(String taskId);
 
+    void testAsync();
+
 }

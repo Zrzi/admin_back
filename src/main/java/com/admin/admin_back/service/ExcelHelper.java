@@ -16,4 +16,6 @@ public interface ExcelHelper {
 
     void batchSaveTeacher(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo);
 
+    void testAsync(String code);
+
 }

@@ -158,6 +158,8 @@ public class ExcelServiceImpl implements ExcelService {
             TaskDto taskDto = new TaskDto();
             taskDto.setTaskId(code);
             taskDto.setTaskStatus(Constant.TASK_CREATE);
+            taskDto.setCreatedBy(userNo);
+            taskDto.setUpdatedBy(userNo);
             taskMapper.insertTask(taskDto);
             if (StringUtils.equalsAny(sqlName, Constant.STUDENT_TABLE, Constant.TEACHER_TABLE)) {
                 if (StringUtils.equals(sqlName, Constant.STUDENT_TABLE)) {
@@ -245,6 +247,15 @@ public class ExcelServiceImpl implements ExcelService {
         return excelColumnDto;
     }
 
-
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void testAsync() {
+        String code = GenerateCodeUtil.generateCode(CodeTypeEnum.TASK);
+        TaskDto taskDto = new TaskDto();
+        taskDto.setTaskId(code);
+        taskDto.setTaskStatus(Constant.TASK_CREATE);
+        taskMapper.insertTask(taskDto);
+        excelHelper.testAsync(code);
+    }
 
 }

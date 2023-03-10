@@ -2,6 +2,8 @@ package com.admin.admin_back.pojo.dto;
 
 import com.alibaba.fastjson.JSON;
 
+import java.util.Date;
+
 /**
  * @author 陈群矜
  */
@@ -12,6 +14,14 @@ public class TaskDto {
     private String taskId;
 
     private Integer taskStatus;
+
+    private String createdBy;
+
+    private Date createdDate;
+
+    private String updatedBy;
+
+    private Date updatedDate;
 
     public TaskDto() {}
 
@@ -37,6 +47,38 @@ public class TaskDto {
 
     public void setTaskStatus(Integer taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     @Override

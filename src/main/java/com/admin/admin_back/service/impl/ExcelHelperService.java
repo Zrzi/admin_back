@@ -43,6 +43,7 @@ public class ExcelHelperService implements ExcelHelper {
     public void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
         TaskErrorDto taskErrorDto = new TaskErrorDto();
         taskErrorDto.setTaskId(taskCode);
+        taskErrorDto.setCreatedBy(userNo);
         boolean isSuccess = true;
         int size = dataList.size();
         for (int i=0; i<size; ++i) {
@@ -69,8 +70,6 @@ public class ExcelHelperService implements ExcelHelper {
                         keys.addLast(key);
                         values.addLast(value);
                     });
-                    System.out.println(keys);
-                    System.out.println(values);
                     insertData(excelDto, keys, values);
                 }
             } catch (Exception exception) {
@@ -83,6 +82,7 @@ public class ExcelHelperService implements ExcelHelper {
         TaskDto taskDto = new TaskDto();
         taskDto.setTaskId(taskCode);
         taskDto.setTaskStatus(isSuccess ? Constant.TASK_SUCCESS : Constant.TASK_ERROR);
+        taskDto.setUpdatedBy(userNo);
         taskMapper.updateTask(taskDto);
     }
 
@@ -118,4 +118,15 @@ public class ExcelHelperService implements ExcelHelper {
         dataMapper.updateData(excelDto, data, primaryKeys);
     }
 
+    @Override
+    @Async("uploadExcelExecutor")
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void testAsync(String code) {
+        TaskDto taskDto = new TaskDto();
+        taskDto.setTaskId(code);
+        taskDto.setTaskStatus(Constant.TASK_SUCCESS);
+        // 模拟异常请情况
+        int i = 1 / 0;
+        taskMapper.updateTask(taskDto);
+    }
 }
