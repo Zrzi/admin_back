@@ -12,6 +12,7 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ExcelColumnVo;
 import com.admin.admin_back.pojo.vo.ExcelTaskVo;
 import com.admin.admin_back.pojo.vo.ExcelVo;
+import com.admin.admin_back.pojo.vo.GetSqlColumnsVo;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.utils.GenerateCodeUtil;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -87,8 +89,35 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public List<String> getSqlColumns(String sqlTableName) {
-        return sqlMapper.findSqlColumnNames(Constant.TABLE_SCHEMA, sqlTableName);
+    public GetSqlColumnsVo getSqlColumns(String sqlTableName) {
+        // 获取主键名称集合
+        GetSqlColumnsVo result = new GetSqlColumnsVo();
+        Set<String> primaryKeyNames = sqlMapper
+                .findSqlConstraintByType(Constant.TABLE_SCHEMA, sqlTableName, Constant.CONSTRAINT_TYPE_PRIMARY_KEY)
+                .stream()
+                .map(SqlConstraintDto::getColumnName)
+                .collect(Collectors.toSet());
+        List<SqlColumnInfoDto> sqlColumnInfos = sqlMapper.findSqlColumnInfos(Constant.TABLE_SCHEMA, sqlTableName);
+        List<String> nonNullList = result.getNonNullList();
+        List<String> nullableList = result.getNullableList();
+        for (SqlColumnInfoDto sqlColumnInfo : sqlColumnInfos) {
+            if (StringUtils.equals(sqlColumnInfo.getExtra(), Constant.AUTO_INCREMENT)) {
+                // 不需要用户填写，直接跳过
+                continue;
+            }
+            if (!StringUtils.equals(sqlColumnInfo.getIsNullable(), Constant.IS_NULLABLE)) {
+                // NOT NULL 字段，必须添加
+                nonNullList.add(sqlColumnInfo.getColumnName());
+                continue;
+            }
+            if (primaryKeyNames.contains(sqlColumnInfo.getColumnName())) {
+                // 是主键
+                nonNullList.add(sqlColumnInfo.getColumnName());
+                continue;
+            }
+            nullableList.add(sqlColumnInfo.getColumnName());
+        }
+        return result;
     }
 
     @Override
@@ -143,9 +172,9 @@ public class ExcelServiceImpl implements ExcelService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public String uploadExcel(MultipartFile file) {
+        String userNo = UserThreadLocal.getUser().getUserNo();
         ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper, sqlMapper);
         try {
-            String userNo = UserThreadLocal.getUser().getUserNo();
             EasyExcel
                     .read(file.getInputStream(), listener)
                     .sheet()
@@ -209,7 +238,6 @@ public class ExcelServiceImpl implements ExcelService {
         excelColumnVo.setExcelId(excelColumnDto.getExcelId());
         excelColumnVo.setExcelColumn(excelColumnDto.getExcelColumn());
         excelColumnVo.setSqlColumn(excelColumnDto.getSqlColumn());
-        excelColumnVo.setIsPrimaryKey(excelColumnDto.getIsPrimaryKey() == 1);
         return excelColumnVo;
     }
 
@@ -233,7 +261,6 @@ public class ExcelServiceImpl implements ExcelService {
         excelColumnDto.setExcelId(excelId);
         excelColumnDto.setExcelColumn(excelColumnForm.getExcelColumn());
         excelColumnDto.setSqlColumn(excelColumnForm.getSqlColumn());
-        excelColumnDto.setIsPrimaryKey(excelColumnForm.getIsPrimaryKey() ? 1 : 0);
         excelColumnDto.setCreatedBy(userNo);
         excelColumnDto.setUpdatedBy(userNo);
         return excelColumnDto;

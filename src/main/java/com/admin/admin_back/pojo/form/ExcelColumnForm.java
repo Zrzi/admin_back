@@ -16,9 +16,6 @@ public class ExcelColumnForm {
     @ApiModelProperty(value = "sql列名", required = true)
     private String sqlColumn;
 
-    @ApiModelProperty(value = "是否是主键", required = true)
-    private Boolean isPrimaryKey;
-
     public ExcelColumnForm() {}
 
     public String getExcelColumn() {
@@ -35,14 +32,6 @@ public class ExcelColumnForm {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
-    }
-
-    public Boolean getIsPrimaryKey() {
-        return isPrimaryKey;
-    }
-
-    public void setIsPrimaryKey(Boolean isPrimaryKey) {
-        this.isPrimaryKey = isPrimaryKey;
     }
 
     @Override

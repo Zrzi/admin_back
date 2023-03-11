@@ -18,11 +18,6 @@ public class Constant {
     public final static String FILE_XLSX = "xlsx";
 
     /**
-     * Excel列映射配置，是主键
-     */
-    public final static int IS_PRIMARY_KEY = 1;
-
-    /**
      * Excel映射配置，与库里数据重复时，覆盖
      */
     public final static int IS_COVER = 1;
@@ -100,6 +95,15 @@ public class Constant {
     };
 
     /**
+     * 数据库相关约束、属性
+     */
+    public final static String CONSTRAINT_TYPE_PRIMARY_KEY = "PRIMARY KEY";
+
+    public final static String CONSTRAINT_TYPE_UNIQUE = "UNIQUE";
+
+    public final static String AUTO_INCREMENT = "auto_increment";
+
+    /**
      * 数据库名称
      */
     public final static String TABLE_SCHEMA = "emp";
@@ -119,5 +123,7 @@ public class Constant {
     public final static String DATE_TYPE_DATE_TIME = "datetime";
 
     public final static String IS_NULLABLE = "YES";
+
+    public final static String BLANK_STRING = "";
 
 }

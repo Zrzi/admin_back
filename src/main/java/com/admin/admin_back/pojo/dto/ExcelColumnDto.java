@@ -17,8 +17,6 @@ public class ExcelColumnDto {
 
     private String sqlColumn;
 
-    private Integer isPrimaryKey;
-
     private String createdBy;
 
     private Date createdDate;
@@ -61,14 +59,6 @@ public class ExcelColumnDto {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
-    }
-
-    public Integer getIsPrimaryKey() {
-        return isPrimaryKey;
-    }
-
-    public void setIsPrimaryKey(Integer isPrimaryKey) {
-        this.isPrimaryKey = isPrimaryKey;
     }
 
     public String getCreatedBy() {

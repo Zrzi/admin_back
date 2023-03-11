@@ -15,6 +15,8 @@ public class SqlColumnInfoDto {
 
     private String dataType;
 
+    private String extra;
+
     public SqlColumnInfoDto() {}
 
     public String getColumnName() {
@@ -39,6 +41,14 @@ public class SqlColumnInfoDto {
 
     public void setDataType(String dataType) {
         this.dataType = dataType;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
     @Override

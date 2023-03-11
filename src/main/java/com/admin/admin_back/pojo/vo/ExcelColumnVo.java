@@ -19,9 +19,6 @@ public class ExcelColumnVo {
     @ApiModelProperty("sql列名")
     private String sqlColumn;
 
-    @ApiModelProperty("是否是主键")
-    private Boolean isPrimaryKey;
-
     public ExcelColumnVo() {}
 
     public String getExcelId() {
@@ -46,14 +43,6 @@ public class ExcelColumnVo {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
-    }
-
-    public Boolean getIsPrimaryKey() {
-        return isPrimaryKey;
-    }
-
-    public void setIsPrimaryKey(Boolean isPrimaryKey) {
-        this.isPrimaryKey = isPrimaryKey;
     }
 
     @Override

@@ -4,17 +4,13 @@ import com.admin.admin_back.mapper.ExcelColumnMapper;
 import com.admin.admin_back.mapper.ExcelMapper;
 import com.admin.admin_back.mapper.SqlMapper;
 import com.admin.admin_back.pojo.constant.Constant;
-import com.admin.admin_back.pojo.dto.ExcelColumnDto;
-import com.admin.admin_back.pojo.dto.ExcelDataDto;
-import com.admin.admin_back.pojo.dto.ExcelDto;
-import com.admin.admin_back.pojo.dto.SqlColumnInfoDto;
+import com.admin.admin_back.pojo.dto.*;
 import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelNameExistException;
 import com.admin.admin_back.pojo.exception.SqlColumnNameNotFoundException;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,11 +48,6 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
     private final List<String> columnNames = new ArrayList<>();
 
     /**
-     * 主键
-     */
-    private final List<ExcelColumnDto> primaryKeys = new ArrayList<>();
-
-    /**
      * 存储excel列名 -> sql列名 的映射关系
      */
     private final Map<String, String> excelSqlColumnMapper = new HashMap<>();
@@ -65,6 +56,28 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
      * 存储sql列名 -> 详细信息 的映射关系
      */
     private final Map<String, SqlColumnInfoDto> sqlColumnInfoMap = new HashMap<>();
+
+    /**
+     *
+     */
+    private final Set<String> primaryKeys = new HashSet<>();
+
+    /**
+     * 唯一性列表
+     * 认为 主键 = 唯一性 + 非空
+     */
+    private final List<List<String>> uniqueKeys = new ArrayList<>();
+
+    /**
+     * 非空字段名称列表
+     * 认为 主键 = 唯一性 + 非空
+     */
+    private final Set<String> nonNullKeys = new HashSet<>();
+
+    /**
+     * 自增字段
+     */
+    private final Set<String> autoIncrementKeys = new HashSet<>();
 
     /**
      * 通过构造函数传入dao
@@ -157,49 +170,37 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
      * @param excelDataDto 数据
      */
     private void checkData(ExcelDataDto excelDataDto) {
-        // 如果没有配置主键，说明数据正确，直接返回
-        if (CollectionUtils.isEmpty(primaryKeys)) {
-            return;
-        }
-
         Map<String, Object> keys = excelDataDto.getPrimaryKeys();
         Map<String, Object> data = excelDataDto.getData();
 
-        // 检查主键字段是否为空
-        for (ExcelColumnDto primaryKey : primaryKeys) {
-            Object value = data.get(primaryKey.getSqlColumn());
+        // 检查字段是否为空
+        for (String columnName : nonNullKeys) {
+            Object value = data.get(columnName);
             if (checkIfNull(value)) {
-                throw new ExcelDataException("第" + nums + "行，" + primaryKey.getExcelColumn() + "为空");
+                throw new ExcelDataException("第" + nums + "行，" + columnName + "为空");
             }
-            // 将主键的sql列名和对应的值存入excelDataDto.primaryKeys中
-            keys.put(primaryKey.getSqlColumn(), value);
-        }
-
-        for (String sqlColumnName : sqlColumnInfoMap.keySet()) {
-            SqlColumnInfoDto sqlColumnInfoDto = sqlColumnInfoMap.get(sqlColumnName);
-            if (!StringUtils.equalsIgnoreCase(sqlColumnInfoDto.getIsNullable(), Constant.IS_NULLABLE)) {
-                // 字段不能为空
-                Object value = data.get(sqlColumnName);
-                if (checkIfNull(value)) {
-                    throw new ExcelDataException("第" + nums + "行，" + sqlColumnName + "为空");
-                }
+            if (primaryKeys.contains(columnName)) {
+                // 将主键的sql列名和对应的值存入excelDataDto.primaryKeys中
+                keys.put(columnName, value);
             }
         }
 
         // 检查重复
         for (ExcelDataDto other : dataList) {
-            boolean isEqual = true;
-            Map<String, Object> otherKeys = other.getPrimaryKeys();
-            for (ExcelColumnDto primaryKey : this.primaryKeys) {
-                String value1 = keys.get(primaryKey.getSqlColumn()).toString();
-                String value2 = otherKeys.get(primaryKey.getSqlColumn()).toString();
-                if (!StringUtils.equals(value1, value2)) {
-                    isEqual = false;
-                    break;
+            Map<String, Object> otherData = other.getData();
+            for (List<String> uniqueKeyList : this.uniqueKeys) {
+                boolean isEqual = true;
+                for (String uniqueKey : uniqueKeyList) {
+                    String value1 = Optional.ofNullable(data.get(uniqueKey)).orElse(Constant.BLANK_STRING).toString();
+                    String value2 = Optional.ofNullable(otherData.get(uniqueKey)).orElse(Constant.BLANK_STRING).toString();
+                    if (!StringUtils.equals(value1, value2)) {
+                        isEqual = false;
+                        break;
+                    }
                 }
-            }
-            if (isEqual) {
-                throw new ExcelDataException("第" + nums + "行，主键与Excel表内数据重复");
+                if (isEqual) {
+                    throw new ExcelDataException("第" + nums + "行，" + uniqueKeyList + "与Excel表内数据重复");
+                }
             }
         }
     }
@@ -207,21 +208,87 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
     @Override
     public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
         String excelName = headMap.getOrDefault(0, "");
+        if (StringUtils.isBlank(excelName)) {
+            // 减少一次数据库查询数据次数
+            throw new ExcelNameExistException();
+        }
         this.excelDto = excelMapper.findExcelByExcelName(excelName);
         if (Objects.isNull(this.excelDto)) {
             throw new ExcelNameExistException();
         }
+        init(Constant.TABLE_SCHEMA, excelDto.getSqlName());
         List<ExcelColumnDto> excelColumnDtos = excelColumnMapper.findExcelColumnsByExcelId(excelDto.getExcelId());
         for (ExcelColumnDto excelColumnDto : excelColumnDtos) {
             String excelColumnName = excelColumnDto.getExcelColumn();
             String sqlColumnName = excelColumnDto.getSqlColumn();
-            excelSqlColumnMapper.put(excelColumnName, sqlColumnName);
-            if (excelColumnDto.getIsPrimaryKey() == Constant.IS_PRIMARY_KEY) {
-                primaryKeys.add(excelColumnDto);
+            if (autoIncrementKeys.contains(sqlColumnName)) {
+                continue;
             }
-            SqlColumnInfoDto sqlColumnInfoDto =
-                    sqlMapper.findSqlColumnInfo(Constant.TABLE_SCHEMA, excelDto.getSqlName(), sqlColumnName);
-            sqlColumnInfoMap.put(sqlColumnName, sqlColumnInfoDto);
+            excelSqlColumnMapper.put(excelColumnName, sqlColumnName);
+        }
+    }
+
+    /**
+     * 初始化uniqueKeys和nonNullKeys
+     * @param dataBaseName 数据库名称
+     * @param sqlTableName 数据库表名
+     */
+    private void init(String dataBaseName, String sqlTableName) {
+        /*
+         * 从`INFORMATION_SCHEMA`.`COLUMNS`获取数据
+         * column_name
+         * is_nullable 判断非空
+         * data_type 数据类型，之后读取数据时使用
+         * extra 判断自增
+         */
+        List<SqlColumnInfoDto> sqlColumnInfos = sqlMapper.findSqlColumnInfos(dataBaseName, sqlTableName);
+        sqlColumnInfos.forEach(sqlColumnInfo -> {
+            String columnName = sqlColumnInfo.getColumnName();
+            if (StringUtils.equals(sqlColumnInfo.getExtra(), Constant.AUTO_INCREMENT)) {
+                // 自增键
+                autoIncrementKeys.add(columnName);
+            } else {
+                if (!StringUtils.equals(sqlColumnInfo.getIsNullable(), Constant.IS_NULLABLE)) {
+                    // 非空 或者 主键字段
+                    nonNullKeys.add(columnName);
+                }
+            }
+            sqlColumnInfoMap.put(columnName, sqlColumnInfo);
+        });
+
+        List<SqlConstraintDto> primaryConstraintKeys = sqlMapper
+                .findSqlConstraintByType(dataBaseName, sqlTableName, Constant.CONSTRAINT_TYPE_PRIMARY_KEY);
+        List<SqlConstraintDto> uniqueConstraintKeys = sqlMapper
+                .findSqlConstraintByType(dataBaseName, sqlTableName, Constant.CONSTRAINT_TYPE_UNIQUE);
+        Map<String, List<String>> uniqueConstraintKeysMap = new HashMap<>();
+        for (SqlConstraintDto sqlConstraint : uniqueConstraintKeys) {
+            String constraintName = sqlConstraint.getConstraintName();
+            String columnName = sqlConstraint.getColumnName();
+            if (uniqueConstraintKeysMap.containsKey(constraintName)) {
+                uniqueConstraintKeysMap.get(constraintName).add(columnName);
+            } else {
+                List<String> list = new ArrayList<String>() {{
+                    add(columnName);
+                }};
+                uniqueConstraintKeysMap.put(constraintName, list);
+            }
+        }
+        for (SqlConstraintDto sqlConstraint : primaryConstraintKeys) {
+            String constraintName = sqlConstraint.getConstraintName();
+            String columnName = sqlConstraint.getColumnName();
+            nonNullKeys.add(columnName);
+            primaryKeys.add(columnName);
+            if (uniqueConstraintKeysMap.containsKey(constraintName)) {
+                uniqueConstraintKeysMap.get(constraintName).add(columnName);
+            } else {
+                List<String> list = new ArrayList<String>() {{
+                    add(columnName);
+                }};
+                uniqueConstraintKeysMap.put(constraintName, list);
+            }
+        }
+        for (Map.Entry<String, List<String>> entry : uniqueConstraintKeysMap.entrySet()) {
+            uniqueKeys.add(entry.getValue());
         }
     }
 
