@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,8 +25,11 @@ public class ExcelVo {
     @ApiModelProperty("插入数据时，出现重复，是否覆盖")
     private Boolean isCover;
 
-    @ApiModelProperty("Excel映射列名配置")
-    private List<ExcelColumnVo> rows;
+    @ApiModelProperty("Excel映射列名配置，不可为空的列")
+    private final List<ExcelColumnVo> nonNullColumns = new ArrayList<>();
+
+    @ApiModelProperty("Excel映射列名配置，可以为空的列")
+    private final List<ExcelColumnVo> nullableColumns = new ArrayList<>();
 
     public ExcelVo() {}
 
@@ -61,12 +65,12 @@ public class ExcelVo {
         this.isCover = isCover;
     }
 
-    public List<ExcelColumnVo> getRows() {
-        return rows;
+    public List<ExcelColumnVo> getNonNullColumns() {
+        return nonNullColumns;
     }
 
-    public void setRows(List<ExcelColumnVo> rows) {
-        this.rows = rows;
+    public List<ExcelColumnVo> getNullableColumns() {
+        return nullableColumns;
     }
 
     @Override

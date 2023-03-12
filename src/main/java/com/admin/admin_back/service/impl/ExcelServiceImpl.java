@@ -25,10 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -75,11 +72,20 @@ public class ExcelServiceImpl implements ExcelService {
         if (CollectionUtils.isEmpty(excelColumnDtos)) {
             return excelVo;
         }
-        List<ExcelColumnVo> excelColumnVos = new ArrayList<>();
+        String sqlTableName = excelVo.getSqlName();
+        Set<String> nonNullableColumnsList = new HashSet<>();
+        Set<String> nullableColumnsList = new HashSet<>();
+        classifyColumnNames(sqlTableName, nonNullableColumnsList, nullableColumnsList);
+        List<ExcelColumnVo> nonNullColumns = excelVo.getNonNullColumns();
+        List<ExcelColumnVo> nullableColumns = excelVo.getNullableColumns();
         for (ExcelColumnDto excelColumnDto : excelColumnDtos) {
-            excelColumnVos.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
+            String sqlColumn = excelColumnDto.getSqlColumn();
+            if (nonNullableColumnsList.contains(sqlColumn)) {
+                nonNullColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
+            } else if (nullableColumnsList.contains(sqlColumn)) {
+                nullableColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
+            }
         }
-        excelVo.setRows(excelColumnVos);
         return excelVo;
     }
 
@@ -92,31 +98,9 @@ public class ExcelServiceImpl implements ExcelService {
     public GetSqlColumnsVo getSqlColumns(String sqlTableName) {
         // 获取主键名称集合
         GetSqlColumnsVo result = new GetSqlColumnsVo();
-        Set<String> primaryKeyNames = sqlMapper
-                .findSqlConstraintByType(Constant.TABLE_SCHEMA, sqlTableName, Constant.CONSTRAINT_TYPE_PRIMARY_KEY)
-                .stream()
-                .map(SqlConstraintDto::getColumnName)
-                .collect(Collectors.toSet());
-        List<SqlColumnInfoDto> sqlColumnInfos = sqlMapper.findSqlColumnInfos(Constant.TABLE_SCHEMA, sqlTableName);
         List<String> nonNullList = result.getNonNullList();
         List<String> nullableList = result.getNullableList();
-        for (SqlColumnInfoDto sqlColumnInfo : sqlColumnInfos) {
-            if (StringUtils.equals(sqlColumnInfo.getExtra(), Constant.AUTO_INCREMENT)) {
-                // 不需要用户填写，直接跳过
-                continue;
-            }
-            if (!StringUtils.equals(sqlColumnInfo.getIsNullable(), Constant.IS_NULLABLE)) {
-                // NOT NULL 字段，必须添加
-                nonNullList.add(sqlColumnInfo.getColumnName());
-                continue;
-            }
-            if (primaryKeyNames.contains(sqlColumnInfo.getColumnName())) {
-                // 是主键
-                nonNullList.add(sqlColumnInfo.getColumnName());
-                continue;
-            }
-            nullableList.add(sqlColumnInfo.getColumnName());
-        }
+        classifyColumnNames(sqlTableName, nonNullList, nullableList);
         return result;
     }
 
@@ -229,7 +213,6 @@ public class ExcelServiceImpl implements ExcelService {
         excelVo.setExcelName(excelDto.getExcelName());
         excelVo.setSqlName(excelDto.getSqlName());
         excelVo.setIsCover(excelDto.getIsCover() == 1);
-        excelVo.setRows(null);
         return excelVo;
     }
 
@@ -275,6 +258,34 @@ public class ExcelServiceImpl implements ExcelService {
         taskDto.setTaskStatus(Constant.TASK_CREATE);
         taskMapper.insertTask(taskDto);
         excelHelper.testAsync(code);
+    }
+
+    private void classifyColumnNames(String sqlTableName,
+                                     Collection<String> nonNullableCollection,
+                                     Collection<String> nullableCollection) {
+        Set<String> primaryKeyNames = sqlMapper
+                .findSqlConstraintByType(Constant.TABLE_SCHEMA, sqlTableName, Constant.CONSTRAINT_TYPE_PRIMARY_KEY)
+                .stream()
+                .map(SqlConstraintDto::getColumnName)
+                .collect(Collectors.toSet());
+        List<SqlColumnInfoDto> sqlColumnInfos = sqlMapper.findSqlColumnInfos(Constant.TABLE_SCHEMA, sqlTableName);
+        for (SqlColumnInfoDto sqlColumnInfo : sqlColumnInfos) {
+            if (StringUtils.equals(sqlColumnInfo.getExtra(), Constant.AUTO_INCREMENT)) {
+                // 不需要用户填写，直接跳过
+                continue;
+            }
+            if (!StringUtils.equals(sqlColumnInfo.getIsNullable(), Constant.IS_NULLABLE)) {
+                // NOT NULL 字段，必须添加
+                nonNullableCollection.add(sqlColumnInfo.getColumnName());
+                continue;
+            }
+            if (primaryKeyNames.contains(sqlColumnInfo.getColumnName())) {
+                // 是主键
+                nonNullableCollection.add(sqlColumnInfo.getColumnName());
+                continue;
+            }
+            nullableCollection.add(sqlColumnInfo.getColumnName());
+        }
     }
 
 }
