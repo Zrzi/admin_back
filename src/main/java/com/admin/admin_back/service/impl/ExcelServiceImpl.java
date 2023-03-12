@@ -73,16 +73,16 @@ public class ExcelServiceImpl implements ExcelService {
             return excelVo;
         }
         String sqlTableName = excelVo.getSqlName();
-        Set<String> nonNullableColumnsList = new HashSet<>();
-        Set<String> nullableColumnsList = new HashSet<>();
-        classifyColumnNames(sqlTableName, nonNullableColumnsList, nullableColumnsList);
-        List<ExcelColumnVo> nonNullColumns = excelVo.getNonNullColumns();
-        List<ExcelColumnVo> nullableColumns = excelVo.getNullableColumns();
+        Set<String> nonNullSet = new HashSet<>();
+        Set<String> nullableSet = new HashSet<>();
+        classifyColumnNames(sqlTableName, nonNullSet, nullableSet);
+        List<ExcelColumnVo> nonNullColumns = excelVo.getNonNullList();
+        List<ExcelColumnVo> nullableColumns = excelVo.getNullableList();
         for (ExcelColumnDto excelColumnDto : excelColumnDtos) {
             String sqlColumn = excelColumnDto.getSqlColumn();
-            if (nonNullableColumnsList.contains(sqlColumn)) {
+            if (nonNullSet.contains(sqlColumn)) {
                 nonNullColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
-            } else if (nullableColumnsList.contains(sqlColumn)) {
+            } else if (nullableSet.contains(sqlColumn)) {
                 nullableColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
             }
         }
@@ -261,7 +261,7 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     private void classifyColumnNames(String sqlTableName,
-                                     Collection<String> nonNullableCollection,
+                                     Collection<String> nonNullCollection,
                                      Collection<String> nullableCollection) {
         Set<String> primaryKeyNames = sqlMapper
                 .findSqlConstraintByType(Constant.TABLE_SCHEMA, sqlTableName, Constant.CONSTRAINT_TYPE_PRIMARY_KEY)
@@ -276,12 +276,12 @@ public class ExcelServiceImpl implements ExcelService {
             }
             if (!StringUtils.equals(sqlColumnInfo.getIsNullable(), Constant.IS_NULLABLE)) {
                 // NOT NULL 字段，必须添加
-                nonNullableCollection.add(sqlColumnInfo.getColumnName());
+                nonNullCollection.add(sqlColumnInfo.getColumnName());
                 continue;
             }
             if (primaryKeyNames.contains(sqlColumnInfo.getColumnName())) {
                 // 是主键
-                nonNullableCollection.add(sqlColumnInfo.getColumnName());
+                nonNullCollection.add(sqlColumnInfo.getColumnName());
                 continue;
             }
             nullableCollection.add(sqlColumnInfo.getColumnName());

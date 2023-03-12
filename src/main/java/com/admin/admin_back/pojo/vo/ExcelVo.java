@@ -26,10 +26,10 @@ public class ExcelVo {
     private Boolean isCover;
 
     @ApiModelProperty("Excel映射列名配置，不可为空的列")
-    private final List<ExcelColumnVo> nonNullColumns = new ArrayList<>();
+    private final List<ExcelColumnVo> nonNullList = new ArrayList<>();
 
     @ApiModelProperty("Excel映射列名配置，可以为空的列")
-    private final List<ExcelColumnVo> nullableColumns = new ArrayList<>();
+    private final List<ExcelColumnVo> nullableList = new ArrayList<>();
 
     public ExcelVo() {}
 
@@ -65,12 +65,12 @@ public class ExcelVo {
         this.isCover = isCover;
     }
 
-    public List<ExcelColumnVo> getNonNullColumns() {
-        return nonNullColumns;
+    public List<ExcelColumnVo> getNonNullList() {
+        return nonNullList;
     }
 
-    public List<ExcelColumnVo> getNullableColumns() {
-        return nullableColumns;
+    public List<ExcelColumnVo> getNullableList() {
+        return nullableList;
     }
 
     @Override
