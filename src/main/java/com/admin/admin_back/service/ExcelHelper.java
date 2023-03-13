@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ExcelHelper {
 
-    void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo);
+    void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, List<List<String>> uniqueKeys, boolean isCover, String userNo);
 
     void testAsync(String code);
 

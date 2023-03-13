@@ -12,6 +12,15 @@
             ${key} = #{value}
         </foreach>
     </select>
+
+    <select id="selectCountDataByUniqueKeys" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ${excelDto.sqlName}
+        WHERE
+        <foreach collection="uniqueKeys" index="key" item="value" separator=" AND " >
+            ${key} = #{value}
+        </foreach>
+    </select>
     
 <!--    <insert id="insertData">-->
 <!--        INSERT INTO #{excelDto.sqlName}-->

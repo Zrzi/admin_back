@@ -11,14 +11,14 @@ import com.admin.admin_back.pojo.dto.TaskErrorDto;
 import com.admin.admin_back.pojo.event.ExcelEvent;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.LogTask;
-import org.springframework.beans.BeansException;
+import com.admin.admin_back.utils.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author 陈群矜
  */
 @Service
-public class ExcelHelperService implements ExcelHelper, ApplicationContextAware {
+public class ExcelHelperService implements ExcelHelper {
 
     @Autowired
     private DataMapper dataMapper;
@@ -41,17 +41,18 @@ public class ExcelHelperService implements ExcelHelper, ApplicationContextAware 
     @Autowired
     private LogTask logTask;
 
-    private ApplicationContext applicationContext;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @Override
     @Async("uploadExcelExecutor")
     @Transactional(rollbackFor = RuntimeException.class)
-    public void batchSave(String taskCode, ExcelDto excelDto, List<ExcelDataDto> dataList, boolean isCover, String userNo) {
+    public void batchSave(String taskCode,
+                          ExcelDto excelDto,
+                          List<ExcelDataDto> dataList,
+                          List<List<String>> uniqueKeys,
+                          boolean isCover,
+                          String userNo) {
         TaskErrorDto taskErrorDto = new TaskErrorDto();
         taskErrorDto.setTaskId(taskCode);
         taskErrorDto.setCreatedBy(userNo);
@@ -61,13 +62,13 @@ public class ExcelHelperService implements ExcelHelper, ApplicationContextAware 
             ExcelDataDto excelDataDto = dataList.get(i);
             Map<String, Object> primaryKeys = excelDataDto.getPrimaryKeys();
             Map<String, Object> data = excelDataDto.getData();
-            boolean exist = findDataByPrimaryKeys(excelDto, primaryKeys);
+            boolean exist = checkIfExistDuplicate(excelDto, excelDataDto, uniqueKeys);
             try {
                 if (exist) {
                     if (isCover) {
                         // 存在数据，设置为覆盖
-                        updateDate(excelDto, data, primaryKeys);
-                        applicationContext.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, true));
+                        updateDate(excelDto, data, primaryKeys, uniqueKeys);
+                        eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, true));
                     } else {
                         // 存在数据，设置为不覆盖
                         isSuccess = false;
@@ -83,7 +84,7 @@ public class ExcelHelperService implements ExcelHelper, ApplicationContextAware 
                         values.addLast(value);
                     });
                     insertData(excelDto, keys, values);
-                    applicationContext.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
+                    eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
                 }
             } catch (Exception exception) {
                 isSuccess = false;
@@ -100,6 +101,38 @@ public class ExcelHelperService implements ExcelHelper, ApplicationContextAware 
     }
 
     /**
+     * 检查数据重复
+     * @param excelDto 用于传入sqlName
+     * @param data 传入数据等
+     * @param uniqueKeys 唯一约束的列表
+     * @return {@code true}表示存在；{@code false}表示不存在
+     */
+    private boolean checkIfExistDuplicate(ExcelDto excelDto, ExcelDataDto data, List<List<String>> uniqueKeys) {
+        // 可能时没有主键，也可能是主键自增，所以 primaryKeys为空
+        Map<String, Object> primaryKeys = data.getPrimaryKeys();
+        if (!CollectionUtils.isEmpty(primaryKeys)) {
+            if (findDataByPrimaryKeys(excelDto, primaryKeys)) {
+                return true;
+            }
+        }
+        Map<String, Object> unique = new HashMap<>();
+        Map<String, Object> dataMap  = data.getData();
+        for (List<String> keys : uniqueKeys) {
+            if (!CollectionUtils.isEmpty(keys)) {
+                // 构筑unique
+                for (String key : keys) {
+                    unique.put(key, dataMap.get(key));
+                }
+                if (findDataByUniqueKeys(excelDto, unique)) {
+                    return true;
+                }
+                unique.clear();
+            }
+        }
+        return false;
+    }
+
+    /**
      * 根据主键查询数据库中是否存在相关数据
      * @param excelDto 用于传入sqlName
      * @param primaryKeys 主键及对应值
@@ -109,12 +142,49 @@ public class ExcelHelperService implements ExcelHelper, ApplicationContextAware 
         return dataMapper.selectCountDataByPrimaryKeys(excelDto, primaryKeys) != 0;
     }
 
+    /**
+     * 根据唯一键查询数据库中是否存在相关数据
+     * @param excelDto 用于传入sqlName
+     * @param uniqueKeys 唯一键及对应值
+     * @return true代表存在；false代表不存在
+     */
+    private boolean findDataByUniqueKeys(ExcelDto excelDto, Map<String, Object> uniqueKeys) {
+        return dataMapper.selectCountDataByUniqueKeys(excelDto, uniqueKeys) != 0;
+    }
+
     private void insertData(ExcelDto excelDto, List<String> keys, List<Object> values) {
         dataMapper.insertData(excelDto, keys, values);
     }
 
-    private void updateDate(ExcelDto excelDto, Map<String, Object> data, Map<String, Object> primaryKeys) {
-        dataMapper.updateData(excelDto, data, primaryKeys);
+    /**
+     * 更新数据。
+     * 如果存在主键，将根据主键更新数据；否则根据唯一键更新。
+     * 主键缺失原因：没有设置主键；主键自增。
+     * 如果唯一键也不存在，{@code checkIfExistDuplicate}保证返回{@code false}
+     * 举例：
+     *  数据库字段为a,b,c,d,e,f，其中，a为主键，b、(c,d)存在唯一约束
+     *  如果a不是自增字段，将根据a进行更新
+     *  反之，将根据(b,c,d)进行更新
+     * @param excelDto 用于传入sqlName
+     * @param data 数据，所有字段
+     * @param primaryKeys 数据，仅主键
+     * @param uniqueKeyList 唯一约束列表
+     */
+    private void updateDate(ExcelDto excelDto,
+                            Map<String, Object> data,
+                            Map<String, Object> primaryKeys,
+                            List<List<String>> uniqueKeyList) {
+        if (CollectionUtils.isEmpty(primaryKeys)) {
+            Map<String, Object> uniqueKeys = new HashMap<>();
+            for (List<String> keys : uniqueKeyList) {
+                for (String key : keys) {
+                    uniqueKeys.put(key, data.get(key));
+                }
+            }
+            dataMapper.updateData(excelDto, data, uniqueKeys);
+        } else {
+            dataMapper.updateData(excelDto, data, primaryKeys);
+        }
     }
 
     @Override

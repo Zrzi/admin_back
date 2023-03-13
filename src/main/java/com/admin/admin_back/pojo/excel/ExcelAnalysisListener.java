@@ -6,7 +6,7 @@ import com.admin.admin_back.mapper.SqlMapper;
 import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.*;
 import com.admin.admin_back.pojo.exception.ExcelDataException;
-import com.admin.admin_back.pojo.exception.ExcelNameExistException;
+import com.admin.admin_back.pojo.exception.ExcelNameNotFoundException;
 import com.admin.admin_back.pojo.exception.SqlColumnNameNotFoundException;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -106,6 +106,10 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
 
     public List<ExcelDataDto> getDataList() {
         return dataList;
+    }
+
+    public List<List<String>> getUniqueKeys() {
+        return uniqueKeys;
     }
 
     @Override
@@ -210,11 +214,11 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         String excelName = headMap.getOrDefault(0, "");
         if (StringUtils.isBlank(excelName)) {
             // 减少一次数据库查询数据次数
-            throw new ExcelNameExistException();
+            throw new ExcelNameNotFoundException();
         }
         this.excelDto = excelMapper.findExcelByExcelName(excelName);
         if (Objects.isNull(this.excelDto)) {
-            throw new ExcelNameExistException();
+            throw new ExcelNameNotFoundException();
         }
         init(Constant.TABLE_SCHEMA, excelDto.getSqlName());
         List<ExcelColumnDto> excelColumnDtos = excelColumnMapper.findExcelColumnsByExcelId(excelDto.getExcelId());
@@ -276,6 +280,9 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         for (SqlConstraintDto sqlConstraint : primaryConstraintKeys) {
             String constraintName = sqlConstraint.getConstraintName();
             String columnName = sqlConstraint.getColumnName();
+            if (autoIncrementKeys.contains(columnName)) {
+                continue;
+            }
             nonNullKeys.add(columnName);
             primaryKeys.add(columnName);
             if (uniqueConstraintKeysMap.containsKey(constraintName)) {

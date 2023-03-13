@@ -164,8 +164,8 @@ public class ExcelServiceImpl implements ExcelService {
                     .sheet()
                     .doRead();
             ExcelDto excelDto = listener.getExcelDto();
-            String sqlName = excelDto.getSqlName();
             List<ExcelDataDto> dataList = listener.getDataList();
+            List<List<String>> uniqueKeys = listener.getUniqueKeys();
             boolean isCover = excelDto.getIsCover() == Constant.IS_COVER;
             String code = GenerateCodeUtil.generateCode(CodeTypeEnum.TASK);
             TaskDto taskDto = new TaskDto();
@@ -174,7 +174,7 @@ public class ExcelServiceImpl implements ExcelService {
             taskDto.setCreatedBy(userNo);
             taskDto.setUpdatedBy(userNo);
             taskMapper.insertTask(taskDto);
-            excelHelper.batchSave(code, excelDto, dataList, isCover, userNo);
+            excelHelper.batchSave(code, excelDto, dataList, uniqueKeys, isCover, userNo);
             return code;
         } catch (IOException exception) {
             throw new RuntimeException();

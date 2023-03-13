@@ -19,6 +19,9 @@ public interface DataMapper {
     Integer selectCountDataByPrimaryKeys(@Param("excelDto") ExcelDto excelDto,
                                          @Param("primaryKeys") Map<String, Object> primaryKeys);
 
+    Integer selectCountDataByUniqueKeys(@Param("excelDto") ExcelDto excelDto,
+                                        @Param("uniqueKeys") Map<String, Object> uniqueKeys);
+
 //    Integer insertData(@Param("excelDto") ExcelDto excelDto,
 //                       @Param("columnList") List<String> columnList,
 //                       @Param("valueList") List<String> valueList);
