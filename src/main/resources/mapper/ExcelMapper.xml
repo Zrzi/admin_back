@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.admin_back.mapper.ExcelMapper">
+
+    <resultMap id="baseMap" type="com.admin.admin_back.pojo.dto.ExcelDto">
+        <id column="id" property="id" />
+        <result column="excel_id" property="excelId" />
+        <result column="excel_name" property="excelName" />
+        <result column="sql_name" property="sqlName" />
+        <result column="is_cover" property="isCover" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_date" property="updatedDate" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <select id="findExcels" resultMap="baseMap">
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel`
+        WHERE `status` = 0;
+    </select>
+
+    <select id="findExcelByExcelId" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel`
+        WHERE `excel_id` = #{excelId}
+          AND `status` = 0
+    </select>
+
+    <select id="findExcelByExcelName" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_excel`
+        WHERE `excel_name` = #{excelName}
+          AND `status` = 0
+    </select>
+
+    <insert id="insertExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
+        INSERT INTO `admin_excel` (`excel_id`, `excel_name`, `sql_name`, `is_cover`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelDto.excelId}, #{excelDto.excelName}, #{excelDto.sqlName}, #{excelDto.isCover}, #{excelDto.createdBy}, NOW(), #{excelDto.updatedBy}, NOW(), 0)
+    </insert>
+
+    <update id="updateExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
+        UPDATE `admin_excel`
+        SET `excel_name` = #{excelDto.excelName},
+            `sql_name` = #{excelDto.sqlName},
+            `is_cover` = #{excelDto.isCover},
+            `updated_by` = #{excelDto.updatedBy},
+            `updated_date` = NOW()
+        WHERE `excel_id` = #{excelDto.excelId}
+          AND `status` = 0
+    </update>
+
+    <update id="deleteExcelDto" parameterType="com.admin.admin_back.pojo.dto.ExcelDto">
+        UPDATE `admin_excel`
+        SET `status` = 1,
+            `updated_by` = #{excelDto.updatedBy},
+            `updated_date` = NOW()
+        WHERE `excel_id` = #{excelDto.excelId}
+          AND `status` = 0
+    </update>
+
+</mapper>

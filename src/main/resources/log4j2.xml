@@ -55,14 +55,14 @@
     <!-- 然后定义logger，只有定义了logger并引入的appender，appender才会生效 -->
     <loggers>
 
-        <root level="info">
+        <root level="DEBUG">
             <appender-ref ref="Console" />
             <appender-ref ref="info" />
             <appender-ref ref="error" />
         </root>
 
         <!-- 向root上报这个包下的info级别的日志 -->
-        <logger name="com.admin.admin_back" level="INFO" />
+        <logger name="com.admin.admin_back" level="DEBUG" />
 
     </loggers>
 

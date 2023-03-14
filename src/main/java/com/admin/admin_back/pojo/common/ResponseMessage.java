@@ -137,14 +137,59 @@ public enum ResponseMessage {
     USER_TYOE_ERROR(400007, "用户类型错误"),
 
     /**
-     *
+     * 数据为空
      */
     CONTENT_NOT_FOUND(500000, "数据为空"),
 
     /**
-     *
+     * 密钥为空
      */
     KEY_NOT_FOUND(500001, "密钥为空"),
+
+    /**
+     * Excel映射配置编码不存在
+     */
+    EXCEL_ID_IS_NULL(600000, "Excel映射配置编码不存在"),
+
+    /**
+     * Excel映射配置不存在
+     */
+    EXCEL_NOT_FOUND(600001, "Excel映射配置不存在"),
+
+    /**
+     * Excel表单错误
+     */
+    EXCEL_FORM_ERROR(600002, "Excel表单错误"),
+
+    /**
+     * Excel名称已经存在
+     */
+    EXCEL_NAME_EXIST(600003, "Excel名称已经存在"),
+
+    /**
+     * 文件类型错误
+     */
+    FILE_TYPE_ERROR(600004, "文件类型错误"),
+
+    /**
+     * 不存在对应的Excel映射
+     */
+    EXCEL_NAME_NOT_FOUND(600005, "不存在对应的Excel映射"),
+
+    /**
+     * Excel某一列不存在对应的配置
+     */
+    EXCEL_COLUMN_NAME_ERROR(600006, "Excel某一列不存在对应的配置"),
+
+    /**
+     * Excel表格中存在数据错误
+     */
+    EXCEL_DATA_ERROR(600007, "Excel表格中存在数据错误"),
+
+    /**
+     * Excel上传任务不存在
+     */
+    EXCEL_TASK_NOT_FOUND(600008, "Excel上传任务不存在"),
 
     /**
      * 参数异常

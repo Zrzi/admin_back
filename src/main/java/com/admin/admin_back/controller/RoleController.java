@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.RoleNameExistException;
 import com.admin.admin_back.pojo.exception.SystemExistException;
@@ -64,7 +65,7 @@ public class RoleController {
     public Result<?> addRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, false);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, null, flag);
         }
         try {
             roleService.addRole(roleForm);
@@ -84,7 +85,7 @@ public class RoleController {
     public Result<?> updateRole(@RequestBody RoleForm roleForm) {
         String flag = checkValidRoleForm(roleForm, true);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.ROLE_FORM_ERROR, null, flag);
         }
         try {
             roleService.updateRole(roleForm);
@@ -133,7 +134,7 @@ public class RoleController {
             return "角色名称为空";
         }
         roleName = roleName.trim();
-        if (roleName.length() > 16) {
+        if (roleName.length() > Constant.INT_16) {
             return "角色名称超过16个字符";
         }
         roleForm.setRoleName(roleName);

@@ -1,5 +1,6 @@
 package com.admin.admin_back.utils;
 
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.exception.UnAuthorizedException;
@@ -18,22 +19,22 @@ import java.util.*;
 @Component
 public class JwtTokenUtil {
 
-    private static final String CLAIM_KEY_USER_NO = "userNo";
-    private static final String CLAIM_KEY_USERNAME = "username";
-    private static final String CLAIM_KEY_USER_TYPE = "userType";
-    private static final String CLAIM_KEY_ROLES = "roles";
-    private static final String SECRET = "secret";
-    private static final String ISSUER = "sdu-admin";
+    private static final String CLAIM_KEY_USER_NO = Constant.CLAIM_KEY_USER_NO;
+    private static final String CLAIM_KEY_USERNAME = Constant.CLAIM_KEY_USERNAME;
+    private static final String CLAIM_KEY_USER_TYPE = Constant.CLAIM_KEY_USER_TYPE;
+    private static final String CLAIM_KEY_ROLES = Constant.CLAIM_KEY_ROLES;
+    private static final String SECRET = Constant.SECRET;
+    private static final String ISSUER = Constant.ISSUER;
     /**
      * 令牌过期时间
      * 5 * 60 单位：秒
      */
-    private static final int JWT_TOKEN_EXPIRATION = 300;
+    private static final int JWT_TOKEN_EXPIRATION = Constant.JWT_TOKEN_EXPIRATION;
     /**
      * 刷新令牌过期时间
      * 7 * 24 * 60 * 60 单位：秒
      */
-    private static final int REFRESH_TOKEN_EXPIRATION = 604800;
+    private static final int REFRESH_TOKEN_EXPIRATION = Constant.REFRESH_TOKEN_EXPIRATION;
 
     public String getUserNoFromToken(String token) {
         String userNo;

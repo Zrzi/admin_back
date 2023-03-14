@@ -4,11 +4,13 @@ import com.admin.admin_back.mapper.StudentMapper;
 import com.admin.admin_back.mapper.TeacherMapper;
 import com.admin.admin_back.mapper.UserMapper;
 import com.admin.admin_back.mapper.UserRoleMapper;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.StudentDto;
 import com.admin.admin_back.pojo.dto.TeacherDto;
 import com.admin.admin_back.pojo.dto.UserDto;
 import com.admin.admin_back.pojo.dto.UserRoleDto;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
+import com.admin.admin_back.pojo.event.ExcelEvent;
 import com.admin.admin_back.pojo.exception.PasswordException;
 import com.admin.admin_back.pojo.exception.UserExistException;
 import com.admin.admin_back.pojo.exception.UserNoException;
@@ -21,13 +23,16 @@ import com.admin.admin_back.utils.JwtTokenUtil;
 import com.admin.admin_back.utils.Md5Util;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -177,7 +182,7 @@ public class UserServiceImpl implements UserService {
                 usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
                 break;
             default:
-                // 不返沪系统用户
+                // 不返回系统用户
                 break;
         }
         return usersVo;
@@ -260,6 +265,44 @@ public class UserServiceImpl implements UserService {
                     userVo.setUpdatedDate(userDto.getUpdatedDate());
                     return userVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @EventListener(classes = ExcelEvent.class)
+    public void onListenExcel(ExcelEvent excelEvent) {
+        String sqlName = excelEvent.getSqlName();
+        String userNo = excelEvent.getUserNo();
+        Map<String, Object> data = excelEvent.getData();
+        UserDto userDto = null;
+        switch (sqlName) {
+            case Constant.STUDENT_TABLE:
+                userDto = castDataToUserDto(data, userNo, true);
+                break;
+            case Constant.TEACHER_TABLE:
+                userDto = castDataToUserDto(data, userNo, false);
+                break;
+            default:
+                // 什么都不做
+                break;
+        }
+        if (Objects.nonNull(userDto)) {
+            if (excelEvent.getIsUpdate()) {
+                userMapper.updateUser(userDto);
+            } else {
+                userMapper.addUser(userDto);
+            }
+        }
+    }
+
+    private UserDto castDataToUserDto(Map<String, Object> data, String userNo, boolean isStudent) {
+        UserDto userDto = new UserDto();
+        userDto.setUserNo(data.getOrDefault(isStudent ? "stuNo" : "empNo", "").toString());
+        userDto.setUsername(data.getOrDefault(isStudent ? "stuName" : "empName", "").toString());
+        userDto.setUserType(isStudent ? UserTypeEnum.STUDENT.code : UserTypeEnum.TEACHER.code);
+        userDto.setPassword(initDefaultPassword());
+        userDto.setCreatedBy(userNo);
+        userDto.setUpdatedBy(userNo);
+        return userDto;
     }
 
     private void addStudent(StudentVo student) {

@@ -1,5 +1,8 @@
 package com.admin.admin_back.pojo.exception;
 
+/**
+ * @author 陈群矜
+ */
 public class BaseException extends RuntimeException {
 
     private String message;

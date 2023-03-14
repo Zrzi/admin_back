@@ -5,6 +5,7 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.exception.RoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleExistException;
 import com.admin.admin_back.pojo.exception.UserRoleNotFoundException;
@@ -82,7 +83,7 @@ public class MemberRoleController {
     public Result<?> addMemberRole(@RequestBody AddMemberRoleForm addMemberRoleForm) {
         String flag = checkAddMemberRoleForm(addMemberRoleForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             memberRoleService.addMemberRole(addMemberRoleForm);
@@ -162,7 +163,7 @@ public class MemberRoleController {
         }
         editMemberRoleForm.setRoleId(roleId.trim());
         Integer level = editMemberRoleForm.getLevel();
-        if (level < 0 || level > 10) {
+        if (level < 0 || level > Constant.INT_10) {
             return "角色等级应该在0到10之间";
         }
         return "";

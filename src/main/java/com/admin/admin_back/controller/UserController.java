@@ -3,6 +3,7 @@ package com.admin.admin_back.controller;
 import com.admin.admin_back.annotations.*;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.enums.UserTypeEnum;
 import com.admin.admin_back.pojo.exception.PasswordException;
 import com.admin.admin_back.pojo.exception.UserExistException;
@@ -182,7 +183,7 @@ public class UserController {
     public Result<?> addUser(@RequestBody AddUserForm addUserForm) {
         String flag = checkAddUserForm(addUserForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             userService.addUser(addUserForm);
@@ -200,7 +201,7 @@ public class UserController {
     public Result<?> updateUser(@RequestBody EditUserForm editUserForm) {
         String flag = checkEditUserForm(editUserForm);
         if (StringUtils.isNotBlank(flag)) {
-            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, flag);
+            return new Result<>(ResponseMessage.MEMBER_FORM_ERROR, null, flag);
         }
         try {
             userService.updateUser(editUserForm);
@@ -276,7 +277,7 @@ public class UserController {
             return "请输入学生学号";
         }
         stuNo = stuNo.trim();
-        if (stuNo.length() > 20) {
+        if (stuNo.length() > Constant.INT_20) {
             return "学号长度不超过20个字符";
         }
         studentVo.setStuNo(stuNo);
@@ -285,7 +286,7 @@ public class UserController {
             return "请输入学生姓名";
         }
         stuName = stuName.trim();
-        if (stuName.length() > 20) {
+        if (stuName.length() > Constant.INT_50) {
             return "学生姓名长度不超过50个字符";
         }
         studentVo.setStuName(stuName);
@@ -294,7 +295,7 @@ public class UserController {
             return "请输入学生性别";
         }
         sex = sex.trim();
-        if (sex.length() > 5) {
+        if (sex.length() > Constant.INT_5) {
             return "性别长度不超过5个字符";
         }
         studentVo.setSex(sex);
@@ -303,7 +304,7 @@ public class UserController {
             return "请输入学生专业号";
         }
         majorNo = majorNo.trim();
-        if (majorNo.length() > 10) {
+        if (majorNo.length() > Constant.INT_10) {
             return "学生专业号长度不超过10个字符";
         }
         studentVo.setMajorNo(majorNo);
@@ -312,7 +313,7 @@ public class UserController {
             return "请输入学生班号";
         }
         classNo = classNo.trim();
-        if (classNo.length() > 20) {
+        if (classNo.length() > Constant.INT_20) {
             return "学生班号长度不超过20个字符";
         }
         studentVo.setClassNo(classNo);
@@ -335,14 +336,14 @@ public class UserController {
             return "请输入学生出生日期";
         }
         birthday = birthday.trim();
-        if (birthday.length() > 20) {
+        if (birthday.length() > Constant.INT_20) {
             return "出生日期长度不超过20个字符";
         }
         studentVo.setBirthday(birthday);
         String id = studentVo.getId();
         if (StringUtils.isNotBlank(id)) {
             id = id.trim();
-            if (id.length() > 20) {
+            if (id.length() > Constant.INT_20) {
                 return "学生身份证最长20位";
             }
             studentVo.setId(id);
@@ -352,7 +353,7 @@ public class UserController {
             return "请输入学生在校状态";
         }
         status = status.trim();
-        if (status.length() > 10) {
+        if (status.length() > Constant.INT_10) {
             return "在校状态不超过10个字符";
         }
         studentVo.setStatus(status);
@@ -361,7 +362,7 @@ public class UserController {
             return "请输入学生民族";
         }
         nation = nation.trim();
-        if (nation.length() > 10) {
+        if (nation.length() > Constant.INT_10) {
             return "民族不超过10个字符";
         }
         studentVo.setNation(nation);
@@ -370,14 +371,14 @@ public class UserController {
             return "请输入学生政治面貌";
         }
         politicalStatus = politicalStatus.trim();
-        if (politicalStatus.length() > 20) {
+        if (politicalStatus.length() > Constant.INT_20) {
             return "政治面貌不超过20个字符";
         }
         studentVo.setPoliticalStatus(politicalStatus);
         String sourcePlace = studentVo.getSourcePlace();
         if (StringUtils.isNotBlank(sourcePlace)) {
             sourcePlace = sourcePlace.trim();
-            if (sourcePlace.length() > 50) {
+            if (sourcePlace.length() > Constant.INT_50) {
                 return "生源所在地不超过50个字符";
             }
             studentVo.setSourcePlace(sourcePlace);
@@ -394,7 +395,7 @@ public class UserController {
             return "请输入学生姓名";
         }
         stuName = stuName.trim();
-        if (stuName.length() > 20) {
+        if (stuName.length() > Constant.INT_20) {
             return "学生姓名长度不超过50个字符";
         }
         studentVo.setStuName(stuName);
@@ -403,7 +404,7 @@ public class UserController {
             return "请输入学生性别";
         }
         sex = sex.trim();
-        if (sex.length() > 5) {
+        if (sex.length() > Constant.INT_5) {
             return "性别长度不超过5个字符";
         }
         studentVo.setSex(sex);
@@ -412,7 +413,7 @@ public class UserController {
             return "请输入学生专业号";
         }
         majorNo = majorNo.trim();
-        if (majorNo.length() > 10) {
+        if (majorNo.length() > Constant.INT_10) {
             return "学生专业号长度不超过10个字符";
         }
         studentVo.setMajorNo(majorNo);
@@ -421,7 +422,7 @@ public class UserController {
             return "请输入学生班号";
         }
         classNo = classNo.trim();
-        if (classNo.length() > 20) {
+        if (classNo.length() > Constant.INT_20) {
             return "学生班号长度不超过20个字符";
         }
         studentVo.setClassNo(classNo);
@@ -444,14 +445,14 @@ public class UserController {
             return "请输入学生出生日期";
         }
         birthday = birthday.trim();
-        if (birthday.length() > 20) {
+        if (birthday.length() > Constant.INT_20) {
             return "出生日期长度不超过20个字符";
         }
         studentVo.setBirthday(birthday);
         String id = studentVo.getId();
         if (StringUtils.isNotBlank(id)) {
             id = id.trim();
-            if (id.length() > 20) {
+            if (id.length() > Constant.INT_20) {
                 return "学生身份证最长20位";
             }
             studentVo.setId(id);
@@ -461,7 +462,7 @@ public class UserController {
             return "请输入学生在校状态";
         }
         status = status.trim();
-        if (status.length() > 10) {
+        if (status.length() > Constant.INT_10) {
             return "在校状态不超过10个字符";
         }
         studentVo.setStatus(status);
@@ -470,7 +471,7 @@ public class UserController {
             return "请输入学生民族";
         }
         nation = nation.trim();
-        if (nation.length() > 10) {
+        if (nation.length() > Constant.INT_10) {
             return "民族不超过10个字符";
         }
         studentVo.setNation(nation);
@@ -479,14 +480,14 @@ public class UserController {
             return "请输入学生政治面貌";
         }
         politicalStatus = politicalStatus.trim();
-        if (politicalStatus.length() > 20) {
+        if (politicalStatus.length() > Constant.INT_20) {
             return "政治面貌不超过20个字符";
         }
         studentVo.setPoliticalStatus(politicalStatus);
         String sourcePlace = studentVo.getSourcePlace();
         if (StringUtils.isNotBlank(sourcePlace)) {
             sourcePlace = sourcePlace.trim();
-            if (sourcePlace.length() > 50) {
+            if (sourcePlace.length() > Constant.INT_50) {
                 return "生源所在地不超过50个字符";
             }
             studentVo.setSourcePlace(sourcePlace);
@@ -503,7 +504,7 @@ public class UserController {
             return "请输入教工号";
         }
         empNo = empNo.trim();
-        if (empNo.length() > 20) {
+        if (empNo.length() > Constant.INT_20) {
             return "教工号长度不超过20个字符";
         }
         teacherVo.setEmpNo(empNo);
@@ -512,7 +513,7 @@ public class UserController {
             return "请输入姓名";
         }
         empName = empName.trim();
-        if (empName.length() > 50) {
+        if (empName.length() > Constant.INT_50) {
             return "姓名长度不超过50个字符";
         }
         teacherVo.setEmpName(empName);
@@ -521,7 +522,7 @@ public class UserController {
             return "请输入性别";
         }
         sex = sex.trim();
-        if (sex.length() > 20) {
+        if (sex.length() > Constant.INT_20) {
             return "性别不超过20个字符";
         }
         teacherVo.setSex(sex);
@@ -532,7 +533,7 @@ public class UserController {
         String phone = teacherVo.getPhone();
         if (StringUtils.isNotBlank(phone)) {
             phone = phone.trim();
-            if (phone.length() > 15) {
+            if (phone.length() > Constant.INT_15) {
                 return "电话长度不超过15个字符";
             }
             teacherVo.setPhone(phone);
@@ -540,7 +541,7 @@ public class UserController {
         String idNo = teacherVo.getIdNo();
         if (StringUtils.isNotEmpty(idNo)) {
             idNo = idNo.trim();
-            if (idNo.length() > 20) {
+            if (idNo.length() > Constant.INT_20) {
                 return "身份证长度不超过20个字符";
             }
             teacherVo.setIdNo(idNo);
@@ -548,7 +549,7 @@ public class UserController {
         String marriage = teacherVo.getMarriage();
         if (StringUtils.isNotEmpty(marriage)) {
             marriage = marriage.trim();
-            if (marriage.length() > 10) {
+            if (marriage.length() > Constant.INT_10) {
                 return "婚姻状况长度不超过10个字符";
             }
             teacherVo.setMarriage(marriage);
@@ -556,7 +557,7 @@ public class UserController {
         String orgType = teacherVo.getOrgType();
         if (StringUtils.isNotEmpty(orgType)) {
             orgType = orgType.trim();
-            if (orgType.length() > 20) {
+            if (orgType.length() > Constant.INT_20) {
                 return "编制类别长度不超过20个字符";
             }
             teacherVo.setOrgType(orgType);
@@ -564,7 +565,7 @@ public class UserController {
         String staffType = teacherVo.getStaffType();
         if (StringUtils.isNotEmpty(staffType)) {
             staffType = staffType.trim();
-            if (staffType.length() > 10) {
+            if (staffType.length() > Constant.INT_10) {
                 return "教职工类别长度不超过10个字符";
             }
             teacherVo.setStaffType(staffType);
@@ -572,7 +573,7 @@ public class UserController {
         String title = teacherVo.getTitle();
         if (StringUtils.isNotEmpty(title)) {
             title = title.trim();
-            if (title.length() > 20) {
+            if (title.length() > Constant.INT_20) {
                 return "教师职称长度不超过20个字符";
             }
             teacherVo.setTitle(title);
@@ -580,7 +581,7 @@ public class UserController {
         String degree = teacherVo.getDegree();
         if (StringUtils.isNotEmpty(degree)) {
             degree = degree.trim();
-            if (degree.length() > 10) {
+            if (degree.length() > Constant.INT_10) {
                 return "文化程度长度不超过10个字符";
             }
             teacherVo.setDegree(degree);
@@ -588,7 +589,7 @@ public class UserController {
         String titleLevel = teacherVo.getTitleLevel();
         if (StringUtils.isNotEmpty(titleLevel)) {
             titleLevel = titleLevel.trim();
-            if (titleLevel.length() > 10) {
+            if (titleLevel.length() > Constant.INT_10) {
                 return "职称等级长度不超过10个字符";
             }
             teacherVo.setTitleLevel(titleLevel);
@@ -596,7 +597,7 @@ public class UserController {
         String teachType = teacherVo.getTeachType();
         if (StringUtils.isNotEmpty(teachType)) {
             teachType = teachType.trim();
-            if (teachType.length() > 10) {
+            if (teachType.length() > Constant.INT_10) {
                 return "教师类别长度不超过10个字符";
             }
             teacherVo.setTeachType(teachType);
@@ -604,7 +605,7 @@ public class UserController {
         String school = teacherVo.getSchool();
         if (StringUtils.isNotEmpty(school)) {
             school = school.trim();
-            if (school.length() > 10) {
+            if (school.length() > Constant.INT_10) {
                 return "教师所属单位长度不超过10个字符";
             }
             teacherVo.setSchool(school);
@@ -613,7 +614,7 @@ public class UserController {
         String teachDate = teacherVo.getTeachDate();
         if (StringUtils.isNotEmpty(teachDate)) {
             teachDate = teachType.trim();
-            if (teachDate.length() > 10) {
+            if (teachDate.length() > Constant.INT_10) {
                 return "从教年月长度不超过10个字符";
             }
             teacherVo.setTeachDate(teachDate);
@@ -621,7 +622,7 @@ public class UserController {
         String status = teacherVo.getStatus();
         if (StringUtils.isNotBlank(status)) {
             status = status.trim();
-            if (status.length() > 10) {
+            if (status.length() > Constant.INT_10) {
                 return "当前状态长度不超过10个字符";
             }
             teacherVo.setStatus(status);
@@ -630,7 +631,7 @@ public class UserController {
         String tecposition = teacherVo.getTecposition();
         if (StringUtils.isNotBlank(tecposition)) {
             tecposition = tecposition.trim();
-            if (tecposition.length() > 20) {
+            if (tecposition.length() > Constant.INT_20) {
                 return "技术职务长度不超过20个字符";
             }
             teacherVo.setTecposition(tecposition);
@@ -638,7 +639,7 @@ public class UserController {
         String memo = teacherVo.getMemo();
         if (StringUtils.isNotEmpty(memo)) {
             memo = memo.trim();
-            if (memo.length() > 100) {
+            if (memo.length() > Constant.INT_100) {
                 return "备注长度不超过100个字符";
             }
             teacherVo.setMemo(memo);
@@ -656,7 +657,7 @@ public class UserController {
             return "请输入姓名";
         }
         empName = empName.trim();
-        if (empName.length() > 50) {
+        if (empName.length() > Constant.INT_50) {
             return "姓名长度不超过50个字符";
         }
         teacherVo.setEmpName(empName);
@@ -665,7 +666,7 @@ public class UserController {
             return "请输入性别";
         }
         sex = sex.trim();
-        if (sex.length() > 20) {
+        if (sex.length() > Constant.INT_20) {
             return "性别不超过20个字符";
         }
         teacherVo.setSex(sex);
@@ -676,7 +677,7 @@ public class UserController {
         String phone = teacherVo.getPhone();
         if (StringUtils.isNotBlank(phone)) {
             phone = phone.trim();
-            if (phone.length() > 15) {
+            if (phone.length() > Constant.INT_15) {
                 return "电话长度不超过15个字符";
             }
             teacherVo.setPhone(phone);
@@ -684,7 +685,7 @@ public class UserController {
         String idNo = teacherVo.getIdNo();
         if (StringUtils.isNotEmpty(idNo)) {
             idNo = idNo.trim();
-            if (idNo.length() > 20) {
+            if (idNo.length() > Constant.INT_20) {
                 return "身份证长度不超过20个字符";
             }
             teacherVo.setIdNo(idNo);
@@ -692,7 +693,7 @@ public class UserController {
         String marriage = teacherVo.getMarriage();
         if (StringUtils.isNotEmpty(marriage)) {
             marriage = marriage.trim();
-            if (marriage.length() > 10) {
+            if (marriage.length() > Constant.INT_10) {
                 return "婚姻状况长度不超过10个字符";
             }
             teacherVo.setMarriage(marriage);
@@ -700,7 +701,7 @@ public class UserController {
         String orgType = teacherVo.getOrgType();
         if (StringUtils.isNotEmpty(orgType)) {
             orgType = orgType.trim();
-            if (orgType.length() > 20) {
+            if (orgType.length() > Constant.INT_20) {
                 return "编制类别长度不超过20个字符";
             }
             teacherVo.setOrgType(orgType);
@@ -708,7 +709,7 @@ public class UserController {
         String staffType = teacherVo.getStaffType();
         if (StringUtils.isNotEmpty(staffType)) {
             staffType = staffType.trim();
-            if (staffType.length() > 10) {
+            if (staffType.length() > Constant.INT_10) {
                 return "教职工类别长度不超过10个字符";
             }
             teacherVo.setStaffType(staffType);
@@ -716,7 +717,7 @@ public class UserController {
         String title = teacherVo.getTitle();
         if (StringUtils.isNotEmpty(title)) {
             title = title.trim();
-            if (title.length() > 20) {
+            if (title.length() > Constant.INT_20) {
                 return "教师职称长度不超过20个字符";
             }
             teacherVo.setTitle(title);
@@ -724,7 +725,7 @@ public class UserController {
         String degree = teacherVo.getDegree();
         if (StringUtils.isNotEmpty(degree)) {
             degree = degree.trim();
-            if (degree.length() > 10) {
+            if (degree.length() > Constant.INT_10) {
                 return "文化程度长度不超过10个字符";
             }
             teacherVo.setDegree(degree);
@@ -732,7 +733,7 @@ public class UserController {
         String titleLevel = teacherVo.getTitleLevel();
         if (StringUtils.isNotEmpty(titleLevel)) {
             titleLevel = titleLevel.trim();
-            if (titleLevel.length() > 10) {
+            if (titleLevel.length() > Constant.INT_10) {
                 return "职称等级长度不超过10个字符";
             }
             teacherVo.setTitleLevel(titleLevel);
@@ -740,7 +741,7 @@ public class UserController {
         String teachType = teacherVo.getTeachType();
         if (StringUtils.isNotEmpty(teachType)) {
             teachType = teachType.trim();
-            if (teachType.length() > 10) {
+            if (teachType.length() > Constant.INT_10) {
                 return "教师类别长度不超过10个字符";
             }
             teacherVo.setTeachType(teachType);
@@ -748,7 +749,7 @@ public class UserController {
         String school = teacherVo.getSchool();
         if (StringUtils.isNotEmpty(school)) {
             school = school.trim();
-            if (school.length() > 10) {
+            if (school.length() > Constant.INT_10) {
                 return "教师所属单位长度不超过10个字符";
             }
             teacherVo.setSchool(school);
@@ -757,7 +758,7 @@ public class UserController {
         String teachDate = teacherVo.getTeachDate();
         if (StringUtils.isNotEmpty(teachDate)) {
             teachDate = teachType.trim();
-            if (teachDate.length() > 10) {
+            if (teachDate.length() > Constant.INT_10) {
                 return "从教年月长度不超过10个字符";
             }
             teacherVo.setTeachDate(teachDate);
@@ -765,7 +766,7 @@ public class UserController {
         String status = teacherVo.getStatus();
         if (StringUtils.isNotBlank(status)) {
             status = status.trim();
-            if (status.length() > 10) {
+            if (status.length() > Constant.INT_10) {
                 return "当前状态长度不超过10个字符";
             }
             teacherVo.setStatus(status);
@@ -774,7 +775,7 @@ public class UserController {
         String tecposition = teacherVo.getTecposition();
         if (StringUtils.isNotBlank(tecposition)) {
             tecposition = tecposition.trim();
-            if (tecposition.length() > 20) {
+            if (tecposition.length() > Constant.INT_20) {
                 return "技术职务长度不超过20个字符";
             }
             teacherVo.setTecposition(tecposition);
@@ -782,7 +783,7 @@ public class UserController {
         String memo = teacherVo.getMemo();
         if (StringUtils.isNotEmpty(memo)) {
             memo = memo.trim();
-            if (memo.length() > 100) {
+            if (memo.length() > Constant.INT_100) {
                 return "备注长度不超过100个字符";
             }
             teacherVo.setMemo(memo);

@@ -19,7 +19,17 @@ public enum CodeTypeEnum {
     /**
      * 资源
      */
-    RESOURCE('R')
+    RESOURCE('R'),
+
+    /**
+     * Excel映射配置
+     */
+    EXCEL('E'),
+
+    /**
+     * Excel上传任务
+     */
+    TASK('T'),
 
     ;
 

@@ -13,3 +13,7 @@ CREATE TABLE `admin_system`(
 
 INSERT INTO `admin_system`(`system_id`, `system_name`,`created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
+
+--- EXCEL 系统 新增 ---
+INSERT INTO `admin_system`(`system_id`, `system_name`,`created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '00000000000000000000', NOW(), '00000000000000000000', NOW(), 0);
