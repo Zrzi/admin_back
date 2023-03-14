@@ -14,6 +14,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -34,12 +35,14 @@ public class LogAspect {
 
     @Around("logPoint()")
     public Object around(ProceedingJoinPoint pjp) {
+        String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        Method method = signature.getMethod();
+        String methodName = method.getName();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start(methodName + "/" + userNo);
         try {
-            String userNo = Optional.ofNullable(UserThreadLocal.getUser()).orElseGet(UserDto::new).getUserNo();
-            MethodSignature signature = (MethodSignature) pjp.getSignature();
-            Method method = signature.getMethod();
             LogAnnotation annotation = method.getAnnotation(LogAnnotation.class);
-            String methodName = method.getName();
             Object[] args = pjp.getArgs();
             logTask.logBeforeMethod(userNo, methodName, annotation.inEnabled() ? args : null);
             Object result = pjp.proceed(args);
@@ -47,6 +50,10 @@ public class LogAspect {
             return result;
         } catch (Throwable e) {
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
+        } finally {
+            stopWatch.stop();
+            long totalTimeMillis = stopWatch.getTotalTimeMillis();
+            logTask.logTimeCount(userNo, methodName, totalTimeMillis);
         }
     }
 

@@ -15,6 +15,7 @@ import com.admin.admin_back.pojo.vo.ExcelVo;
 import com.admin.admin_back.pojo.vo.GetSqlColumnsVo;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
+import com.admin.admin_back.service.LogTask;
 import com.admin.admin_back.utils.GenerateCodeUtil;
 import com.alibaba.excel.EasyExcel;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,9 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Autowired
     private ExcelHelper excelHelper;
+
+    @Autowired
+    private LogTask logTask;
 
     @Override
     public List<ExcelVo> getExcels() {
@@ -157,7 +161,7 @@ public class ExcelServiceImpl implements ExcelService {
     @Transactional(rollbackFor = RuntimeException.class)
     public String uploadExcel(MultipartFile file) {
         String userNo = UserThreadLocal.getUser().getUserNo();
-        ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper, sqlMapper);
+        ExcelAnalysisListener listener = new ExcelAnalysisListener(excelMapper, excelColumnMapper, sqlMapper, logTask);
         try {
             EasyExcel
                     .read(file.getInputStream(), listener)

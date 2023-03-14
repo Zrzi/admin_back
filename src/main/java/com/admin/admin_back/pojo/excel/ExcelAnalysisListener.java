@@ -7,7 +7,7 @@ import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.*;
 import com.admin.admin_back.pojo.exception.ExcelDataException;
 import com.admin.admin_back.pojo.exception.ExcelNameNotFoundException;
-import com.admin.admin_back.pojo.exception.SqlColumnNameNotFoundException;
+import com.admin.admin_back.service.LogTask;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import org.apache.commons.lang3.StringUtils;
@@ -94,10 +94,19 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
      */
     private final SqlMapper sqlMapper;
 
-    public ExcelAnalysisListener(ExcelMapper excelMapper, ExcelColumnMapper excelColumnMapper, SqlMapper sqlMapper) {
+    /**
+     * 通过构造函数传入日志service
+     */
+    private final LogTask logTask;
+
+    public ExcelAnalysisListener(ExcelMapper excelMapper,
+                                 ExcelColumnMapper excelColumnMapper,
+                                 SqlMapper sqlMapper,
+                                 LogTask logTask) {
         this.excelMapper = excelMapper;
         this.excelColumnMapper = excelColumnMapper;
         this.sqlMapper = sqlMapper;
+        this.logTask = logTask;
     }
 
     public ExcelDto getExcelDto() {
@@ -128,9 +137,11 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         this.isColumnName = false;
         for (Integer key : linkedHashMap.keySet()) {
             String excelColumnName = linkedHashMap.get(key);
-            String sqlColumnName = excelSqlColumnMapper.get(excelColumnName);
-            if (StringUtils.isBlank(sqlColumnName)) {
-                throw new SqlColumnNameNotFoundException(excelColumnName);
+            String sqlColumnName = null;
+            if (excelSqlColumnMapper.containsKey(excelColumnName)) {
+                sqlColumnName = excelSqlColumnMapper.get(excelColumnName);
+            } else {
+                logTask.logInfo(excelColumnName + "对应的配置不存在");
             }
             columnNames.add(sqlColumnName);
         }
@@ -143,6 +154,9 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         for (Integer key : linkedHashMap.keySet()) {
             if (key < columnNames.size()) {
                 String sqlColumnName = columnNames.get(key);
+                if (StringUtils.isBlank(sqlColumnName)) {
+                    continue;
+                }
                 Object value = linkedHashMap.get(key);
                 String dataType = sqlColumnInfoMap.get(sqlColumnName).getDataType();
                 switch (dataType) {

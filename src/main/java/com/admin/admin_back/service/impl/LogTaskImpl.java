@@ -38,6 +38,16 @@ public class LogTaskImpl implements LogTask {
 
     @Override
     @Async("logTaskExecutor")
+    public void logTimeCount(String userNo, String methodName, long totalTimeMillis) {
+        if (StringUtils.isBlank(userNo)) {
+            logger.info("执行方法：{}，总共耗时：{}毫秒", methodName, totalTimeMillis);
+        } else {
+            logger.info("用户名：{}，执行方法：{}，总共耗时：{}毫秒", userNo, methodName, totalTimeMillis);
+        }
+    }
+
+    @Override
+    @Async("logTaskExecutor")
     public void logInfo(String info) {
         logger.info(info);
     }
