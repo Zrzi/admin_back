@@ -14,6 +14,7 @@ import com.admin.admin_back.pojo.vo.StudentVo;
 import com.admin.admin_back.pojo.vo.TeacherVo;
 import com.admin.admin_back.service.UserService;
 import com.admin.admin_back.utils.JwtTokenUtil;
+import com.admin.admin_back.utils.SearchKeyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -150,18 +151,21 @@ public class UserController {
         }
     }
 
+    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据用户类型获取用户信息列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userType", value = "用户类型", required = true),
-            @ApiImplicitParam(name = "start", value = "起始页", required = true),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true),
+            @ApiImplicitParam(name = "start", value = "起始页", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
+            @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
     @LogAnnotation
     @CheckRole("getUser")
     @GetMapping("/user/get")
     public Result<?> getUser(@RequestParam("userType") String userType,
-                             @RequestParam("start") Integer start,
-                             @RequestParam("pageSize") Integer pageSize) {
+                             @RequestParam(value = "start", required = false) Integer start,
+                             @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                             @RequestParam(value = "searchKey", required = false) String searchKey) {
         UserTypeEnum userTypeEnum = UserTypeEnum.findUserTypeByMessage(userType);
         if (Objects.isNull(userTypeEnum)) {
             return new Result<>(ResponseMessage.USER_TYOE_ERROR);
@@ -172,7 +176,8 @@ public class UserController {
         if (pageSize == null || pageSize < 0) {
             pageSize = 10;
         }
-        return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize));
+        searchKey = SearchKeyUtil.handle(searchKey);
+        return new Result<>(ResponseMessage.SUCCESS, userService.getUsersPage(userTypeEnum, start, pageSize, searchKey));
     }
 
     @ApiOperation("添加用户接口")

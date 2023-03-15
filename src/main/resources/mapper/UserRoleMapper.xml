@@ -26,7 +26,10 @@
             FROM `admin_user_role`
             WHERE `role_id` = #{roleId}
               AND `status` = 0
-        )
+          )
+        <if test="searchKey != null">
+            AND (`user_no` LIKE #{searchKey} OR `user_name` LIKE #{searchKey})
+        </if>
     </select>
 
     <select id="findUserRoleByNo" resultMap="baseMap" parameterType="java.lang.String">
@@ -41,6 +44,14 @@
         FROM `admin_user_role`
         WHERE `role_id` = #{roleId}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND `user_no` IN (
+                  SELECT `user_no`
+                  FROM `admin_user`
+                  WHERE `status` = 0
+                    AND (`user_no` LIKE #{searchKey} OR `user_name` LIKE #{searchKey})
+              )
+          </if>
     </select>
 
     <select id="findUserRolePageByRoleId" resultMap="baseMap">
@@ -48,6 +59,14 @@
         FROM `admin_user_role`
         WHERE `role_id` = #{roleId}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND `user_no` IN (
+                  SELECT `user_no`
+                  FROM `admin_user`
+                  WHERE `status` = 0
+                    AND (`user_no` LIKE #{searchKey} OR `user_name` LIKE #{searchKey})
+              )
+          </if>
         LIMIT #{start}, #{pageSize}
     </select>
 

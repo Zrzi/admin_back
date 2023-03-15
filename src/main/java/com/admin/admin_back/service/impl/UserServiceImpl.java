@@ -150,12 +150,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize) {
+    public UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize, String searchKey) {
         UsersVo usersVo = new UsersVo();
         switch (userTypeEnum) {
             case STUDENT:
                 List<String> studentNos =
-                        userMapper.findUserNoPageByUserType(UserTypeEnum.STUDENT.code, start, pageSize);
+                        userMapper.findUserNoPageByUserType(UserTypeEnum.STUDENT.code, start, pageSize, searchKey);
                 List<StudentVo> studentVos = new ArrayList<>();
                 if (!CollectionUtils.isEmpty(studentNos)) {
                     for (String studentNo : studentNos) {
@@ -165,11 +165,11 @@ public class UserServiceImpl implements UserService {
                     }
                 }
                 usersVo.setStudents(studentVos);
-                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
+                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code, searchKey));
                 break;
             case TEACHER:
                 List<String> teacherNos =
-                        userMapper.findUserNoPageByUserType(UserTypeEnum.TEACHER.code, start, pageSize);
+                        userMapper.findUserNoPageByUserType(UserTypeEnum.TEACHER.code, start, pageSize, searchKey);
                 List<TeacherVo> teacherVos = new ArrayList<>();
                 if (!CollectionUtils.isEmpty(teacherNos)) {
                     for (String teacherNo : teacherNos) {
@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
                     }
                 }
                 usersVo.setTeachers(teacherVos);
-                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code));
+                usersVo.setTotal(userMapper.findUserCountByUserType(userTypeEnum.code, searchKey));
                 break;
             default:
                 // 不返回系统用户

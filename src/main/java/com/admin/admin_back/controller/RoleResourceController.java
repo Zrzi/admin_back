@@ -10,6 +10,7 @@ import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.form.EditRoleResourceForm;
 import com.admin.admin_back.pojo.vo.RoleResourceVo;
 import com.admin.admin_back.service.RoleResourceService;
+import com.admin.admin_back.utils.SearchKeyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -31,16 +32,19 @@ public class RoleResourceController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    // todo 测试 添加searchKey，代表资源名称或资源路径
     @ApiOperation("根据系统编码与角色编码获取角色资源关联信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),
-            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
+            @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表资源名称或资源路径", required = false)
     })
     @LogAnnotation
     @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
     public Result<?> getRoleResources(@RequestParam("systemId") String systemId,
-                                      @RequestParam("roleId") String roleId) {
+                                      @RequestParam("roleId") String roleId,
+                                      @RequestParam(value = "searchKey", required = false) String searchKey) {
         systemId = systemId.trim();
         roleId = roleId.trim();
         if (StringUtils.isBlank(systemId)) {
@@ -49,8 +53,9 @@ public class RoleResourceController {
         if (StringUtils.isBlank(roleId)) {
             return new Result<>(ResponseMessage.ROLE_ID_IS_NULL);
         }
+        searchKey = SearchKeyUtil.handle(searchKey);
         try {
-            List<RoleResourceVo> roleResources = roleResourceService.getRoleResources(systemId, roleId);
+            List<RoleResourceVo> roleResources = roleResourceService.getRoleResources(systemId, roleId, searchKey);
             return new Result<>(ResponseMessage.SUCCESS, roleResources);
         } catch (SystemExistException exception) {
             return new Result<>(ResponseMessage.SYSTEM_NOT_FOUNT);

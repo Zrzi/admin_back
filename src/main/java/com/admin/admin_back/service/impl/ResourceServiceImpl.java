@@ -35,8 +35,8 @@ public class ResourceServiceImpl implements ResourceService {
     private SystemMapper systemMapper;
 
     @Override
-    public Integer getResourcesCount(String systemId) {
-        return resourceMapper.findResourceCount(systemId);
+    public Integer getResourcesCount(String systemId, String searchKey) {
+        return resourceMapper.findResourceCount(systemId, searchKey);
     }
 
     @Override
@@ -125,8 +125,8 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer pageSize) {
-        List<ResourceDto> resourceBySystemId = resourceMapper.findResourcePageBySystemId(systemId, start, pageSize);
+    public List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer pageSize, String searchKey) {
+        List<ResourceDto> resourceBySystemId = resourceMapper.findResourcePageBySystemId(systemId, start, pageSize, searchKey);
         if (CollectionUtils.isEmpty(resourceBySystemId)) {
             throw new BaseException("资源不存在");
         }

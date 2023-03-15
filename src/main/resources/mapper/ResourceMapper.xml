@@ -26,6 +26,9 @@
         FROM `admin_resource`
         WHERE `system_id` = #{systemId}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND (`resource_name` LIKE #{searchKey} OR `resource_url` LIKE #{searchKey})
+          </if>
     </select>
 
     <select id="findResourceByUserNo" resultMap="baseMap" parameterType="java.lang.String">
@@ -87,6 +90,9 @@
         FROM `admin_resource`
         WHERE `system_id` = #{systemId}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND (`resource_name` LIKE #{searchKey} OR `resource_url` LIKE #{searchKey})
+          </if>
         LIMIT #{start}, #{pageSize}
     </select>
 
@@ -95,6 +101,16 @@
         FROM `admin_resource`
         WHERE `system_id` = #{systemId}
           AND `status` = 0
+    </select>
+
+    <select id="findResourceBySystemIdAndSearchKey" resultMap="baseMap" parameterType="java.lang.String">
+        SELECT `id`, `resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        FROM `admin_resource`
+        WHERE `system_id` = #{systemId}
+          AND `status` = 0
+          <if test="searchKey != null">
+              AND (`resource_name` LIKE #{searchKey} OR `resource_url` LIKE #{searchKey})
+          </if>
     </select>
 
 <!--    <select id="findResourceByParentResource" resultType="java.lang.String" parameterType="java.lang.String">-->

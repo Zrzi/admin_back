@@ -43,9 +43,9 @@ public class MemberRoleServiceImpl implements MemberRoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public List<UserVo> getUnaddedUserByRoleId(String roleId) {
+    public List<UserVo> getUnaddedUserByRoleId(String roleId, String searchKey) {
         List<UserVo> result = new ArrayList<>();
-        List<String> unaddedUser = userRoleMapper.findUnaddedUser(roleId);
+        List<String> unaddedUser = userRoleMapper.findUnaddedUser(roleId, searchKey);
         if (CollectionUtils.isEmpty(unaddedUser)) {
             return result;
         }
@@ -60,15 +60,15 @@ public class MemberRoleServiceImpl implements MemberRoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public Integer getMemberRolesCount(String roleId) {
-        return userRoleMapper.findUserRoleCountByRoleId(roleId);
+    public Integer getMemberRolesCount(String roleId, String searchKey) {
+        return userRoleMapper.findUserRoleCountByRoleId(roleId, searchKey);
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize) {
+    public List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize, String searchKey) {
         List<UserVo> result = new ArrayList<>();
-        List<UserRoleDto> userRoleDtos = userRoleMapper.findUserRolePageByRoleId(roleId, start, pageSize);
+        List<UserRoleDto> userRoleDtos = userRoleMapper.findUserRolePageByRoleId(roleId, start, pageSize, searchKey);
         if (CollectionUtils.isEmpty(userRoleDtos)) {
             return result;
         }

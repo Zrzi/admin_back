@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ResourceService {
 
-    Integer getResourcesCount(String systemId);
+    Integer getResourcesCount(String systemId, String searchKey);
 
     Boolean checkAuthority(String resourceId);
 
@@ -22,7 +22,7 @@ public interface ResourceService {
 
     List<ResourceVo> getResourceByUserNoAndResourceType(String userNo, ResourceTypeEnum resourceTypeEnum);
 
-    List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer end);
+    List<ResourceVo> getResourcesPageBySystemId(String systemId, Integer start, Integer end, String searchKey);
 
     List<ResourceVo> getResourcesBySystemId(String systemId);
 

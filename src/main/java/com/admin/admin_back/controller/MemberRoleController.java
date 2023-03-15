@@ -14,6 +14,7 @@ import com.admin.admin_back.pojo.form.DeleteMemberRoleForm;
 import com.admin.admin_back.pojo.form.EditMemberRoleForm;
 import com.admin.admin_back.pojo.vo.UserVo;
 import com.admin.admin_back.service.MemberRoleService;
+import com.admin.admin_back.utils.SearchKeyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,26 +38,30 @@ public class MemberRoleController {
     @Autowired
     private MemberRoleService memberRoleService;
 
+    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据角色编码获取用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
-            @ApiImplicitParam(name = "start", value = "起始页", required = true),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true)
+            @ApiImplicitParam(name = "start", value = "起始页", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
+            @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
     @LogAnnotation
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
     public Result<?> getMemberRole(@RequestParam("roleId") String roleId,
                                    @RequestParam(value = "start", required = false) Integer start,
-                                   @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                   @RequestParam(value = "searchKey", required = false) String searchKey) {
         if (start == null || start < 0) {
             start = 0;
         }
         if (pageSize == null || pageSize < 0) {
             pageSize = 10;
         }
-        List<UserVo> memberRoles = memberRoleService.getMemberRolePageByRoleId(roleId, start, pageSize);
-        Integer count = memberRoleService.getMemberRolesCount(roleId);
+        searchKey = SearchKeyUtil.handle(searchKey);
+        List<UserVo> memberRoles = memberRoleService.getMemberRolePageByRoleId(roleId, start, pageSize, searchKey);
+        Integer count = memberRoleService.getMemberRolesCount(roleId, searchKey);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("users", memberRoles);
             put("count", count);
@@ -64,15 +69,19 @@ public class MemberRoleController {
         return new Result<>(ResponseMessage.SUCCESS, map);
     }
 
+    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据角色编码获取不具有该角色的用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
+            @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
+            @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
     @LogAnnotation
     @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
-    public Result<?> getUnaddedUser(@RequestParam("roleId") String roleId) {
-        return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId));
+    public Result<?> getUnaddedUser(@RequestParam("roleId") String roleId,
+                                    @RequestParam(value = "searchKey", required = false) String searchKey) {
+        searchKey = SearchKeyUtil.handle(searchKey);
+        return new Result<>(ResponseMessage.SUCCESS, memberRoleService.getUnaddedUserByRoleId(roleId, searchKey));
     }
 
     @ApiOperation("添加用户角色关联")

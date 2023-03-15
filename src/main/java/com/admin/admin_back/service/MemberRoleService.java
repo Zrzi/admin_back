@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface MemberRoleService {
 
-    List<UserVo> getUnaddedUserByRoleId(String roleId);
+    List<UserVo> getUnaddedUserByRoleId(String roleId, String searchKey);
 
-    Integer getMemberRolesCount(String roleId);
+    Integer getMemberRolesCount(String roleId, String searchKey);
 
-    List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize);
+    List<UserVo> getMemberRolePageByRoleId(String roleId, Integer start, Integer pageSize, String searchKey);
 
     List<UserVo> getMemberRoleByRoleId(String roleId);
 

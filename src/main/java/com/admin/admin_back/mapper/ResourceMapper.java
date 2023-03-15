@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface ResourceMapper {
 
-    Integer findResourceCount(@Param("systemId") String systemId);
+    Integer findResourceCount(@Param("systemId") String systemId, @Param("searchKey") String searchKey);
 
     List<ResourceDto> findResourceByUserNo(String userNo);
 
@@ -23,9 +23,15 @@ public interface ResourceMapper {
 
     List<ResourceDto> findResourceByUserNoAndResourceType(@Param("userNo") String userNo, @Param("resourceType") Integer resourceType);
 
-    List<ResourceDto> findResourcePageBySystemId(@Param("systemId") String systemId, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+    List<ResourceDto> findResourcePageBySystemId(@Param("systemId") String systemId,
+                                                 @Param("start") Integer start,
+                                                 @Param("pageSize") Integer pageSize,
+                                                 @Param("searchKey") String searchKey);
 
     List<ResourceDto> findResourceBySystemId(String systemId);
+
+    List<ResourceDto> findResourceBySystemIdAndSearchKey(@Param("systemId") String systemId,
+                                                         @Param("searchKey") String searchKey);
 
     // List<String> findResourceByParentResource(String parentResource);
 

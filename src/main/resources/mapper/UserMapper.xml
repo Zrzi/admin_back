@@ -24,11 +24,14 @@
           AND `status` = 0
     </select>
 
-    <select id="findUserCountByUserType" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    <select id="findUserCountByUserType" resultType="java.lang.Integer">
         SELECT COUNT(`id`)
         FROM `admin_user`
         WHERE `user_type` = #{userType}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND (`user_no` LIKE #{searchKey} OR `user_name` LIKE #{searchKey})
+          </if>
     </select>
 
     <select id="findUserNoPageByUserType" resultType="java.lang.String">
@@ -36,6 +39,9 @@
         FROM `admin_user`
         WHERE `user_type` = #{userType}
           AND `status` = 0
+          <if test="searchKey != null">
+              AND (`user_no` LIKE #{searchKey} OR `user_name` LIKE #{searchKey})
+          </if>
         LIMIT #{start}, #{pageSize}
     </select>
 

@@ -19,7 +19,7 @@ public interface UserService {
 
     TokenVo refreshToken(String refreshToken);
 
-    UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize);
+    UsersVo getUsersPage(UserTypeEnum userTypeEnum, Integer start, Integer pageSize, String searchKey);
 
     StudentVo getStudentByStuNo(String userNo);
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RoleResourceService {
 
-    List<RoleResourceVo> getRoleResources(String systemId, String roleId);
+    List<RoleResourceVo> getRoleResources(String systemId, String roleId, String searchKey);
 
     void editRoleResources(EditRoleResourceForm editRoleResourceForm);
 

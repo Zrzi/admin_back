@@ -46,7 +46,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public List<RoleResourceVo> getRoleResources(String systemId, String roleId) {
+    public List<RoleResourceVo> getRoleResources(String systemId, String roleId, String searchKey) {
         SystemDto system = systemMapper.findSystemBySystemId(systemId);
         if (Objects.isNull(system)) {
             throw new SystemExistException();
@@ -55,7 +55,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
         if (Objects.isNull(role)) {
             throw new RoleExistException();
         }
-        List<ResourceDto> resourceDtos = resourceMapper.findResourceBySystemId(systemId);
+        List<ResourceDto> resourceDtos = resourceMapper.findResourceBySystemIdAndSearchKey(systemId, searchKey);
         List<RoleResourceVo> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(resourceDtos)) {
             return result;

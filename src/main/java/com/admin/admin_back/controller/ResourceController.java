@@ -13,6 +13,7 @@ import com.admin.admin_back.pojo.form.ResourceForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.ResourceVo;
 import com.admin.admin_back.service.ResourceService;
+import com.admin.admin_back.utils.SearchKeyUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -127,18 +128,21 @@ public class ResourceController {
 //        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
 //    }
 
+    // todo 测试 添加searchKey，代表资源名称或资源路径
     @ApiOperation("根据系统编码获取资源列表，分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),
-            @ApiImplicitParam(name = "start", value = "起始页", required = true),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true)
+            @ApiImplicitParam(name = "start", value = "起始页", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
+            @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表资源名称或资源路径", required = false)
     })
     @LogAnnotation
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
     public Result<?> getResourcesBySystemId(@RequestParam("systemId") String systemId,
                                             @RequestParam(value = "start", required = false) Integer start,
-                                            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+                                            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                            @RequestParam(value = "searchKey", required = false) String searchKey) {
         try {
             if (start == null || start < 0) {
                 start = 0;
@@ -146,8 +150,9 @@ public class ResourceController {
             if (pageSize == null || pageSize < 0) {
                 pageSize = 10;
             }
-            List<ResourceVo> resourceVos = resourceService.getResourcesPageBySystemId(systemId, start, pageSize);
-            Integer total = resourceService.getResourcesCount(systemId);
+            searchKey = SearchKeyUtil.handle(searchKey);
+            List<ResourceVo> resourceVos = resourceService.getResourcesPageBySystemId(systemId, start, pageSize, searchKey);
+            Integer total = resourceService.getResourcesCount(systemId, searchKey);
             Map<String, Object> map = new HashMap<String, Object>(){{
                 put("resources", resourceVos);
                 put("total", total);
