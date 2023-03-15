@@ -15,7 +15,11 @@ import com.admin.admin_back.utils.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
@@ -44,6 +48,9 @@ public class ExcelHelperService implements ExcelHelper {
     @Autowired
     private EventPublisher eventPublisher;
 
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
     @Override
     @Async("uploadExcelExecutor")
     @Transactional(rollbackFor = RuntimeException.class)
@@ -63,6 +70,9 @@ public class ExcelHelperService implements ExcelHelper {
             Map<String, Object> primaryKeys = excelDataDto.getPrimaryKeys();
             Map<String, Object> data = excelDataDto.getData();
             boolean exist = checkIfExistDuplicate(excelDto, excelDataDto, uniqueKeys);
+            DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+            transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+            TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
             try {
                 if (exist) {
                     if (isCover) {
@@ -86,8 +96,10 @@ public class ExcelHelperService implements ExcelHelper {
                     insertData(excelDto, keys, values);
                     eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
                 }
+                transactionManager.commit(transactionStatus);
             } catch (Exception exception) {
                 isSuccess = false;
+                transactionManager.rollback(transactionStatus);
                 taskErrorDto.setErrorMessage("第" + (i + 1) + "条数据" + (exist ? "更新" : "插入") + "出现异常；");
                 taskErrorMapper.insertTaskError(taskErrorDto);
                 logTask.logInfo(exception.getMessage());
