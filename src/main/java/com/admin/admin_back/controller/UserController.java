@@ -151,7 +151,6 @@ public class UserController {
         }
     }
 
-    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据用户类型获取用户信息列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userType", value = "用户类型", required = true),

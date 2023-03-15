@@ -32,7 +32,6 @@ public class RoleResourceController {
     @Autowired
     private RoleResourceService roleResourceService;
 
-    // todo 测试 添加searchKey，代表资源名称或资源路径
     @ApiOperation("根据系统编码与角色编码获取角色资源关联信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),

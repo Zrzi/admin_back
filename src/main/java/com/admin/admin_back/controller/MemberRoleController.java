@@ -38,7 +38,6 @@ public class MemberRoleController {
     @Autowired
     private MemberRoleService memberRoleService;
 
-    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据角色编码获取用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
@@ -69,7 +68,6 @@ public class MemberRoleController {
         return new Result<>(ResponseMessage.SUCCESS, map);
     }
 
-    // todo 测试 添加searchKey，代表用户名或者姓名
     @ApiOperation("根据角色编码获取不具有该角色的用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),

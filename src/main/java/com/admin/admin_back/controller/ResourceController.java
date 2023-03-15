@@ -128,7 +128,6 @@ public class ResourceController {
 //        return new Result<>(ResponseMessage.SUCCESS, resourceService.getResourcesCount(systemId));
 //    }
 
-    // todo 测试 添加searchKey，代表资源名称或资源路径
     @ApiOperation("根据系统编码获取资源列表，分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "systemId", value = "系统编码", required = true),
