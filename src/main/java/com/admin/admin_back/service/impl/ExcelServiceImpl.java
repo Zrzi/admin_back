@@ -192,6 +192,8 @@ public class ExcelServiceImpl implements ExcelService {
             throw new ExcelTaskExistException();
         }
         ExcelTaskVo excelTaskVo = new ExcelTaskVo();
+        excelTaskVo.setTaskSuccessInsert(taskDto.getTaskSuccessInsert());
+        excelTaskVo.setTaskSuccessUpdate(taskDto.getTaskSuccessUpdate());
         switch (taskDto.getTaskStatus()) {
             case Constant.TASK_CREATE:
                 excelTaskVo.setTaskStatus(Constant.TASK_CREATE);

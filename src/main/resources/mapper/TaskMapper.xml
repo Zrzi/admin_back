@@ -8,6 +8,8 @@
         <id column="id" property="id" />
         <result column="task_id" property="taskId" />
         <result column="task_status" property="taskStatus" />
+        <result column="task_success_insert" property="taskSuccessInsert" />
+        <result column="task_success_update" property="taskSuccessUpdate" />
         <result column="created_by" property="createdBy" />
         <result column="created_date" property="createdDate" />
         <result column="updated_by" property="updatedBy" />
@@ -15,7 +17,7 @@
     </resultMap>
 
     <select id="findTaskByTaskId" resultMap="baseMap">
-        SELECT `id`, `task_id`, `task_status`, `created_by`, `created_date`, `updated_by`, `updated_date`
+        SELECT `id`, `task_id`, `task_status`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
         FROM `admin_task`
         WHERE `task_id` = #{taskId}
     </select>
@@ -28,6 +30,8 @@
     <update id="updateTask" parameterType="com.admin.admin_back.pojo.dto.TaskDto">
         UPDATE `admin_task`
         SET `task_status` = #{taskDto.taskStatus},
+            `task_success_insert` = #{taskDto.taskSuccessInsert},
+            `task_success_update` = #{taskDto.taskSuccessUpdate},
             `updated_by` = #{taskDto.updatedBy},
             `updated_date` = NOW()
         WHERE `task_id` = #{taskDto.taskId}

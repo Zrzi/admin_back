@@ -15,6 +15,10 @@ public class TaskDto {
 
     private Integer taskStatus;
 
+    private Integer taskSuccessInsert;
+
+    private Integer taskSuccessUpdate;
+
     private String createdBy;
 
     private Date createdDate;
@@ -47,6 +51,22 @@ public class TaskDto {
 
     public void setTaskStatus(Integer taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public Integer getTaskSuccessInsert() {
+        return taskSuccessInsert;
+    }
+
+    public void setTaskSuccessInsert(Integer taskSuccessInsert) {
+        this.taskSuccessInsert = taskSuccessInsert;
+    }
+
+    public Integer getTaskSuccessUpdate() {
+        return taskSuccessUpdate;
+    }
+
+    public void setTaskSuccessUpdate(Integer taskSuccessUpdate) {
+        this.taskSuccessUpdate = taskSuccessUpdate;
     }
 
     public String getCreatedBy() {

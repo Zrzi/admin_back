@@ -18,6 +18,12 @@ public class ExcelTaskVo {
     @ApiModelProperty("异常信息列表")
     private List<String> errorMessage;
 
+    @ApiModelProperty("成功插入数据个数")
+    private int taskSuccessInsert;
+
+    @ApiModelProperty("成功修改数据个数")
+    private int taskSuccessUpdate;
+
     public ExcelTaskVo() {}
 
     public int getTaskStatus() {
@@ -34,6 +40,22 @@ public class ExcelTaskVo {
 
     public void setErrorMessage(List<String> errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public int getTaskSuccessInsert() {
+        return taskSuccessInsert;
+    }
+
+    public void setTaskSuccessInsert(int taskSuccessInsert) {
+        this.taskSuccessInsert = taskSuccessInsert;
+    }
+
+    public int getTaskSuccessUpdate() {
+        return taskSuccessUpdate;
+    }
+
+    public void setTaskSuccessUpdate(int taskSuccessUpdate) {
+        this.taskSuccessUpdate = taskSuccessUpdate;
     }
 
     @Override
