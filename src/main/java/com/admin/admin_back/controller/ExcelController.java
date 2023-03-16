@@ -6,12 +6,14 @@ import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
 import com.admin.admin_back.pojo.constant.Constant;
+import com.admin.admin_back.pojo.event.UploadFinishEvent;
 import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.DeleteExcelForm;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.vo.ExcelVo;
 import com.admin.admin_back.service.ExcelService;
+import com.admin.admin_back.utils.EventPublisher;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,6 +39,9 @@ public class ExcelController {
 
     @Autowired
     private ExcelService excelService;
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @ApiOperation("获取所有Excel映射配置")
     @LogAnnotation
@@ -139,7 +144,7 @@ public class ExcelController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "Excel文件", required = true)
     })
-    @Limit(200)
+    @Limit(value = 200, lazy = true)
     @LogAnnotation(inEnabled = false)
     @CheckRole("uploadExcel")
     @PostMapping("/excel/upload")
@@ -156,12 +161,16 @@ public class ExcelController {
             String result = excelService.uploadExcel(file);
             return new Result<>(ResponseMessage.SUCCESS, result);
         } catch (ExcelAnalysisException exception) {
+            // excel读取过程中出现异常，释放令牌
+            eventPublisher.publishEvent(new UploadFinishEvent(this, "com.admin.admin_back.controller.ExcelController.uploadExcel"));
             if (exception.getCause() instanceof BaseException) {
                 return new Result<>(ResponseMessage.EXCEL_DATA_ERROR, null, exception.getCause().getMessage());
             } else {
                 return new Result<>(ResponseMessage.SYSTEM_ERROR);
             }
         } catch (Exception exception) {
+            // 后续代码运行过程中出现异常，可能与数据库、线程池相关，释放令牌
+            eventPublisher.publishEvent(new UploadFinishEvent(this, "com.admin.admin_back.controller.ExcelController.uploadExcel"));
             return new Result<>(ResponseMessage.SYSTEM_ERROR);
         }
     }

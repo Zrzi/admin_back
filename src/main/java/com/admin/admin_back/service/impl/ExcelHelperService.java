@@ -6,6 +6,7 @@ import com.admin.admin_back.mapper.TaskMapper;
 import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.*;
 import com.admin.admin_back.pojo.event.ExcelEvent;
+import com.admin.admin_back.pojo.event.UploadFinishEvent;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.LogTask;
 import com.admin.admin_back.utils.EventPublisher;
@@ -59,64 +60,69 @@ public class ExcelHelperService implements ExcelHelper {
                           List<List<String>> uniqueKeys,
                           boolean isCover,
                           String userNo) {
-        TaskErrorDto taskErrorDto = new TaskErrorDto();
-        taskErrorDto.setTaskId(taskCode);
-        taskErrorDto.setCreatedBy(userNo);
-        boolean isSuccess = true;
-        int size = dataList.size();
-        int insert = 0;
-        int update = 0;
-        for (int i=0; i<size; ++i) {
-            ExcelDataDto excelDataDto = dataList.get(i);
-            Map<String, Object> primaryKeys = excelDataDto.getPrimaryKeys();
-            Map<String, Object> data = excelDataDto.getData();
-            String flag = checkIfExistDuplicate(excelDto, excelDataDto, uniqueKeys);
-            boolean exist = StringUtils.isNotBlank(flag);
-            DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-            transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-            TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
-            try {
-                if (exist) {
-                    if (isCover) {
-                        // 存在数据，设置为覆盖
-                        updateDate(excelDto, data, primaryKeys, uniqueKeys);
-                        eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, true));
-                        ++update;
+        try {
+            TaskErrorDto taskErrorDto = new TaskErrorDto();
+            taskErrorDto.setTaskId(taskCode);
+            taskErrorDto.setCreatedBy(userNo);
+            boolean isSuccess = true;
+            int size = dataList.size();
+            int insert = 0;
+            int update = 0;
+            for (int i=0; i<size; ++i) {
+                ExcelDataDto excelDataDto = dataList.get(i);
+                Map<String, Object> primaryKeys = excelDataDto.getPrimaryKeys();
+                Map<String, Object> data = excelDataDto.getData();
+                String flag = checkIfExistDuplicate(excelDto, excelDataDto, uniqueKeys);
+                boolean exist = StringUtils.isNotBlank(flag);
+                DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+                transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+                TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
+                try {
+                    if (exist) {
+                        if (isCover) {
+                            // 存在数据，设置为覆盖
+                            updateDate(excelDto, data, primaryKeys, uniqueKeys);
+                            eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, true));
+                            ++update;
+                        } else {
+                            // 存在数据，设置为不覆盖
+                            isSuccess = false;
+                            taskErrorDto.setErrorMessage("第" + (i + 1) + "条数据，" + flag);
+                            taskErrorMapper.insertTaskError(taskErrorDto);
+                            logTask.logInfo(taskErrorDto.getErrorMessage());
+                        }
                     } else {
-                        // 存在数据，设置为不覆盖
-                        isSuccess = false;
-                        taskErrorDto.setErrorMessage("第" + (i + 1) + "条数据，" + flag);
-                        taskErrorMapper.insertTaskError(taskErrorDto);
-                        logTask.logInfo(taskErrorDto.getErrorMessage());
+                        // 不存在数据，直接插入
+                        LinkedList<String> keys = new LinkedList<>();
+                        LinkedList<Object> values = new LinkedList<>();
+                        data.forEach((key, value) -> {
+                            keys.addLast(key);
+                            values.addLast(value);
+                        });
+                        insertData(excelDto, keys, values);
+                        eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
+                        ++insert;
                     }
-                } else {
-                    // 不存在数据，直接插入
-                    LinkedList<String> keys = new LinkedList<>();
-                    LinkedList<Object> values = new LinkedList<>();
-                    data.forEach((key, value) -> {
-                        keys.addLast(key);
-                        values.addLast(value);
-                    });
-                    insertData(excelDto, keys, values);
-                    eventPublisher.publishEvent(new ExcelEvent(this, excelDto.getSqlName(), data, userNo, false));
-                    ++insert;
+                    transactionManager.commit(transactionStatus);
+                } catch (Exception exception) {
+                    isSuccess = false;
+                    transactionManager.rollback(transactionStatus);
+                    taskErrorDto.setErrorMessage(excelDto.getExcelName() + "，第" + (i + 1) + "条数据，" + (exist ? "更新" : "插入") + "出现服务器异常。");
+                    taskErrorMapper.insertTaskError(taskErrorDto);
+                    logTask.logInfo(exception.getMessage());
                 }
-                transactionManager.commit(transactionStatus);
-            } catch (Exception exception) {
-                isSuccess = false;
-                transactionManager.rollback(transactionStatus);
-                taskErrorDto.setErrorMessage(excelDto.getExcelName() + "，第" + (i + 1) + "条数据，" + (exist ? "更新" : "插入") + "出现服务器异常。");
-                taskErrorMapper.insertTaskError(taskErrorDto);
-                logTask.logInfo(exception.getMessage());
             }
+            TaskDto taskDto = new TaskDto();
+            taskDto.setTaskId(taskCode);
+            taskDto.setTaskStatus(isSuccess ? Constant.TASK_SUCCESS : Constant.TASK_ERROR);
+            taskDto.setTaskSuccessInsert(insert);
+            taskDto.setTaskSuccessUpdate(update);
+            taskDto.setUpdatedBy(userNo);
+            taskMapper.updateTask(taskDto);
+        } finally {
+            // 确保释放令牌
+            eventPublisher.publishEvent(new UploadFinishEvent(this, "com.admin.admin_back.controller.ExcelController.uploadExcel"));
         }
-        TaskDto taskDto = new TaskDto();
-        taskDto.setTaskId(taskCode);
-        taskDto.setTaskStatus(isSuccess ? Constant.TASK_SUCCESS : Constant.TASK_ERROR);
-        taskDto.setTaskSuccessInsert(insert);
-        taskDto.setTaskSuccessUpdate(update);
-        taskDto.setUpdatedBy(userNo);
-        taskMapper.updateTask(taskDto);
     }
 
     /**
