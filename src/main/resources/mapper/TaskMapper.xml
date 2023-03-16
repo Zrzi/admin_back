@@ -16,6 +16,13 @@
         <result column="updated_date" property="updatedDate" />
     </resultMap>
 
+    <select id="findTaskByUserNo" resultMap="baseMap">
+        SELECT `id`, `task_id`, `task_status`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
+        FROM `admin_task`
+        WHERE `created_by` = #{userNo}
+          AND `task_status` &lt;&gt; 0
+    </select>
+
     <select id="findTaskByTaskId" resultMap="baseMap">
         SELECT `id`, `task_id`, `task_status`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
         FROM `admin_task`

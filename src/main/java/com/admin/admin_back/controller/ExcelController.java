@@ -181,6 +181,14 @@ public class ExcelController {
         }
     }
 
+    @ApiOperation("获取历史文件上传错误记录")
+    @LogAnnotation
+    @CheckRole("getHistoryUploadExcelResult")
+    @GetMapping("/excel/getHistoryUploadExcelResult")
+    public Result<?> getHistoryUploadExcelResult() {
+        return new Result<>(ResponseMessage.SUCCESS, excelService.getHistoryUploadExcelResult());
+    }
+
     private String checkExcelForm(ExcelForm excelForm, boolean isUpdate) {
         if (isUpdate) {
             if (StringUtils.isBlank(excelForm.getExcelId())) {

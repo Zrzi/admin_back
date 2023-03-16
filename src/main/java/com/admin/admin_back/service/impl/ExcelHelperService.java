@@ -105,7 +105,7 @@ public class ExcelHelperService implements ExcelHelper {
             } catch (Exception exception) {
                 isSuccess = false;
                 transactionManager.rollback(transactionStatus);
-                taskErrorDto.setErrorMessage("第" + (i + 1) + "条数据，" + (exist ? "更新" : "插入") + "出现服务器异常。");
+                taskErrorDto.setErrorMessage(excelDto.getExcelName() + "，第" + (i + 1) + "条数据，" + (exist ? "更新" : "插入") + "出现服务器异常。");
                 taskErrorMapper.insertTaskError(taskErrorDto);
                 logTask.logInfo(exception.getMessage());
             }

@@ -191,26 +191,21 @@ public class ExcelServiceImpl implements ExcelService {
         if (Objects.isNull(taskDto)) {
             throw new ExcelTaskExistException();
         }
-        ExcelTaskVo excelTaskVo = new ExcelTaskVo();
-        excelTaskVo.setTaskSuccessInsert(taskDto.getTaskSuccessInsert());
-        excelTaskVo.setTaskSuccessUpdate(taskDto.getTaskSuccessUpdate());
-        switch (taskDto.getTaskStatus()) {
-            case Constant.TASK_CREATE:
-                excelTaskVo.setTaskStatus(Constant.TASK_CREATE);
-                break;
-            case Constant.TASK_SUCCESS:
-                excelTaskVo.setTaskStatus(Constant.TASK_SUCCESS);
-                break;
-            case Constant.TASK_ERROR:
-                excelTaskVo.setTaskStatus(Constant.TASK_ERROR);
-                List<TaskErrorDto> taskErrors = taskErrorMapper.findTaskErrorsByTaskId(taskId);
-                List<String> errors = taskErrors.stream().map(TaskErrorDto::getErrorMessage).collect(Collectors.toList());
-                excelTaskVo.setErrorMessage(errors);
-                break;
-            default:
-                throw new ExcelTaskExistException();
+        return getExcelTaskVoFromTaskDto(taskDto, taskId);
+    }
+
+    @Override
+    public List<ExcelTaskVo> getHistoryUploadExcelResult() {
+        List<ExcelTaskVo> result = new ArrayList<>();
+        String userNo = UserThreadLocal.getUser().getUserNo();
+        List<TaskDto> taskDtos = taskMapper.findTaskByUserNo(userNo);
+        if (CollectionUtils.isEmpty(taskDtos)) {
+            return result;
         }
-        return excelTaskVo;
+        for (TaskDto taskDto : taskDtos) {
+            result.add(getExcelTaskVoFromTaskDto(taskDto, taskDto.getTaskId()));
+        }
+        return result;
     }
 
     private ExcelVo getExcelVoFromExcelDto(ExcelDto excelDto) {
@@ -292,6 +287,29 @@ public class ExcelServiceImpl implements ExcelService {
             }
             nullableCollection.add(sqlColumnInfo.getColumnName());
         }
+    }
+
+    private ExcelTaskVo getExcelTaskVoFromTaskDto(TaskDto taskDto, String taskId) {
+        ExcelTaskVo excelTaskVo = new ExcelTaskVo();
+        excelTaskVo.setTaskSuccessInsert(taskDto.getTaskSuccessInsert());
+        excelTaskVo.setTaskSuccessUpdate(taskDto.getTaskSuccessUpdate());
+        switch (taskDto.getTaskStatus()) {
+            case Constant.TASK_CREATE:
+                excelTaskVo.setTaskStatus(Constant.TASK_CREATE);
+                break;
+            case Constant.TASK_SUCCESS:
+                excelTaskVo.setTaskStatus(Constant.TASK_SUCCESS);
+                break;
+            case Constant.TASK_ERROR:
+                excelTaskVo.setTaskStatus(Constant.TASK_ERROR);
+                List<TaskErrorDto> taskErrors = taskErrorMapper.findTaskErrorsByTaskId(taskId);
+                List<String> errors = taskErrors.stream().map(TaskErrorDto::getErrorMessage).collect(Collectors.toList());
+                excelTaskVo.setErrorMessage(errors);
+                break;
+            default:
+                throw new ExcelTaskExistException();
+        }
+        return excelTaskVo;
     }
 
 }

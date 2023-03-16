@@ -31,6 +31,8 @@ public interface ExcelService {
 
     ExcelTaskVo getUploadExcelResult(String taskId);
 
+    List<ExcelTaskVo> getHistoryUploadExcelResult();
+
 //    void testAsync();
 
 }

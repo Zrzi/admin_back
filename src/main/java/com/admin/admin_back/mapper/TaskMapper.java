@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author 陈群矜
@@ -12,6 +13,8 @@ import javax.annotation.Resource;
 @Mapper
 @Resource
 public interface TaskMapper {
+
+    List<TaskDto> findTaskByUserNo(@Param("userNo") String userNo);
 
     TaskDto findTaskByTaskId(@Param("taskId") String taskId);
 
