@@ -235,6 +235,11 @@ public enum ResponseMessage {
      * 全局异常处理
      */
     SYSTEM_ERROR(900000, "系统内部异常"),
+
+    /**
+     * 限流
+     */
+    LIMIT(900001, "服务限流，请稍后重试"),
     ;
 
     /**

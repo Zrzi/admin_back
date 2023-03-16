@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
@@ -138,6 +139,7 @@ public class ExcelController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "Excel文件", required = true)
     })
+    @Limit(200)
     @LogAnnotation(inEnabled = false)
     @CheckRole("uploadExcel")
     @PostMapping("/excel/upload")

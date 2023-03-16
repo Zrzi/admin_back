@@ -1,9 +1,10 @@
 package com.admin.admin_back.config;
 
-import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author 陈群矜
@@ -22,7 +23,7 @@ public class AsyncPoolConfig {
         executor.setMaxPoolSize(20);
         executor.setQueueCapacity(200);
         executor.setKeepAliveSeconds(60);
-        executor.setThreadNamePrefix("logTaskExecutor");
+        executor.setThreadNamePrefix("log-task-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -41,12 +42,27 @@ public class AsyncPoolConfig {
         executor.setMaxPoolSize(20);
         executor.setQueueCapacity(200);
         executor.setKeepAliveSeconds(60);
-        executor.setThreadNamePrefix("uploadExcelExecutor");
+        executor.setThreadNamePrefix("upload-excel-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
     }
+
+//    @Bean("testExecutor")
+//    public ThreadPoolTaskExecutor testExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(1);
+//        executor.setMaxPoolSize(1);
+//        executor.setQueueCapacity(0);
+//        executor.setKeepAliveSeconds(60);
+//        executor.setThreadNamePrefix("test-executor-");
+//        executor.setWaitForTasksToCompleteOnShutdown(true);
+//        executor.setAwaitTerminationSeconds(60);
+//        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+//        executor.initialize();
+//        return executor;
+//    }
 
 }

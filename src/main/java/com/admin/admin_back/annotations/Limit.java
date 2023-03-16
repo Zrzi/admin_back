@@ -11,11 +11,11 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CheckRole {
+public @interface Limit {
 
     /**
-     * 接口对应的资源名称
+     * 接口同时处理请求上限
      */
-    String value() default "";
+    int value() default 0;
 
 }

@@ -199,16 +199,27 @@ public class ExcelHelperService implements ExcelHelper {
         }
     }
 
-    @Override
-    @Async("uploadExcelExecutor")
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void testAsync(String code) {
-        TaskDto taskDto = new TaskDto();
-        taskDto.setTaskId(code);
-        taskDto.setTaskStatus(Constant.TASK_SUCCESS);
-        // 模拟异常请情况
-        int i = 1 / 0;
-        taskMapper.updateTask(taskDto);
-    }
+//    @Override
+//    @Async("uploadExcelExecutor")
+//    @Transactional(rollbackFor = RuntimeException.class)
+//    public void testAsync(String code) {
+//        TaskDto taskDto = new TaskDto();
+//        taskDto.setTaskId(code);
+//        taskDto.setTaskStatus(Constant.TASK_SUCCESS);
+//        // 模拟异常请情况
+//        int i = 1 / 0;
+//        taskMapper.updateTask(taskDto);
+//    }
+//
+//    @Override
+//    @Async("uploadExcelExecutor")
+//    public void testExecutor(int i) {
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(i);
+//    }
 
 }
