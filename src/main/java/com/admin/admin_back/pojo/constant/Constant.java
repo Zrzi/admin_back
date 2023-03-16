@@ -18,6 +18,13 @@ public class Constant {
     public final static String FILE_XLSX = "xlsx";
 
     /**
+     * 不需要转换为RequestWrapper的URI
+     */
+    public final static String[] CHANNEL_FILTER_URI = new String[]{
+            "/excel/upload"
+    };
+
+    /**
      * Excel映射配置，与库里数据重复时，覆盖
      */
     public final static int IS_COVER = 1;

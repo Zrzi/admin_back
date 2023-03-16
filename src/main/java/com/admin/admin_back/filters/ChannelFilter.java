@@ -1,6 +1,7 @@
 package com.admin.admin_back.filters;
 
 import com.admin.admin_back.pojo.RequestWrapper;
+import com.admin.admin_back.pojo.constant.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.core.annotation.Order;
@@ -27,13 +28,27 @@ public class ChannelFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        if (ServletFileUpload.isMultipartContent(request)) {
+        if (check(request.getRequestURI())) {
             // 上传文件，放行
             filterChain.doFilter(request, response);
             return;
         }
         RequestWrapper requestWrapper = new RequestWrapper(request);
         filterChain.doFilter(requestWrapper, response);
+    }
+
+    /**
+     * 判断是否需要放行
+     * @param uri 请求uri
+     * @return {@code true}表示需要放行
+     */
+    private boolean check(String uri) {
+        for (String string : Constant.CHANNEL_FILTER_URI) {
+            if (StringUtils.equals(uri, string)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

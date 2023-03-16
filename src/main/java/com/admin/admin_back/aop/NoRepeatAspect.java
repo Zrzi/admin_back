@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author 陈群矜
  */
-@Order(4)
+@Order(5)
 @Aspect
 @Component
 public class NoRepeatAspect {
