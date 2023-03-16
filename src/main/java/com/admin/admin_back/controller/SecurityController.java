@@ -1,5 +1,6 @@
 package com.admin.admin_back.controller;
 
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -45,6 +46,7 @@ public class SecurityController {
     private AesUtil aesUtil;
 
     @ApiOperation("获取服务器RSA公钥")
+    @Limit(1000)
     @LogAnnotation
     @ResponseBody
     @GetMapping("/getRsaPublicKey")
@@ -63,6 +65,7 @@ public class SecurityController {
     }
 
     @ApiOperation("解密接口")
+    @Limit(1000)
     @NoRepeatSubmit
     @LogAnnotation(outEnabled = false)
     @ResponseBody
@@ -96,6 +99,7 @@ public class SecurityController {
             @ApiImplicitParam(name = "file", value = "上传的文件", required = true),
             @ApiImplicitParam(name = "encryptedKey", value = "密钥", required = true)
     })
+    @Limit(1000)
     @NoRepeatSubmit
     @LogAnnotation(inEnabled = false, outEnabled = false)
     @PostMapping(value = "/decryptFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

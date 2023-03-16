@@ -41,6 +41,15 @@ public class NoRepeatAspect {
     @Around("noRepeatAspect()")
     public Object around(ProceedingJoinPoint pjp) {
         try {
+            // 注意，此处不一定有user，所以userDto可能是null
+            UserDto user = UserThreadLocal.getUser();
+            if (Objects.isNull(user)) {
+                // 新增LimitAspect，对于外部系统调用，无法提供userNo，防重复意义不大
+                // 比如，A用户提交数据a，B用户提交数据b，A用户再提交数据a
+                // A用户两次提交间隔时间较短，但redis缓存已经被B提交的数据覆盖，因此，判断是不重复
+                // 所以，对于这类请求，不校验重复
+                return pjp.proceed();
+            }
             MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
             Method method = methodSignature.getMethod();
             NoRepeatSubmit annotation = method.getAnnotation(NoRepeatSubmit.class);
@@ -54,9 +63,7 @@ public class NoRepeatAspect {
                 }
                 args.add(arg);
             }
-            // 注意，此处不一定有user，所以userDto可能是null
-            UserDto user = UserThreadLocal.getUser();
-            String sign = methodName + '/' + (Objects.isNull(user) ? "" : user.getUserNo());
+            String sign = methodName + '/' + user.getUserNo();
             String value = JSON.toJSONString(args);
             String cachedValue = (String) redisTemplate.opsForValue().get(sign);
             if (StringUtils.equals(value, cachedValue)) {

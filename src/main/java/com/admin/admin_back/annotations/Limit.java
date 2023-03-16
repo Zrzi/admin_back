@@ -18,9 +18,4 @@ public @interface Limit {
      */
     int value() default 0;
 
-    /**
-     * 是否需要自行提交释放令牌
-     */
-    boolean lazy() default false;
-
 }

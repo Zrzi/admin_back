@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -35,6 +36,7 @@ public class RoleController {
     private RoleService roleService;
 
     @ApiOperation("获取角色列表")
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getRole")
     @GetMapping("/role/get")
@@ -46,6 +48,7 @@ public class RoleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getRoleByRoleId")
     @GetMapping("/role/getByRoleId")
@@ -58,6 +61,7 @@ public class RoleController {
     }
 
     @ApiOperation("添加角色")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addRole")
@@ -78,6 +82,7 @@ public class RoleController {
     }
 
     @ApiOperation("添加角色")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateRole")
@@ -98,6 +103,7 @@ public class RoleController {
     }
 
     @ApiOperation("删除角色")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeRole")

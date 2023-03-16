@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -39,6 +40,7 @@ public class ResourceController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "resourceId", value = "资源编码", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("checkAuthority")
     @GetMapping("/checkAuthority")
@@ -64,6 +66,7 @@ public class ResourceController {
             @ApiImplicitParam(name = "userNo", value = "用户名", required = false),
             @ApiImplicitParam(name = "resourceId", value = "资源编码", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @GetMapping("/checkAuthorityWithUserNoAndResourceId")
     public Result<Boolean> checkAuthorityWithUserNoAndResourceId(@RequestParam(value = "userNo", required = false) String userNo,
@@ -82,6 +85,7 @@ public class ResourceController {
     }
 
     @ApiOperation("获取导航菜单")
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getMenus")
     @GetMapping("/getMenus")
@@ -101,6 +105,7 @@ public class ResourceController {
             @ApiImplicitParam(name = "userNo", value = "用户名", required = false),
             @ApiImplicitParam(name = "resourceType", value = "资源类型", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @GetMapping("/getResourceWithUserNoAndResourceType")
     public Result<List<?>> getResourceWithUserNoAndResourceType(@RequestParam(value = "userNo", required = false) String userNo,
@@ -135,6 +140,7 @@ public class ResourceController {
             @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
             @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表资源名称或资源路径", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getResourcesBySystemId")
     @GetMapping("/resource/get")
@@ -166,6 +172,7 @@ public class ResourceController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "resourceId", value = "资源编码", required = true)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getResourceById")
     @GetMapping("/resource/getById")
@@ -178,6 +185,7 @@ public class ResourceController {
     }
 
     @ApiOperation("添加资源")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addResource")
@@ -202,6 +210,7 @@ public class ResourceController {
     }
 
     @ApiOperation("编辑资源")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateResource")
@@ -228,6 +237,7 @@ public class ResourceController {
     }
 
     @ApiOperation("删除资源")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteResource")

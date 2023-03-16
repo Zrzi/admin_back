@@ -45,6 +45,7 @@ public class UserController {
             @ApiImplicitParam(name = "key", value = "经过RSA加密的AES密钥", required = true),
             @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
     })
+    @Limit(1000)
     @LogAnnotation(inEnabled = false)
     @NoRepeatSubmit
     @SecurityAnnotation
@@ -70,6 +71,7 @@ public class UserController {
     }
 
     @ApiOperation("退出接口")
+    @Limit(1000)
     @LogAnnotation
     @PostMapping("/logout")
     public Result<?> logout() {
@@ -77,6 +79,7 @@ public class UserController {
     }
 
     @ApiOperation("刷新token")
+    @Limit(1000)
     @NoRepeatSubmit
     @RefreshToken
     @PostMapping("/refreshToken")
@@ -101,6 +104,7 @@ public class UserController {
             @ApiImplicitParam(name = "key", value = "经过RSA加密的AES密钥", required = true),
             @ApiImplicitParam(name = "data", value = "经过AES加密的loginForm", required = true)
     })
+    @Limit(1000)
     @LogAnnotation(inEnabled = false)
     @SecurityAnnotation
     @CheckRole("resetPassword")
@@ -132,6 +136,7 @@ public class UserController {
             @ApiImplicitParam(name = "userNo", value = "用户名", required = true),
             @ApiImplicitParam(name = "userType", value = "用户类型", required = true)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getUserByUserNo")
     @GetMapping("/user/getByUserNo")
@@ -158,6 +163,7 @@ public class UserController {
             @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
             @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getUser")
     @GetMapping("/user/get")
@@ -180,6 +186,7 @@ public class UserController {
     }
 
     @ApiOperation("添加用户接口")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addUser")
@@ -198,6 +205,7 @@ public class UserController {
     }
 
     @ApiOperation("更新用户接口")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateUser")
@@ -216,6 +224,7 @@ public class UserController {
     }
 
     @ApiOperation("删除用户接口")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("removeUser")
@@ -239,6 +248,7 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true)
     })
+    @Limit(1000)
 //    @NoRepeatSubmit
     @LogAnnotation
     @GetMapping("/user/getUsersByRoleId")

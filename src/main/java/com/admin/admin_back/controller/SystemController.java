@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -32,6 +33,7 @@ public class SystemController {
     private SystemService systemService;
 
     @ApiOperation("获取系统列表接口")
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getSystems")
     @GetMapping(value = "/system/get")
@@ -55,6 +57,7 @@ public class SystemController {
 //    }
 
     @ApiOperation("添加系统接口")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addSystem")
@@ -77,6 +80,7 @@ public class SystemController {
     }
 
     @ApiOperation("更新系统接口")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("updateSystem")

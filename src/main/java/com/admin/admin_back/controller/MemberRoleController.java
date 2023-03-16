@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -45,6 +46,7 @@ public class MemberRoleController {
             @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false),
             @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getMemberRole")
     @GetMapping("/memberRole/get")
@@ -73,6 +75,7 @@ public class MemberRoleController {
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
             @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表用户名或者姓名", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getUnaddedUser")
     @GetMapping("/memberRole/getUnaddedUser")
@@ -83,6 +86,7 @@ public class MemberRoleController {
     }
 
     @ApiOperation("添加用户角色关联")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("addMemberRole")
@@ -119,6 +123,7 @@ public class MemberRoleController {
 //    }
 
     @ApiOperation("删除用户角色关联")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("deleteMemberRole")

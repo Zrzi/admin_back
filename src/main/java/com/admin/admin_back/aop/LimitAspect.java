@@ -3,7 +3,6 @@ package com.admin.admin_back.aop;
 import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.pojo.Result;
 import com.admin.admin_back.pojo.common.ResponseMessage;
-import com.admin.admin_back.pojo.event.UploadFinishEvent;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,30 +40,15 @@ public class LimitAspect implements ApplicationContextAware {
     public Object around(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        if (!method.isAnnotationPresent(Limit.class)) {
-            // 不会走
+        String key = method.getDeclaringClass().getName() + "." + method.getName();
+        AtomicInteger token = TOKEN_MAP.get(key);
+        if (token.getAndDecrement() > 0) {
             try {
                 return joinPoint.proceed();
             } catch (Throwable e) {
                 return new Result<>(ResponseMessage.SYSTEM_ERROR);
-            }
-        }
-        Limit limit = method.getAnnotation(Limit.class);
-        boolean lazy = limit.lazy();
-        String key = method.getDeclaringClass().getName() + "." + method.getName();
-        AtomicInteger token = TOKEN_MAP.get(key);
-        if (token.getAndDecrement() > 0) {
-            Object result = null;
-            try {
-                result = joinPoint.proceed();
-                if (!lazy) {
-                    token.incrementAndGet();
-                }
-                return result;
-            } catch (Throwable e) {
-                result = new Result<>(ResponseMessage.SYSTEM_ERROR);
+            } finally {
                 token.incrementAndGet();
-                return result;
             }
         } else {
             token.incrementAndGet();
@@ -74,11 +58,7 @@ public class LimitAspect implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        handleLimitAnnotation(applicationContext.getBeansWithAnnotation(RestController.class));
-        handleLimitAnnotation(applicationContext.getBeansWithAnnotation(Controller.class));
-    }
-
-    private void handleLimitAnnotation(Map<String, Object> beansMap) {
+        Map<String, Object> beansMap = applicationContext.getBeansWithAnnotation(Controller.class);
         for (Map.Entry<String, Object> beanEntry : beansMap.entrySet()) {
             // 采用cglib代理，生成的代理类是目标的子类，通过getSuperclass方法获取目标类型
             Class<?> clazz = beanEntry.getValue().getClass().getSuperclass();
@@ -95,14 +75,6 @@ public class LimitAspect implements ApplicationContextAware {
                     }
                 }
             }
-        }
-    }
-
-    @EventListener
-    public void listen(UploadFinishEvent event) {
-        String key = event.getKey();
-        if (TOKEN_MAP.containsKey(key)) {
-            TOKEN_MAP.get(key).incrementAndGet();
         }
     }
 

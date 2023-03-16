@@ -1,6 +1,7 @@
 package com.admin.admin_back.controller;
 
 import com.admin.admin_back.annotations.CheckRole;
+import com.admin.admin_back.annotations.Limit;
 import com.admin.admin_back.annotations.LogAnnotation;
 import com.admin.admin_back.annotations.NoRepeatSubmit;
 import com.admin.admin_back.pojo.Result;
@@ -38,6 +39,7 @@ public class RoleResourceController {
             @ApiImplicitParam(name = "roleId", value = "角色编码", required = true),
             @ApiImplicitParam(name = "searchKey", value = "搜索条件，代表资源名称或资源路径", required = false)
     })
+    @Limit(1000)
     @LogAnnotation
     @CheckRole("getRoleResources")
     @GetMapping("/roleResource/get")
@@ -64,6 +66,7 @@ public class RoleResourceController {
     }
 
     @ApiOperation("编辑角色资源关联")
+    @Limit(1000)
     @LogAnnotation
     @NoRepeatSubmit
     @CheckRole("editRoleResource")
