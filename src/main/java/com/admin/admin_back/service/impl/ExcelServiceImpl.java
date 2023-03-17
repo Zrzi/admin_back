@@ -9,10 +9,7 @@ import com.admin.admin_back.pojo.exception.*;
 import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
-import com.admin.admin_back.pojo.vo.ExcelColumnVo;
-import com.admin.admin_back.pojo.vo.ExcelTaskVo;
-import com.admin.admin_back.pojo.vo.ExcelVo;
-import com.admin.admin_back.pojo.vo.GetSqlColumnsVo;
+import com.admin.admin_back.pojo.vo.*;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.service.LogTask;
@@ -26,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -173,6 +172,8 @@ public class ExcelServiceImpl implements ExcelService {
             boolean isCover = excelDto.getIsCover() == Constant.IS_COVER;
             String code = GenerateCodeUtil.generateCode(CodeTypeEnum.TASK);
             TaskDto taskDto = new TaskDto();
+            taskDto.setExcelName(excelDto.getExcelName());
+            taskDto.setSqlName(excelDto.getSqlName());
             taskDto.setTaskId(code);
             taskDto.setTaskStatus(Constant.TASK_CREATE);
             taskDto.setCreatedBy(userNo);
@@ -195,15 +196,17 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public List<ExcelTaskVo> getHistoryUploadExcelResult() {
-        List<ExcelTaskVo> result = new ArrayList<>();
+    public GetHistoryUploadExcelResult getHistoryUploadExcelResult(int start, int pageSize) {
+        GetHistoryUploadExcelResult result = new GetHistoryUploadExcelResult();
+        List<ExcelTaskVo> excelTasks = result.getExcelTasks();
         String userNo = UserThreadLocal.getUser().getUserNo();
-        List<TaskDto> taskDtos = taskMapper.findTaskByUserNo(userNo);
+        List<TaskDto> taskDtos = taskMapper.findTaskByUserNo(userNo, start, pageSize);
+        result.setTotal(taskMapper.findTotalCountByUserNo(userNo));
         if (CollectionUtils.isEmpty(taskDtos)) {
             return result;
         }
         for (TaskDto taskDto : taskDtos) {
-            result.add(getExcelTaskVoFromTaskDto(taskDto, taskDto.getTaskId()));
+            excelTasks.add(getExcelTaskVoFromTaskDto(taskDto, taskDto.getTaskId()));
         }
         return result;
     }
@@ -291,6 +294,9 @@ public class ExcelServiceImpl implements ExcelService {
 
     private ExcelTaskVo getExcelTaskVoFromTaskDto(TaskDto taskDto, String taskId) {
         ExcelTaskVo excelTaskVo = new ExcelTaskVo();
+        excelTaskVo.setTaskId(taskId);
+        excelTaskVo.setExcelName(taskDto.getExcelName());
+        excelTaskVo.setSqlName(taskDto.getSqlName());
         excelTaskVo.setTaskSuccessInsert(taskDto.getTaskSuccessInsert());
         excelTaskVo.setTaskSuccessUpdate(taskDto.getTaskSuccessUpdate());
         switch (taskDto.getTaskStatus()) {
@@ -299,9 +305,11 @@ public class ExcelServiceImpl implements ExcelService {
                 break;
             case Constant.TASK_SUCCESS:
                 excelTaskVo.setTaskStatus(Constant.TASK_SUCCESS);
+                excelTaskVo.setCompletedDate(dateFormat(taskDto.getUpdatedDate()));
                 break;
             case Constant.TASK_ERROR:
                 excelTaskVo.setTaskStatus(Constant.TASK_ERROR);
+                excelTaskVo.setCompletedDate(dateFormat(taskDto.getUpdatedDate()));
                 List<TaskErrorDto> taskErrors = taskErrorMapper.findTaskErrorsByTaskId(taskId);
                 List<String> errors = taskErrors.stream().map(TaskErrorDto::getErrorMessage).collect(Collectors.toList());
                 excelTaskVo.setErrorMessage(errors);
@@ -310,6 +318,11 @@ public class ExcelServiceImpl implements ExcelService {
                 throw new ExcelTaskExistException();
         }
         return excelTaskVo;
+    }
+
+    private String dateFormat(Date date) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return format.format(date);
     }
 
 }

@@ -8,6 +8,8 @@
         <id column="id" property="id" />
         <result column="task_id" property="taskId" />
         <result column="task_status" property="taskStatus" />
+        <result column="excel_name" property="excelName" />
+        <result column="sql_name" property="sqlName" />
         <result column="task_success_insert" property="taskSuccessInsert" />
         <result column="task_success_update" property="taskSuccessUpdate" />
         <result column="created_by" property="createdBy" />
@@ -17,21 +19,30 @@
     </resultMap>
 
     <select id="findTaskByUserNo" resultMap="baseMap">
-        SELECT `id`, `task_id`, `task_status`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
+        SELECT `id`, `task_id`, `task_status`, `excel_name`, `sql_name`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
+        FROM `admin_task`
+        WHERE `created_by` = #{userNo}
+          AND `task_status` &lt;&gt; 0
+        ORDER BY `updated_date` DESC
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <select id="findTotalCountByUserNo" resultType="java.lang.Integer">
+        SELECT COUNT(1)
         FROM `admin_task`
         WHERE `created_by` = #{userNo}
           AND `task_status` &lt;&gt; 0
     </select>
 
     <select id="findTaskByTaskId" resultMap="baseMap">
-        SELECT `id`, `task_id`, `task_status`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
+        SELECT `id`, `task_id`, `task_status`, `excel_name`, `sql_name`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`
         FROM `admin_task`
         WHERE `task_id` = #{taskId}
     </select>
 
     <insert id="insertTask" parameterType="com.admin.admin_back.pojo.dto.TaskDto">
-        INSERT INTO `admin_task` (`task_id`, `task_status`, `created_by`, `created_date`, `updated_by`, `updated_date`)
-        VALUES (#{taskDto.taskId}, #{taskDto.taskStatus}, #{taskDto.createdBy}, NOW(), #{taskDto.updatedBy}, NOW())
+        INSERT INTO `admin_task` (`task_id`, `task_status`,  `excel_name`, `sql_name`, `task_success_insert`, `task_success_update`, `created_by`, `created_date`, `updated_by`, `updated_date`)
+        VALUES (#{taskDto.taskId}, #{taskDto.taskStatus}, #{taskDto.excelName}, #{taskDto.sqlName}, 0, 0, #{taskDto.createdBy}, NOW(), #{taskDto.updatedBy}, NOW())
     </insert>
 
     <update id="updateTask" parameterType="com.admin.admin_back.pojo.dto.TaskDto">

@@ -200,3 +200,10 @@ VALUES ('R8482f80be65245ff917e80091d220396', 'uploadExcel', 'S6b7980d3d2064c718e
 
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R07368d7d787f42168feaa8fd39c908a5', 'getUploadExcelResult', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getUploadExcelResult', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+--- 2023-03-17 新增 ---
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Re9ace883c3eb480da8d4e258c188019a', 'getHistoryUploadExcelResult', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getHistoryUploadExcelResult', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Rfea74b989acb435b94a0883a3c3ebb52', 'historyRecordButton', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/home/excels', 2, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);

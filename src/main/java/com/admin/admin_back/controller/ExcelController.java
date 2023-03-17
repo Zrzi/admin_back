@@ -12,7 +12,6 @@ import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.vo.ExcelVo;
 import com.admin.admin_back.service.ExcelService;
-import com.admin.admin_back.utils.EventPublisher;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -199,13 +198,24 @@ public class ExcelController {
         }
     }
 
-    @ApiOperation("获取历史文件上传错误记录")
+    @ApiOperation("获取历史文件上传记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "start", value = "起始页", required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", required = false)
+    })
     @Limit(1000)
     @LogAnnotation
     @CheckRole("getHistoryUploadExcelResult")
     @GetMapping("/excel/getHistoryUploadExcelResult")
-    public Result<?> getHistoryUploadExcelResult() {
-        return new Result<>(ResponseMessage.SUCCESS, excelService.getHistoryUploadExcelResult());
+    public Result<?> getHistoryUploadExcelResult(@RequestParam(value = "start", required = false) Integer start,
+                                                 @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (start == null || start < 0) {
+            start = 0;
+        }
+        if (pageSize == null || pageSize < 0) {
+            pageSize = 10;
+        }
+        return new Result<>(ResponseMessage.SUCCESS, excelService.getHistoryUploadExcelResult(start, pageSize));
     }
 
     private String checkExcelForm(ExcelForm excelForm, boolean isUpdate) {

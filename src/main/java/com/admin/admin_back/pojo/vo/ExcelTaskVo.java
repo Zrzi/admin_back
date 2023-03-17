@@ -12,8 +12,17 @@ import java.util.List;
 @ApiModel("查询excel上传结果")
 public class ExcelTaskVo {
 
+    @ApiModelProperty("任务编码")
+    private String taskId;
+
     @ApiModelProperty("任务状态，0：运行中；1：成功；2：异常")
     private int taskStatus;
+
+    @ApiModelProperty("excel名称")
+    private String excelName;
+
+    @ApiModelProperty("sql名称")
+    private String sqlName;
 
     @ApiModelProperty("异常信息列表")
     private List<String> errorMessage;
@@ -24,7 +33,18 @@ public class ExcelTaskVo {
     @ApiModelProperty("成功修改数据个数")
     private int taskSuccessUpdate;
 
+    @ApiModelProperty("上传完成日期，仅限于status=1或者status=2")
+    private String completedDate;
+
     public ExcelTaskVo() {}
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
 
     public int getTaskStatus() {
         return taskStatus;
@@ -32,6 +52,22 @@ public class ExcelTaskVo {
 
     public void setTaskStatus(int taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public String getExcelName() {
+        return excelName;
+    }
+
+    public void setExcelName(String excelName) {
+        this.excelName = excelName;
+    }
+
+    public String getSqlName() {
+        return sqlName;
+    }
+
+    public void setSqlName(String sqlName) {
+        this.sqlName = sqlName;
     }
 
     public List<String> getErrorMessage() {
@@ -56,6 +92,14 @@ public class ExcelTaskVo {
 
     public void setTaskSuccessUpdate(int taskSuccessUpdate) {
         this.taskSuccessUpdate = taskSuccessUpdate;
+    }
+
+    public String getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(String completedDate) {
+        this.completedDate = completedDate;
     }
 
     @Override

@@ -14,7 +14,11 @@ import java.util.List;
 @Resource
 public interface TaskMapper {
 
-    List<TaskDto> findTaskByUserNo(@Param("userNo") String userNo);
+    List<TaskDto> findTaskByUserNo(@Param("userNo") String userNo,
+                                   @Param("start") int start,
+                                   @Param("pageSize") int pageSize);
+
+    Integer findTotalCountByUserNo(@Param("userNo") String userNo);
 
     TaskDto findTaskByTaskId(@Param("taskId") String taskId);
 

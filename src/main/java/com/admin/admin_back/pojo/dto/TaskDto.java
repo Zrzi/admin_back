@@ -13,6 +13,10 @@ public class TaskDto {
 
     private String taskId;
 
+    private String excelName;
+
+    private String sqlName;
+
     private Integer taskStatus;
 
     private Integer taskSuccessInsert;
@@ -43,6 +47,22 @@ public class TaskDto {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getExcelName() {
+        return excelName;
+    }
+
+    public void setExcelName(String excelName) {
+        this.excelName = excelName;
+    }
+
+    public String getSqlName() {
+        return sqlName;
+    }
+
+    public void setSqlName(String sqlName) {
+        this.sqlName = sqlName;
     }
 
     public Integer getTaskStatus() {
