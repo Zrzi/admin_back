@@ -34,6 +34,8 @@ public interface ExcelService {
 
     GetHistoryUploadExcelResult getHistoryUploadExcelResult(int start, int pageSize);
 
+    boolean checkIfExistExcelName(String excelName);
+
 //    void testAsync();
 
 }

@@ -211,6 +211,16 @@ public class ExcelServiceImpl implements ExcelService {
         return result;
     }
 
+    /**
+     * 查询是否已经存在Excel配置
+     * @param excelName Excel表格名称
+     * @return true：不存在；false：存在
+     */
+    @Override
+    public boolean checkIfExistExcelName(String excelName) {
+        return Objects.isNull(excelMapper.findExcelByExcelName(excelName));
+    }
+
     private ExcelVo getExcelVoFromExcelDto(ExcelDto excelDto) {
         ExcelVo excelVo = new ExcelVo();
         excelVo.setExcelId(excelDto.getExcelId());

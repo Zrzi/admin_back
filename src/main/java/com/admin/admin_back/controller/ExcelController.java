@@ -218,6 +218,23 @@ public class ExcelController {
         return new Result<>(ResponseMessage.SUCCESS, excelService.getHistoryUploadExcelResult(start, pageSize));
     }
 
+    /**
+     * 查询是否已经存在Excel配置
+     * @param excelName Excel表格名称
+     * @return Result<Boolean> true表示不存在；false表示存在
+     */
+    @ApiOperation("检查是否已经存在Excel配置")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "excelName", value = "excel表格名称", required = true)
+    })
+    @Limit(1000)
+    @LogAnnotation
+    @CheckRole("checkExistExcelName")
+    @GetMapping("/excel/checkExistExcelName")
+    public Result<?> checkExistExcelName(@RequestParam("excelName") String excelName) {
+        return new Result<>(ResponseMessage.SUCCESS, excelService.checkIfExistExcelName(excelName));
+    }
+
     private String checkExcelForm(ExcelForm excelForm, boolean isUpdate) {
         if (isUpdate) {
             if (StringUtils.isBlank(excelForm.getExcelId())) {
