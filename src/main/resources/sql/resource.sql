@@ -207,3 +207,6 @@ VALUES ('Re9ace883c3eb480da8d4e258c188019a', 'getHistoryUploadExcelResult', 'S6b
 
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('Rfea74b989acb435b94a0883a3c3ebb52', 'historyRecordButton', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/home/excels', 2, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
+
+INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+VALUES ('Re338d8cb1fe94e62b7ae29a78454abd0', 'checkExistExcelName', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/checkExistExcelName', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);

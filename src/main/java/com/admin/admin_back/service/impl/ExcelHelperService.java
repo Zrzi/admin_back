@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author 陈群矜
@@ -133,9 +132,15 @@ public class ExcelHelperService implements ExcelHelper {
         if (!CollectionUtils.isEmpty(primaryKeys)) {
             if (findDataByPrimaryKeys(excelDto, primaryKeys)) {
                 // {excelName}中，与数据库{sqlName}中的数据在{[a,b,c]}字段重复
-                builder.append(excelDto.getExcelName()).append("中，与数据库").append(excelDto.getSqlName()).append("中的数据在");
-                builder.append(primaryKeys.keySet().stream().collect(Collectors.joining(", ", "[", "]")));
-                builder.append("字段重复。");
+//                builder.append(excelDto.getExcelName()).append("中，与数据库").append(excelDto.getSqlName()).append("中的数据在");
+//                builder.append("[");
+//                for (Map.Entry<String, Object> entry : primaryKeys.entrySet()) {
+//                    builder.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
+//                }
+//                builder.deleteCharAt(builder.length() - 1);
+//                builder.append("]");
+//                builder.append("字段重复。");
+                doConcatFlag(primaryKeys, builder, excelDto);
                 return builder.toString();
             }
         }
@@ -148,15 +153,32 @@ public class ExcelHelperService implements ExcelHelper {
                     unique.put(key, dataMap.get(key));
                 }
                 if (findDataByUniqueKeys(excelDto, unique)) {
-                    builder.append(excelDto.getExcelName()).append("中，与数据库").append(excelDto.getSqlName()).append("中的数据在");
-                    builder.append(keys.stream().collect(Collectors.joining(", ", "[", "]")));
-                    builder.append("字段重复。");
+//                    builder.append(excelDto.getExcelName()).append("中，与数据库").append(excelDto.getSqlName()).append("中的数据在");
+//                    builder.append("[");
+//                    for (Map.Entry<String, Object> entry : unique.entrySet()) {
+//                        builder.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
+//                    }
+//                    builder.deleteCharAt(builder.length() - 1);
+//                    builder.append("]");
+//                    builder.append("字段重复。");
+                    doConcatFlag(unique, builder, excelDto);
                     return builder.toString();
                 }
                 unique.clear();
             }
         }
         return builder.toString();
+    }
+
+    private void doConcatFlag(Map<String, Object> keys, StringBuilder builder, ExcelDto excelDto) {
+        builder.append(excelDto.getExcelName()).append("中，与数据库").append(excelDto.getSqlName()).append("中的数据在");
+        builder.append("[");
+        for (Map.Entry<String, Object> entry : keys.entrySet()) {
+            builder.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        builder.append("]");
+        builder.append("字段重复。");
     }
 
     /**
