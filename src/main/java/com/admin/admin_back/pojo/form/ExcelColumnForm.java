@@ -16,6 +16,9 @@ public class ExcelColumnForm {
     @ApiModelProperty(value = "sql列名", required = true)
     private String sqlColumn;
 
+    @ApiModelProperty(value = "是否需要特殊处理", required = true)
+    private boolean isSpecial;
+
     public ExcelColumnForm() {}
 
     public String getExcelColumn() {
@@ -32,6 +35,14 @@ public class ExcelColumnForm {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
+    }
+
+    public boolean getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(boolean isSpecial) {
+        this.isSpecial = isSpecial;
     }
 
     @Override

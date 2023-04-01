@@ -1,6 +1,10 @@
 package com.admin.admin_back.pojo.constant;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author 陈群矜
@@ -28,6 +32,11 @@ public class Constant {
      * Excel映射配置，与库里数据重复时，覆盖
      */
     public final static int IS_COVER = 1;
+
+    /**
+     * Excel映射配置，部分列需要进行特殊处理
+     */
+    public final static int IS_SPECIAL = 1;
 
     /**
      * int类型常量
@@ -124,6 +133,18 @@ public class Constant {
      * 教师表
      */
     public final static String TEACHER_TABLE = "teacheres";
+
+    /**
+     * 需要特殊处理的Excel表格名称，以及对应的列名
+     */
+    public final static Map<String, Set<String>> EXCEL_SPECIAL = new HashMap<String, Set<String>>() {{
+        put("选课课程管理信息", new HashSet<String>() {{
+            add("课程编号");
+            add("上课周次");
+            add("上课时间");
+            add("上课地点");
+        }});
+    }};
 
     public final static String DATE_TYPE_DATE = "date";
 

@@ -17,6 +17,8 @@ public class ExcelColumnDto {
 
     private String sqlColumn;
 
+    private Integer isSpecial;
+
     private String createdBy;
 
     private Date createdDate;
@@ -59,6 +61,14 @@ public class ExcelColumnDto {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
+    }
+
+    public Integer getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(Integer isSpecial) {
+        this.isSpecial = isSpecial;
     }
 
     public String getCreatedBy() {

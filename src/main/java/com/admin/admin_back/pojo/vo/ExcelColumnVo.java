@@ -19,6 +19,9 @@ public class ExcelColumnVo {
     @ApiModelProperty("sql列名")
     private String sqlColumn;
 
+    @ApiModelProperty("是否需要特殊处理")
+    private boolean isSpecial;
+
     public ExcelColumnVo() {}
 
     public String getExcelId() {
@@ -43,6 +46,14 @@ public class ExcelColumnVo {
 
     public void setSqlColumn(String sqlColumn) {
         this.sqlColumn = sqlColumn;
+    }
+
+    public boolean getIsSpecial() {
+        return isSpecial;
+    }
+
+    public void setIsSpecial(boolean isSpecial) {
+        this.isSpecial = isSpecial;
     }
 
     @Override

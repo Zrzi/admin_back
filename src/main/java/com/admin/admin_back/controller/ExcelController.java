@@ -266,16 +266,18 @@ public class ExcelController {
         if (isCover == null) {
             excelForm.setIsCover(false);
         }
-        return checkExcelColumns(excelForm.getRows());
+        return checkExcelColumns(excelName, excelForm.getRows());
     }
 
-    private String checkExcelColumns(List<ExcelColumnForm> excelColumnForms) {
+    private String checkExcelColumns(String excelName, List<ExcelColumnForm> excelColumnForms) {
         if (CollectionUtils.isEmpty(excelColumnForms)) {
             return "列映射配置至少有一列";
         }
         int size = excelColumnForms.size();
         Set<String> excelColumnSet = new HashSet<>();
         Set<String> sqlColumnSet = new HashSet<>();
+        Set<String> specialColumnNames =
+                Constant.EXCEL_SPECIAL.getOrDefault(excelName, new HashSet<String>());
         for (int i=0; i<size; ++i) {
             ExcelColumnForm excelColumnForm = excelColumnForms.get(i);
             String excelColumn = excelColumnForm.getExcelColumn();
@@ -286,11 +288,6 @@ public class ExcelController {
             if (excelColumn.length() > Constant.INT_16) {
                 return "第" + (i + 1) + "项Excel列名长度大于16位";
             }
-            if (excelColumnSet.contains(excelColumn)) {
-                return "第" + (i + 1) + "项Excel列名重复";
-            }
-            excelColumnSet.add(excelColumn);
-            excelColumnForm.setExcelColumn(excelColumn);
             String sqlColumn = excelColumnForm.getSqlColumn();
             if (StringUtils.isBlank(sqlColumn)) {
                 return "第" + (i + 1) + "项sql列名为空";
@@ -302,6 +299,20 @@ public class ExcelController {
             if (checkIfExistSpace(sqlColumn)) {
                 return "sql列名中不能有空格";
             }
+            if (specialColumnNames.contains(excelColumn) && excelColumnForm.getIsSpecial()) {
+                // 如果需要特殊处理并且用户也设置了特殊处理
+                excelColumnForm.setExcelColumn(excelColumn);
+                excelColumnForm.setSqlColumn(sqlColumn);
+                continue;
+            }
+            // 除此以外，isSpecial设置为false，不论用户是否尝试设置
+            excelColumnForm.setIsSpecial(false);
+            // 校验重复
+            if (excelColumnSet.contains(excelColumn)) {
+                return "第" + (i + 1) + "项Excel列名重复";
+            }
+            excelColumnSet.add(excelColumn);
+            excelColumnForm.setExcelColumn(excelColumn);
             if (sqlColumnSet.contains(sqlColumn)) {
                 return "第" + (i + 1) + "项sql列名重复";
             }

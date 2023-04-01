@@ -82,6 +82,10 @@ public class ExcelServiceImpl implements ExcelService {
         List<ExcelColumnVo> nonNullColumns = excelVo.getNonNullList();
         List<ExcelColumnVo> nullableColumns = excelVo.getNullableList();
         for (ExcelColumnDto excelColumnDto : excelColumnDtos) {
+            if (excelColumnDto.getIsSpecial() == Constant.IS_SPECIAL) {
+                nonNullColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
+                continue;
+            }
             String sqlColumn = excelColumnDto.getSqlColumn();
             if (nonNullSet.contains(sqlColumn)) {
                 nonNullColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
@@ -226,7 +230,7 @@ public class ExcelServiceImpl implements ExcelService {
         excelVo.setExcelId(excelDto.getExcelId());
         excelVo.setExcelName(excelDto.getExcelName());
         excelVo.setSqlName(excelDto.getSqlName());
-        excelVo.setIsCover(excelDto.getIsCover() == 1);
+        excelVo.setIsCover(excelDto.getIsCover() == Constant.IS_COVER);
         return excelVo;
     }
 
@@ -235,6 +239,7 @@ public class ExcelServiceImpl implements ExcelService {
         excelColumnVo.setExcelId(excelColumnDto.getExcelId());
         excelColumnVo.setExcelColumn(excelColumnDto.getExcelColumn());
         excelColumnVo.setSqlColumn(excelColumnDto.getSqlColumn());
+        excelColumnVo.setIsSpecial(excelColumnDto.getIsSpecial() == Constant.IS_SPECIAL);
         return excelColumnVo;
     }
 
@@ -258,6 +263,7 @@ public class ExcelServiceImpl implements ExcelService {
         excelColumnDto.setExcelId(excelId);
         excelColumnDto.setExcelColumn(excelColumnForm.getExcelColumn());
         excelColumnDto.setSqlColumn(excelColumnForm.getSqlColumn());
+        excelColumnDto.setIsSpecial(excelColumnForm.getIsSpecial() ? 1 : 0);
         excelColumnDto.setCreatedBy(userNo);
         excelColumnDto.setUpdatedBy(userNo);
         return excelColumnDto;

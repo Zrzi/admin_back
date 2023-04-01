@@ -9,6 +9,7 @@
         <result column="excel_id" property="excelId" />
         <result column="excel_column" property="excelColumn" />
         <result column="sql_column" property="sqlColumn" />
+        <result column="is_special" property="isSpecial" />
         <result column="created_by" property="createdBy" />
         <result column="created_date" property="createdDate" />
         <result column="updated_by" property="updatedBy" />
@@ -17,14 +18,14 @@
     </resultMap>
 
     <select id="findExcelColumnsByExcelId" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `is_special`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_excel_column`
         WHERE `excel_id` = #{excelId}
           AND `status` = 0
     </select>
 
     <select id="findExcelColumnByColumnNames" resultMap="baseMap" parameterType="java.lang.String">
-        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
+        SELECT `id`, `excel_id`, `excel_column`, `sql_column`, `is_special`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`
         FROM `admin_excel_column`
         WHERE `excel_column` = #{excelColumn}
           AND `sql_column` = #{sqlColumn}
@@ -32,15 +33,15 @@
     </select>
 
     <insert id="excelColumnDto" parameterType="com.admin.admin_back.pojo.dto.ExcelColumnDto">
-        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
-        VALUES (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
+        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `is_special`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        VALUES (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isSpecial}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
     </insert>
 
     <insert id="batchInsertExcelColumns">
-        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
+        INSERT INTO `admin_excel_column` (`excel_id`, `excel_column`, `sql_column`, `is_special`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
         VALUE
         <foreach collection="list" item="excelColumnDto" index="index" separator=",">
-            (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
+            (#{excelColumnDto.excelId}, #{excelColumnDto.excelColumn}, #{excelColumnDto.sqlColumn}, #{excelColumnDto.isSpecial}, #{excelColumnDto.createdBy}, NOW(), #{excelColumnDto.updatedBy}, NOW(), 0)
         </foreach>
     </insert>
 
