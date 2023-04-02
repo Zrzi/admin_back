@@ -140,11 +140,13 @@ public class Constant {
     public final static Map<String, Set<String>> EXCEL_SPECIAL = new HashMap<String, Set<String>>() {{
         put("选课课程管理信息", new HashSet<String>() {{
             add("课程编号");
-            add("上课周次");
+            add("课序号");
             add("上课时间");
             add("上课地点");
         }});
     }};
+
+    public final static Set<String> EMPTY_STRING_SET = new HashSet<String>();
 
     public final static String DATE_TYPE_DATE = "date";
 

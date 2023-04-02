@@ -277,7 +277,7 @@ public class ExcelController {
         Set<String> excelColumnSet = new HashSet<>();
         Set<String> sqlColumnSet = new HashSet<>();
         Set<String> specialColumnNames =
-                Constant.EXCEL_SPECIAL.getOrDefault(excelName, new HashSet<String>());
+                Constant.EXCEL_SPECIAL.getOrDefault(excelName, Constant.EMPTY_STRING_SET);
         for (int i=0; i<size; ++i) {
             ExcelColumnForm excelColumnForm = excelColumnForms.get(i);
             String excelColumn = excelColumnForm.getExcelColumn();

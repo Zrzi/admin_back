@@ -48,6 +48,11 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
     private final List<String> columnNames = new ArrayList<>();
 
     /**
+     * 存储需要特殊处理的excel列名
+     */
+    private final Set<String> specialExcelColumns = new HashSet<>();
+
+    /**
      * 存储excel列名 -> sql列名 的映射关系
      */
     private final Map<String, String> excelSqlColumnMapper = new HashMap<>();
@@ -126,7 +131,19 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         if (isColumnName) {
             handleColumnNames(linkedHashMap);
         } else {
-            handleData(linkedHashMap);
+            if (specialExcelColumns.isEmpty()) {
+                handleData(linkedHashMap);
+            } else {
+                final String excelName = excelDto.getExcelName();
+                switch (excelDto.getExcelName()) {
+                    case "选课课程管理信息":
+                        handleCourseSelectionInfo(linkedHashMap);
+                        break;
+                    default:
+                        logTask.logInfo("暂时不支持处理" + excelName + "的特殊情况");
+                        throw new ExcelDataException("暂时不支持处理" + excelName + "的特殊情况");
+                }
+            }
         }
     }
 
@@ -137,13 +154,10 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         this.isColumnName = false;
         for (Integer key : linkedHashMap.keySet()) {
             String excelColumnName = linkedHashMap.get(key);
-            String sqlColumnName = null;
-            if (excelSqlColumnMapper.containsKey(excelColumnName)) {
-                sqlColumnName = excelSqlColumnMapper.get(excelColumnName);
-            } else {
+            if (!excelSqlColumnMapper.containsKey(excelColumnName)) {
                 logTask.logInfo(excelColumnName + "对应的配置不存在");
             }
-            columnNames.add(sqlColumnName);
+            columnNames.add(excelColumnName);
         }
     }
 
@@ -153,33 +167,111 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         Map<String, Object> data = excelDataDto.getData();
         for (Integer key : linkedHashMap.keySet()) {
             if (key < columnNames.size()) {
-                String sqlColumnName = columnNames.get(key);
+                String excelColumnName = columnNames.get(key);
+                String sqlColumnName = excelSqlColumnMapper.getOrDefault(excelColumnName, null);
                 if (StringUtils.isBlank(sqlColumnName)) {
                     continue;
                 }
-                Object value = linkedHashMap.get(key);
+                String val = linkedHashMap.get(key);
                 String dataType = sqlColumnInfoMap.get(sqlColumnName).getDataType();
-                switch (dataType) {
-                    case Constant.DATE_TYPE_DATE:
-                        value = handleCastToDate(value.toString(), true);
-                        if (Objects.isNull(value)) {
-                            throw new ExcelDataException("第" + nums + "行，日期格式错误");
-                        }
-                        break;
-                    case Constant.DATE_TYPE_DATE_TIME:
-                        value = handleCastToDate(value.toString(), false);
-                        if (Objects.isNull(value)) {
-                            throw new ExcelDataException("第" + nums + "行，日期格式错误");
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                Object value = parseVal(val, dataType);
                 data.put(sqlColumnName, value);
             }
         }
         checkData(excelDataDto);
         dataList.add(excelDataDto);
+    }
+
+    private void handleCourseSelectionInfo(LinkedHashMap<Integer, String> linkedHashMap) {
+        ++nums;
+        Map<String, Object> data = new HashMap<>();
+        List<ExcelDataDto> extraData = new ArrayList<>();
+        String courseId = null;
+        String courseOrderId = null;
+        for (Integer key : linkedHashMap.keySet()) {
+            if (key < columnNames.size()) {
+                String excelColumnName = columnNames.get(key);
+                String val = linkedHashMap.get(key);
+                if (specialExcelColumns.contains(excelColumnName)) {
+                    int length = 0;
+                    int size = 0;
+                    switch (excelColumnName) {
+                        case "课程编号":
+                            courseId = val;
+                            break;
+                        case "课序号":
+                            courseOrderId = val;
+                            break;
+                        case "上课时间":
+                            String[] times = val.split(",");
+                            length = times.length;
+                            size = extraData.size();
+                            if (length < size) {
+                                throw new ExcelDataException("第" + nums + "行，上课时间数量过少。");
+                            } else if (length > size) {
+                                if (size == 0) {
+                                    for (int i=0; i<length-size; ++i) {
+                                        extraData.add(new ExcelDataDto());
+                                    }
+                                } else {
+                                    throw new ExcelDataException("第" + nums + "行，上课时间数量过多。");
+                                }
+                            }
+                            for (int i=0; i<length; ++i) {
+                                String time = times[i].trim();
+                                String[] splitTime = time.split(" ");
+                                if (splitTime.length != 2) {
+                                    throw new ExcelDataException("第" + nums + "行，上课时间格式错误。");
+                                }
+                                extraData.get(i).getData().put("weekN", splitTime[0]);
+                                extraData.get(i).getData().put("classsegment", splitTime[1]);
+                            }
+                            break;
+                        case "上课地点":
+                            String[] places = val.split(",");
+                            length = places.length;
+                            size = extraData.size();
+                            if (length < size) {
+                                throw new ExcelDataException("第" + nums + "行，上课地点数量过少。");
+                            } else if (length > size) {
+                                if (size == 0) {
+                                    for (int i=0; i<length-size; ++i) {
+                                        extraData.add(new ExcelDataDto());
+                                    }
+                                } else {
+                                    throw new ExcelDataException("第" + nums + "行，上课地点数量过多。");
+                                }
+                            }
+                            for (int i=0; i<length; ++i) {
+                                String place = places[i];
+                                extraData.get(i).getData().put("classroom", place);
+                            }
+                            break;
+                        default:
+                            logTask.logInfo("暂时不支持处理" + excelColumnName + "的特殊情况");
+                            throw new ExcelDataException("暂时不支持处理" + excelColumnName + "的特殊情况");
+                    }
+                }
+                if (excelSqlColumnMapper.containsKey(excelColumnName)) {
+                    String sqlColumnName = excelSqlColumnMapper.getOrDefault(excelColumnName, null);
+                    if (StringUtils.isBlank(sqlColumnName)) {
+                        continue;
+                    }
+                    String dataType = sqlColumnInfoMap.get(sqlColumnName).getDataType();
+                    Object value = parseVal(val, dataType);
+                    data.put(sqlColumnName, value);
+                }
+            }
+        }
+        if (extraData.isEmpty() || StringUtils.isBlank(courseId) || StringUtils.isBlank(courseOrderId)) {
+            throw new ExcelDataException("第" + nums + "行，缺少一些指定的配置。");
+        }
+        for (ExcelDataDto excelDataDto : extraData) {
+            String keyid = courseId + courseOrderId + excelDataDto.getData().get("classsegment");
+            excelDataDto.getData().put("keyid", keyid);
+            checkData(excelDataDto);
+            dataList.add(excelDataDto);
+        }
     }
 
     /**
@@ -242,7 +334,11 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
             if (autoIncrementKeys.contains(sqlColumnName)) {
                 continue;
             }
-            excelSqlColumnMapper.put(excelColumnName, sqlColumnName);
+            if (excelColumnDto.getIsSpecial().equals(Constant.IS_SPECIAL)) {
+                specialExcelColumns.add(excelName);
+            } else {
+                excelSqlColumnMapper.put(excelColumnName, sqlColumnName);
+            }
         }
     }
 
@@ -318,6 +414,35 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         if (nums == 0) {
             throw new ExcelDataException("Excel表内数据为空");
         }
+    }
+
+    /**
+     * 将value转换为对应类型
+     * @param val value
+     * @param dataType 对应类型
+     * @return {@code val}转换后的类型
+     * @throws ExcelDataException 类型转换失败后抛出异常
+     */
+    private Object parseVal(String val, String dataType) {
+        Object value = null;
+        switch (dataType) {
+            case Constant.DATE_TYPE_DATE:
+                value = handleCastToDate(val, true);
+                if (Objects.isNull(value)) {
+                    throw new ExcelDataException("第" + nums + "行，日期格式错误");
+                }
+                break;
+            case Constant.DATE_TYPE_DATE_TIME:
+                value = handleCastToDate(val, false);
+                if (Objects.isNull(value)) {
+                    throw new ExcelDataException("第" + nums + "行，日期格式错误");
+                }
+                break;
+            default:
+                value = val;
+                break;
+        }
+        return value;
     }
 
     /**
