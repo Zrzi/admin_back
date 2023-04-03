@@ -245,8 +245,13 @@ public class UserServiceImpl implements UserService {
         String updatedBy = UserThreadLocal.getUser().getUserNo();
         userDto.setUpdatedBy(updatedBy);
         userMapper.deleteUser(userDto);
-        studentMapper.deleteStudent(userNo);
-        teacherMapper.deleteTeacher(userNo);
+        Integer userType = userDto.getUserType();
+        if (userType.equals(UserTypeEnum.STUDENT.code)) {
+            studentMapper.deleteStudent(userNo);
+        }
+        if (userType.equals(UserTypeEnum.TEACHER.code)) {
+            teacherMapper.deleteTeacher(userNo);
+        }
     }
 
     @Override
