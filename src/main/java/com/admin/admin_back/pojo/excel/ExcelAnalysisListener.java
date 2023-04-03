@@ -10,6 +10,7 @@ import com.admin.admin_back.pojo.exception.ExcelNameNotFoundException;
 import com.admin.admin_back.service.LogTask;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -186,6 +187,7 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
         ++nums;
         Map<String, Object> data = new HashMap<>();
         List<ExcelDataDto> extraData = new ArrayList<>();
+        int size = -1;
         String courseId = null;
         String courseOrderId = null;
         for (Integer key : linkedHashMap.keySet()) {
@@ -194,7 +196,6 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
                 String val = linkedHashMap.get(key);
                 if (specialExcelColumns.contains(excelColumnName)) {
                     int length = 0;
-                    int size = 0;
                     switch (excelColumnName) {
                         case "课程编号":
                             courseId = val;
@@ -203,19 +204,18 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
                             courseOrderId = val;
                             break;
                         case "上课时间":
+                            if (StringUtils.isBlank(val)) {
+                                break;
+                            }
                             String[] times = val.split(",");
                             length = times.length;
-                            size = extraData.size();
-                            if (length < size) {
-                                throw new ExcelDataException("第" + nums + "行，上课时间数量过少。");
-                            } else if (length > size) {
-                                if (size == 0) {
-                                    for (int i=0; i<length-size; ++i) {
-                                        extraData.add(new ExcelDataDto());
-                                    }
-                                } else {
-                                    throw new ExcelDataException("第" + nums + "行，上课时间数量过多。");
+                            if (size == -1) {
+                                for (int i=0; i<length; ++i) {
+                                    extraData.add(new ExcelDataDto());
+                                    size = extraData.size();
                                 }
+                            } else if (size != length) {
+                                throw new ExcelDataException("第" + nums + "行，上课时间数量错误。");
                             }
                             for (int i=0; i<length; ++i) {
                                 String time = times[i].trim();
@@ -223,24 +223,22 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
                                 if (splitTime.length != 2) {
                                     throw new ExcelDataException("第" + nums + "行，上课时间格式错误。");
                                 }
-                                extraData.get(i).getData().put("weekN", splitTime[0]);
-                                extraData.get(i).getData().put("classsegment", splitTime[1]);
+                                extraData.get(i).getData().put("weekN", splitTime[0].substring(2, 3));
+                                extraData.get(i).getData().put("classsegment", splitTime[1].substring(0,4));
                             }
                             break;
                         case "上课地点":
+                            if (StringUtils.isBlank(val)) {
+                                break;
+                            }
                             String[] places = val.split(",");
                             length = places.length;
-                            size = extraData.size();
-                            if (length < size) {
-                                throw new ExcelDataException("第" + nums + "行，上课地点数量过少。");
-                            } else if (length > size) {
-                                if (size == 0) {
-                                    for (int i=0; i<length-size; ++i) {
-                                        extraData.add(new ExcelDataDto());
-                                    }
-                                } else {
-                                    throw new ExcelDataException("第" + nums + "行，上课地点数量过多。");
+                            if (size == -1) {
+                                for (int i=0; i<length; ++i) {
+                                    extraData.add(new ExcelDataDto());
                                 }
+                            } else if (size != length) {
+                                throw new ExcelDataException("第" + nums + "行，上课时间数量错误。");
                             }
                             for (int i=0; i<length; ++i) {
                                 String place = places[i];
@@ -263,14 +261,32 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
                 }
             }
         }
-        if (extraData.isEmpty() || StringUtils.isBlank(courseId) || StringUtils.isBlank(courseOrderId)) {
+        if (StringUtils.isBlank(courseId) || StringUtils.isBlank(courseOrderId)) {
             throw new ExcelDataException("第" + nums + "行，缺少一些指定的配置。");
         }
-        for (ExcelDataDto excelDataDto : extraData) {
-            String keyid = courseId + courseOrderId + excelDataDto.getData().get("classsegment");
+        if (CollectionUtils.isEmpty(extraData)) {
+            String keyid = courseId + courseOrderId;
+            ExcelDataDto excelDataDto = new ExcelDataDto();
+            excelDataDto.getData().putAll(data);
             excelDataDto.getData().put("keyid", keyid);
             checkData(excelDataDto);
             dataList.add(excelDataDto);
+        } else {
+            final Map<String, Integer> weekDayMapper = Constant.WEEK_DAY_MAPPER;
+            for (ExcelDataDto excelDataDto : extraData) {
+                Map<String, Object> map = excelDataDto.getData();
+                String keyid = courseId + courseOrderId
+                        + weekDayMapper.getOrDefault(map.getOrDefault("weekN", "0").toString(), 0)
+                        + map.getOrDefault("classsegment", "0000");
+                map.put("keyid", keyid);
+                for (String key : data.keySet()) {
+                    if (!map.containsKey(key)) {
+                        map.put(key, data.get(key));
+                    }
+                }
+                checkData(excelDataDto);
+                dataList.add(excelDataDto);
+            }
         }
     }
 
@@ -335,7 +351,7 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
                 continue;
             }
             if (excelColumnDto.getIsSpecial().equals(Constant.IS_SPECIAL)) {
-                specialExcelColumns.add(excelName);
+                specialExcelColumns.add(excelColumnDto.getExcelColumn());
             } else {
                 excelSqlColumnMapper.put(excelColumnName, sqlColumnName);
             }

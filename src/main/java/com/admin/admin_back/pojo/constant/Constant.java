@@ -146,6 +146,16 @@ public class Constant {
         }});
     }};
 
+    public final static Map<String, Integer> WEEK_DAY_MAPPER = new HashMap<String, Integer>() {{
+        put("一", 1);
+        put("二", 2);
+        put("三", 3);
+        put("四", 4);
+        put("五", 5);
+        put("六", 6);
+        put("七", 7);
+    }};
+
     public final static Set<String> EMPTY_STRING_SET = new HashSet<String>();
 
     public final static String DATE_TYPE_DATE = "date";
