@@ -72,8 +72,16 @@ public class Constant {
 
     public final static String ISSUER = "sdu-admin";
 
-    public final static int JWT_TOKEN_EXPIRATION = 300;
+    /**
+     * 令牌过期时间
+     * 1 * 24 * 60 * 60 单位：秒
+     */
+    public final static int JWT_TOKEN_EXPIRATION = 86400;
 
+    /**
+     * 刷新令牌过期时间
+     * 7 * 24 * 60 * 60 单位：秒
+     */
     public final static int REFRESH_TOKEN_EXPIRATION = 604800;
 
     /**
