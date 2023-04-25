@@ -265,7 +265,7 @@ public class ExcelAnalysisListener extends AnalysisEventListener<LinkedHashMap<I
             throw new ExcelDataException("第" + nums + "行，缺少一些指定的配置。");
         }
         if (CollectionUtils.isEmpty(extraData)) {
-            String keyid = courseId + courseOrderId;
+            String keyid = courseId + courseOrderId + "00000";
             ExcelDataDto excelDataDto = new ExcelDataDto();
             excelDataDto.getData().putAll(data);
             excelDataDto.getData().put("keyid", keyid);

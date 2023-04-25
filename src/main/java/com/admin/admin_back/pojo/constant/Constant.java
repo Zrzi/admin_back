@@ -1,10 +1,7 @@
 package com.admin.admin_back.pojo.constant;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 陈群矜
@@ -173,5 +170,24 @@ public class Constant {
     public final static String IS_NULLABLE = "YES";
 
     public final static String BLANK_STRING = "";
+
+    /**
+     * 数据获取接口相关常量
+     */
+    public final static Set<String> ALLOWED_SQL_TABLE_NAMES = new HashSet<String>() {{
+        add("admin_excel");
+        add("admin_excel_column");
+        add("admin_resource");
+        add("admin_role");
+        add("admin_system");
+        add("admin_user");
+        add("course_select");
+        add("students");
+        add("teacheres");
+    }};
+
+    public final static List<String> PRIVACY_COLUMN_NAMES = new ArrayList<String>() {{
+        add("password");
+    }};
 
 }

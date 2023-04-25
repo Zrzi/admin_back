@@ -56,4 +56,18 @@
         </foreach>
     </update>
 
+    <select id="getResults" resultType="java.util.Map">
+        SELECT
+        <foreach collection="columns" item="column" index="index" separator=",">
+            ${column}
+        </foreach>
+        FROM ${sqlTable}
+        <if test="conditions.size != 0">
+            WHERE
+            <foreach collection="conditions" index="key" item="value" separator=" AND ">
+                ${key} = #{value}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

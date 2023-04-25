@@ -1,7 +1,6 @@
 package com.admin.admin_back.mapper;
 
 import com.admin.admin_back.pojo.dto.ExcelDto;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,5 +32,16 @@ public interface DataMapper {
     Integer updateData(@Param("excelDto") ExcelDto excelDto,
                        @Param("data") Map<String, Object> data,
                        @Param("primaryKeys") Map<String, Object> primaryKeys);
+
+    /**
+     * 根据表名、列名、查询条件获取对应的数据，可能是多条数据
+     * @param sqlTable 数据库表名
+     * @param columns 数据库列名
+     * @param conditions 查询条件
+     * @return 结果列表
+     */
+    List<Map<String, Object>> getResults(@Param("sqlTable") String sqlTable,
+                                         @Param("columns") List<String> columns,
+                                         @Param("conditions") Map<String, String> conditions);
 
 }

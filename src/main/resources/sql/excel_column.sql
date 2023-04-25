@@ -13,4 +13,4 @@ CREATE TABLE `admin_excel_column` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `admin_excel_column` ADD `is_special` INTEGER NOT NULL DEFAULT 0 COMMENT '标记是否需要特殊处理 0：不需要；1：需要';
+-- ALTER TABLE `admin_excel_column` ADD `is_special` INTEGER NOT NULL DEFAULT 0 COMMENT '标记是否需要特殊处理 0：不需要；1：需要';

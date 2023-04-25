@@ -17,11 +17,11 @@ CREATE TABLE `admin_resource` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `admin_resource` MODIFY COLUMN `resource_name` VARCHAR(50) NOT NULL COMMENT '资源名称';
+-- ALTER TABLE `admin_resource` MODIFY COLUMN `resource_name` VARCHAR(50) NOT NULL COMMENT '资源名称';
 
-ALTER TABLE `admin_resource` ADD COLUMN `is_menu` INTEGER NOT NULL DEFAULT 0 COMMENT '是否是导航菜单，0：不是；1：是';
+-- ALTER TABLE `admin_resource` ADD COLUMN `is_menu` INTEGER NOT NULL DEFAULT 0 COMMENT '是否是导航菜单，0：不是；1：是';
 
-SELECT `resource_id`, `resource_name`, `resource_url`, `resource_type` FROM `admin_resource` WHERE `status` = 0 LIMIT 8, 8;
+-- SELECT `resource_id`, `resource_name`, `resource_url`, `resource_type` FROM `admin_resource` WHERE `status` = 0 LIMIT 8, 8;
 
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R81a9defb13ac44489557e10b6558b32e', 'addRole', 'Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '/role/post', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
@@ -158,7 +158,7 @@ VALUES ('Rc4a57f3e530141468bacda5408a6798a', 'addResourceButton', 'Saeda408ef5de
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R9fd764676bb644dfb8f554e1b56bf5d4', 'getMenus', 'Saeda408ef5de4fdb9a583f9b441cfc97', '权限管理系统', '/getMenus', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
 
---- Excel 新增 ---
+-- Excel 新增
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R5197664e9df34269b99da27e5c33483f', 'Excel映射配置', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/home/excels', 1, NULL, 1, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
 
@@ -201,7 +201,7 @@ VALUES ('R8482f80be65245ff917e80091d220396', 'uploadExcel', 'S6b7980d3d2064c718e
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('R07368d7d787f42168feaa8fd39c908a5', 'getUploadExcelResult', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getUploadExcelResult', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
 
---- 2023-03-17 新增 ---
+-- 2023-03-17 新增
 INSERT INTO `admin_resource`(`resource_id`, `resource_name`, `system_id`, `system_name`, `resource_url`, `resource_type`, `parent_resource`, `is_menu`, `created_by`, `created_date`, `updated_by`, `updated_date`, `status`)
 VALUES ('Re9ace883c3eb480da8d4e258c188019a', 'getHistoryUploadExcelResult', 'S6b7980d3d2064c718ed48989bf919eff', 'Excel上传', '/excel/getHistoryUploadExcelResult', 0, NULL, 0, '00000000000000000000 ', NOW(), '00000000000000000000 ', NOW(), 0);
 

@@ -14,9 +14,9 @@ CREATE TABLE `admin_task` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `admin_task` ADD COLUMN `task_success_insert` INTEGER NOT NULL DEFAULT 0 COMMENT '成功插入的个数';
-ALTER TABLE `admin_task` ADD COLUMN `task_success_update` INTEGER NOT NULL DEFAULT 0 COMMENT '成功修改的个数';
+-- ALTER TABLE `admin_task` ADD COLUMN `task_success_insert` INTEGER NOT NULL DEFAULT 0 COMMENT '成功插入的个数';
+-- ALTER TABLE `admin_task` ADD COLUMN `task_success_update` INTEGER NOT NULL DEFAULT 0 COMMENT '成功修改的个数';
 
 --- 2023-03-17新增 ---
-ALTER TABLE `admin_task` ADD COLUMN `excel_name` VARCHAR(16) NOT NULL COMMENT 'Excel表格名称';
-ALTER TABLE `admin_task` ADD COLUMN `sql_name` VARCHAR(40) NOT NULL COMMENT 'Excel表格名称';
+-- ALTER TABLE `admin_task` ADD COLUMN `excel_name` VARCHAR(16) NOT NULL COMMENT 'Excel表格名称';
+-- ALTER TABLE `admin_task` ADD COLUMN `sql_name` VARCHAR(40) NOT NULL COMMENT 'Excel表格名称';
