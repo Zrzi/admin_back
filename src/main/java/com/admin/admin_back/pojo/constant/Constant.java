@@ -181,9 +181,18 @@ public class Constant {
         add("admin_role");
         add("admin_system");
         add("admin_user");
+        add("buildings");
+        add("classes");
+        add("classestimestatus");
+        add("classrooms");
         add("course_select");
+        add("courses");
+        add("major");
         add("students");
+        add("studentsselect");
+        add("studentschedule");
         add("teacheres");
+        add("testschedule");
     }};
 
     public final static List<String> PRIVACY_COLUMN_NAMES = new ArrayList<String>() {{
