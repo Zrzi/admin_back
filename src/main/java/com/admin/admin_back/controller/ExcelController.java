@@ -246,8 +246,8 @@ public class ExcelController {
             return "Excel表格名称不存在";
         }
         excelName = excelName.trim();
-        if (excelName.length() > Constant.INT_16) {
-            return "Excel表格名称最长16个字符";
+        if (excelName.length() > Constant.INT_64) {
+            return "Excel表格名称最长64个字符";
         }
         excelForm.setExcelName(excelName);
         String sqlName = excelForm.getSqlName();

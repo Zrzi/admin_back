@@ -5,9 +5,9 @@
         <!-- 本地 -->
 <!--        <property name="LOG_HOME">D:/logs/admin</property>-->
         <!-- 测试环境 -->
-        <property name="LOG_HOME">/var/log/admin_back</property>
+<!--        <property name="LOG_HOME">/var/log/admin_back</property>-->
         <!-- 生产环境 -->
-<!--        <property name="LOG_HOME">F:/EDU/logs</property>-->
+        <property name="LOG_HOME">F:/EDU/logs</property>
         <property name="FILE_NAME_INFO">std</property>
         <property name="FILE_NAME_ERROR">error</property>
     </properties>

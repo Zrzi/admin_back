@@ -52,6 +52,8 @@ public class Constant {
 
     public final static int INT_50 = 50;
 
+    public final static int INT_64 = 64;
+
     public final static int INT_100 = 100;
 
     /**
@@ -127,7 +129,7 @@ public class Constant {
     /**
      * 数据库名称
      */
-    public final static String TABLE_SCHEMA = "emp";
+    public final static String TABLE_SCHEMA = "ems";
 
     /**
      * 学生表
