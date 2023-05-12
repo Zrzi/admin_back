@@ -1,6 +1,7 @@
 package com.admin.admin_back.service.impl;
 
 import com.admin.admin_back.mapper.SystemMapper;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.SystemDto;
 import com.admin.admin_back.pojo.enums.CodeTypeEnum;
 import com.admin.admin_back.pojo.exception.BaseException;
@@ -8,23 +9,40 @@ import com.admin.admin_back.pojo.exception.SystemExistException;
 import com.admin.admin_back.pojo.exception.SystemNameExistException;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.SystemVo;
+import com.admin.admin_back.service.DeleteCacheService;
 import com.admin.admin_back.service.SystemService;
+import com.admin.admin_back.utils.CacheTimeUtil;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * @author 陈群矜
+ */
 @Service
 public class SystemServiceImpl implements SystemService {
 
     @Autowired
     private SystemMapper systemMapper;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private CacheTimeUtil cacheTimeUtil;
+
+    @Autowired
+    private DeleteCacheService deleteCacheService;
 
     @Override
     public List<SystemVo> getSystems() {
@@ -47,6 +65,10 @@ public class SystemServiceImpl implements SystemService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public SystemVo getSystemBySystemId(String systemId) {
+        String cacheValue = stringRedisTemplate.opsForValue().get("system:" + systemId);
+        if (StringUtils.isNotBlank(cacheValue)) {
+            return JSON.parseObject(cacheValue, SystemVo.class);
+        }
         SystemDto systemDto = systemMapper.findSystemBySystemId(systemId);
         if (Objects.isNull(systemDto)) {
             throw new SystemExistException();
@@ -58,6 +80,7 @@ public class SystemServiceImpl implements SystemService {
         vo.setCreatedDate(systemDto.getCreatedDate());
         vo.setUpdatedBy(systemDto.getUpdatedBy());
         vo.setUpdatedDate(systemDto.getUpdatedDate());
+        stringRedisTemplate.opsForValue().set("system:" + systemId, vo.toString(), cacheTimeUtil.getCacheTime(), TimeUnit.SECONDS);
         return vo;
     }
 
@@ -93,6 +116,7 @@ public class SystemServiceImpl implements SystemService {
         systemDto.setSystemName(systemName);
         String userNo = UserThreadLocal.getUser().getUserNo();
         systemDto.setUpdatedBy(userNo);
+        deleteCacheService.deleteRedisCache("system:" + systemId, Constant.INT_5);
         systemMapper.updateSystemBySystemId(systemDto);
     }
 
@@ -105,6 +129,7 @@ public class SystemServiceImpl implements SystemService {
         }
         String userNo = UserThreadLocal.getUser().getUserNo();
         system.setUpdatedBy(userNo);
+        deleteCacheService.deleteRedisCache("system:" + systemId, Constant.INT_5);
         systemMapper.deleteSystemBySystemId(system);
     }
 

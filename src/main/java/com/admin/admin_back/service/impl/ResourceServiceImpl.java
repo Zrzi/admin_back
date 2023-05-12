@@ -2,6 +2,7 @@ package com.admin.admin_back.service.impl;
 
 import com.admin.admin_back.mapper.ResourceMapper;
 import com.admin.admin_back.mapper.SystemMapper;
+import com.admin.admin_back.pojo.constant.Constant;
 import com.admin.admin_back.pojo.dto.ResourceDto;
 import com.admin.admin_back.pojo.dto.SystemDto;
 import com.admin.admin_back.pojo.enums.CodeTypeEnum;
@@ -12,10 +13,14 @@ import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.MenuResourceVo;
 import com.admin.admin_back.pojo.vo.MenuSystemVo;
 import com.admin.admin_back.pojo.vo.ResourceVo;
+import com.admin.admin_back.service.DeleteCacheService;
 import com.admin.admin_back.service.ResourceService;
+import com.admin.admin_back.utils.CacheTimeUtil;
 import com.admin.admin_back.utils.GenerateCodeUtil;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -23,8 +28,12 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * @author 陈群矜
+ */
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
@@ -33,6 +42,15 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     private SystemMapper systemMapper;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private CacheTimeUtil cacheTimeUtil;
+
+    @Autowired
+    private DeleteCacheService deleteCacheService;
 
     @Override
     public Integer getResourcesCount(String systemId, String searchKey) {
@@ -174,6 +192,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceVo getResourceById(String resourceId) {
+        String cacheValue = stringRedisTemplate.opsForValue().get("resource:" + resourceId);
+        if (StringUtils.isNotBlank(cacheValue)) {
+            return JSON.parseObject(cacheValue, ResourceVo.class);
+        }
         ResourceDto resourceDto = resourceMapper.findResourceByResourceId(resourceId);
         if (Objects.isNull(resourceDto)) {
             throw new ResourceExistException();
@@ -191,6 +213,7 @@ public class ResourceServiceImpl implements ResourceService {
         vo.setCreatedDate(resourceDto.getCreatedDate());
         vo.setUpdatedBy(resourceDto.getUpdatedBy());
         vo.setUpdatedDate(resourceDto.getUpdatedDate());
+        stringRedisTemplate.opsForValue().set("resource:" + resourceId, vo.toString(), cacheTimeUtil.getCacheTime(), TimeUnit.SECONDS);
         return vo;
     }
 
@@ -269,6 +292,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceDto.setIsMenu(resourceForm.getIsMenu() ? 1 : 0);
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
+        deleteCacheService.deleteRedisCache("resource:" + resourceId, Constant.INT_5);
         resourceMapper.updateResourceByResourceId(resourceDto);
     }
 
@@ -285,6 +309,7 @@ public class ResourceServiceImpl implements ResourceService {
 //        }
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
+        deleteCacheService.deleteRedisCache("resource:" + resourceId, Constant.INT_5);
         resourceMapper.deleteResourceByResourceId(resourceDto);
     }
 

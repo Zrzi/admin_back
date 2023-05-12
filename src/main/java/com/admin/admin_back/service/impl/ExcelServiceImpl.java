@@ -10,13 +10,17 @@ import com.admin.admin_back.pojo.form.ExcelColumnForm;
 import com.admin.admin_back.pojo.form.ExcelForm;
 import com.admin.admin_back.pojo.threadlocals.UserThreadLocal;
 import com.admin.admin_back.pojo.vo.*;
+import com.admin.admin_back.service.DeleteCacheService;
 import com.admin.admin_back.service.ExcelHelper;
 import com.admin.admin_back.service.ExcelService;
 import com.admin.admin_back.service.LogTask;
+import com.admin.admin_back.utils.CacheTimeUtil;
 import com.admin.admin_back.utils.GenerateCodeUtil;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +30,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +60,15 @@ public class ExcelServiceImpl implements ExcelService {
     @Autowired
     private LogTask logTask;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private CacheTimeUtil cacheTimeUtil;
+
+    @Autowired
+    private DeleteCacheService deleteCacheService;
+
     @Override
     public List<ExcelVo> getExcels() {
         return excelMapper
@@ -66,6 +80,10 @@ public class ExcelServiceImpl implements ExcelService {
 
     @Override
     public ExcelVo getExcelByExcelId(String excelId) {
+        String cacheValue = stringRedisTemplate.opsForValue().get("excel:" + excelId);
+        if (StringUtils.isNotBlank(cacheValue)) {
+            return JSON.parseObject(cacheValue, ExcelVo.class);
+        }
         ExcelDto excelDto = excelMapper.findExcelByExcelId(excelId);
         if (Objects.isNull(excelDto)) {
             throw new ExcelExistException();
@@ -93,6 +111,7 @@ public class ExcelServiceImpl implements ExcelService {
                 nullableColumns.add(getExcelColumnVoFromExcelColumnDto(excelColumnDto));
             }
         }
+        stringRedisTemplate.opsForValue().set("excel:" + excelId, excelVo.toString(), cacheTimeUtil.getCacheTime(), TimeUnit.SECONDS);
         return excelVo;
     }
 
@@ -133,6 +152,7 @@ public class ExcelServiceImpl implements ExcelService {
         }
         excelDto = getExcelDtoFromExcelForm(excelForm, true);
         excelDto.setExcelId(excelId);
+        deleteCacheService.deleteRedisCache("excel:" + excelId, Constant.INT_5);
         excelMapper.updateExcelDto(excelDto);
         excelColumnMapper.batchDeleteExcelColumns(excelId);
         saveExcelColumns(excelForm.getRows(), excelId);
@@ -157,6 +177,7 @@ public class ExcelServiceImpl implements ExcelService {
         }
         String userNo = UserThreadLocal.getUser().getUserNo();
         excelDto.setUpdatedBy(userNo);
+        deleteCacheService.deleteRedisCache("excel:" + excelId, Constant.INT_5);
         excelMapper.deleteExcelDto(excelDto);
     }
 

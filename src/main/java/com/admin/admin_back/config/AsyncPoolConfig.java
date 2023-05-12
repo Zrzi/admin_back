@@ -50,6 +50,25 @@ public class AsyncPoolConfig {
         return executor;
     }
 
+    /**
+     * 线程池，用于延迟删除redis缓存
+     * @return 线程池
+     */
+    @Bean("deleteRedisKeyExecutor")
+    public ThreadPoolTaskExecutor deleteRedisKeyExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(50);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("redis-key-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        executor.initialize();
+        return executor;
+    }
+
 //    @Bean("testExecutor")
 //    public ThreadPoolTaskExecutor testExecutor() {
 //        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
