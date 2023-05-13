@@ -292,8 +292,10 @@ public class ResourceServiceImpl implements ResourceService {
         resourceDto.setIsMenu(resourceForm.getIsMenu() ? 1 : 0);
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("resource:" + resourceId, Constant.INT_5);
+        String key = "resource:" + resourceId;
+        deleteCacheService.deleteRedisCache(key);
         resourceMapper.updateResourceByResourceId(resourceDto);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
 
     @Override
@@ -309,8 +311,10 @@ public class ResourceServiceImpl implements ResourceService {
 //        }
         String userNo = UserThreadLocal.getUser().getUserNo();
         resourceDto.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("resource:" + resourceId, Constant.INT_5);
+        String key = "resource:" + resourceId;
+        deleteCacheService.deleteRedisCache(key);
         resourceMapper.deleteResourceByResourceId(resourceDto);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
 
 }

@@ -116,8 +116,10 @@ public class SystemServiceImpl implements SystemService {
         systemDto.setSystemName(systemName);
         String userNo = UserThreadLocal.getUser().getUserNo();
         systemDto.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("system:" + systemId, Constant.INT_5);
+        String key = "system:" + systemId;
+        deleteCacheService.deleteRedisCache(key);
         systemMapper.updateSystemBySystemId(systemDto);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
 
     @Override
@@ -129,8 +131,10 @@ public class SystemServiceImpl implements SystemService {
         }
         String userNo = UserThreadLocal.getUser().getUserNo();
         system.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("system:" + systemId, Constant.INT_5);
+        String key = "system:" + systemId;
+        deleteCacheService.deleteRedisCache(key);
         systemMapper.deleteSystemBySystemId(system);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
 
 }

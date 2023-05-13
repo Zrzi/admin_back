@@ -153,8 +153,10 @@ public class RoleServiceImpl implements RoleService {
         roleDto.setRoleName(roleName);
         String userNo = UserThreadLocal.getUser().getUserNo();
         roleDto.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("role:" + roleId, Constant.INT_5);
+        String key = "role:" + roleId;
+        deleteCacheService.deleteRedisCache(key);
         roleMapper.updateRoleByRoleId(roleDto);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
 
     @Override
@@ -166,9 +168,10 @@ public class RoleServiceImpl implements RoleService {
         }
         String userNo = UserThreadLocal.getUser().getUserNo();
         roleDto.setUpdatedBy(userNo);
-        deleteCacheService.deleteRedisCache("role:" + roleId, Constant.INT_5);
+        String key = "role:" + roleId;
+        deleteCacheService.deleteRedisCache(key);
         roleMapper.deleteRoleByRoleId(roleDto);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
     }
-
 
 }

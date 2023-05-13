@@ -129,7 +129,7 @@ public class Constant {
     /**
      * 数据库名称
      */
-    public final static String TABLE_SCHEMA = "ems";
+    public final static String TABLE_SCHEMA = "emp";
 
     /**
      * 学生表

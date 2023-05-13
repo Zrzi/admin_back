@@ -5,6 +5,8 @@ package com.admin.admin_back.service;
  */
 public interface DeleteCacheService {
 
+    void deleteRedisCache(String key);
+
     /**
      * 延迟删除缓存
      * @param key redis键

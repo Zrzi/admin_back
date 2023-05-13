@@ -18,17 +18,23 @@ public class DeleteCacheServiceImpl implements DeleteCacheService {
     private StringRedisTemplate stringRedisTemplate;
 
     @Override
+    public void deleteRedisCache(String key) {
+        stringRedisTemplate.delete(key);
+    }
+
+    @Override
     @Async("deleteRedisKeyExecutor")
     public void deleteRedisCache(String key, int time) {
-        stringRedisTemplate.delete(key);
+        // 将秒转换为毫秒
+        time *= 1000;
         while (time > 0) {
             long start = System.currentTimeMillis();
             try {
-                TimeUnit.SECONDS.sleep(time);
+                TimeUnit.MILLISECONDS.sleep(time);
             } catch (InterruptedException ignored) {
 
             }
-            time -= (System.currentTimeMillis() - start) / 1000;
+            time -= (System.currentTimeMillis() - start);
         }
         stringRedisTemplate.delete(key);
     }
