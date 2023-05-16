@@ -38,6 +38,8 @@ public class Constant {
     /**
      * int类型常量
      */
+    public final static int INT_2 = 2;
+
     public final static int INT_5 = 5;
 
     public final static int INT_10 = 10;

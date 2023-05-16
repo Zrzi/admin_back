@@ -152,12 +152,12 @@ public class ExcelServiceImpl implements ExcelService {
         }
         excelDto = getExcelDtoFromExcelForm(excelForm, true);
         excelDto.setExcelId(excelId);
-        String key = "excel:" + excelId;
-        deleteCacheService.deleteRedisCache(key);
         excelMapper.updateExcelDto(excelDto);
         excelColumnMapper.batchDeleteExcelColumns(excelId);
         saveExcelColumns(excelForm.getRows(), excelId);
-        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
+        String key = "excel:" + excelId;
+        deleteCacheService.deleteRedisCache(key);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_2);
     }
 
     private void saveExcelColumns(List<ExcelColumnForm> rows, String excelId) {
@@ -179,10 +179,10 @@ public class ExcelServiceImpl implements ExcelService {
         }
         String userNo = UserThreadLocal.getUser().getUserNo();
         excelDto.setUpdatedBy(userNo);
+        excelMapper.deleteExcelDto(excelDto);
         String key = "excel:" + excelId;
         deleteCacheService.deleteRedisCache(key);
-        excelMapper.deleteExcelDto(excelDto);
-        deleteCacheService.deleteRedisCache(key, Constant.INT_5);
+        deleteCacheService.deleteRedisCache(key, Constant.INT_2);
     }
 
     @Override
